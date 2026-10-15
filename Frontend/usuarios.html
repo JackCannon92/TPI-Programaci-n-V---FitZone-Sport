@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports - Usuarios</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="barra">
+    <div class="marca">FitZone <span>Sports</span></div>
+    <nav>
+      <a href="dashboard.html">Panel</a>
+      <a href="usuarios.html">Usuarios</a>
+      <a href="#" id="link-salir">Salir</a>
+    </nav>
+  </div>
+
+  <div class="contenedor">
+    <div class="tarjeta">
+      <h1>Usuarios registrados</h1>
+      <div id="mensaje"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Email</th>
+            <th>Tipo</th>
+            <th>Membresía</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla">
+          <tr><td colspan="5" class="cargando">Cargando usuarios...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/usuarios.js"></script>
+</body>
+</html>

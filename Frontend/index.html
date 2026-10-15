@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports - Ingresar</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-caja">
+      <div class="logo">FitZone <span>Sports</span></div>
+      <div class="tarjeta">
+        <h2 style="margin-bottom:4px;">Ingresar</h2>
+        <p style="margin-top:0;color:#8a8f9e;font-size:0.88rem;">
+          Buscá tu usuario por DNI. (El sistema todavía no tiene contraseña;
+          es una selección simple para poder probar la app.)
+        </p>
+        <div id="mensaje"></div>
+        <form id="form-login">
+          <label for="dni">DNI</label>
+          <input type="text" id="dni" name="dni" placeholder="Ej: 30111222" required>
+          <button type="submit" style="width:100%;">Ingresar</button>
+        </form>
+        <p class="pie-login">¿No tenés usuario todavía? <a href="registro.html">Registrate acá</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

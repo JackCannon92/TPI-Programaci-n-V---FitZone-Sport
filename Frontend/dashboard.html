@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports - Panel</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="barra">
+    <div class="marca">FitZone <span>Sports</span></div>
+    <nav>
+      <a href="dashboard.html">Panel</a>
+      <a href="usuarios.html">Usuarios</a>
+      <a href="#" id="link-salir">Salir</a>
+    </nav>
+  </div>
+
+  <div class="contenedor">
+    <div id="mensaje"></div>
+
+    <div class="tarjeta">
+      <h1 id="saludo">Hola...</h1>
+      <div class="grilla-dos">
+        <div>
+          <div class="dato"><div class="etiqueta">DNI</div><div class="valor" id="d-dni">-</div></div>
+          <div class="dato"><div class="etiqueta">Email</div><div class="valor" id="d-email">-</div></div>
+          <div class="dato"><div class="etiqueta">Teléfono</div><div class="valor" id="d-telefono">-</div></div>
+        </div>
+        <div>
+          <div class="dato"><div class="etiqueta">Tipo</div><div class="valor" id="d-tipo">-</div></div>
+          <div class="dato"><div class="etiqueta">Rol</div><div class="valor" id="d-rol">-</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tarjeta" id="tarjeta-membresia" style="display:none;">
+      <h2>Mi membresía</h2>
+      <div class="grilla-dos">
+        <div>
+          <div class="dato"><div class="etiqueta">Plan</div><div class="valor" id="m-plan">-</div></div>
+          <div class="dato"><div class="etiqueta">Estado</div><div class="valor" id="m-estado">-</div></div>
+        </div>
+        <div>
+          <div class="dato"><div class="etiqueta">Inicio</div><div class="valor" id="m-inicio">-</div></div>
+          <div class="dato"><div class="etiqueta">Vencimiento</div><div class="valor" id="m-vencimiento">-</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Aforo por sede</h2>
+      <label for="select-sede">Elegí una sede</label>
+      <select id="select-sede"></select>
+      <div id="aforo-resultado" class="cargando">Elegí una sede para ver el aforo.</div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

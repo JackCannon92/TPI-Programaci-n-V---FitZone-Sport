@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports - Registrarse</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-caja">
+      <div class="logo">FitZone <span>Sports</span></div>
+      <div class="tarjeta">
+        <h2 style="margin-bottom:4px;">Crear usuario</h2>
+        <div id="mensaje"></div>
+        <form id="form-registro">
+          <label for="dni">DNI</label>
+          <input type="text" id="dni" required>
+
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" required>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+
+          <label for="telefono">Teléfono (opcional)</label>
+          <input type="text" id="telefono">
+
+          <label for="tipo">Tipo de usuario</label>
+          <select id="tipo">
+            <option value="SOCIO">Socio (con membresía)</option>
+            <option value="CLIENTE_EXTERNO">Cliente externo (alquila sin membresía)</option>
+          </select>
+
+          <div id="bloque-membresia">
+            <label for="plan">Plan de membresía</label>
+            <select id="plan">
+              <option value="MENSUAL">Mensual</option>
+              <option value="TRIMESTRAL">Trimestral</option>
+              <option value="ANUAL">Anual</option>
+            </select>
+          </div>
+
+          <button type="submit" style="width:100%;">Registrarme</button>
+        </form>
+        <p class="pie-login"><a href="index.html">Volver a ingresar</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/registro.js"></script>
+</body>
+</html>

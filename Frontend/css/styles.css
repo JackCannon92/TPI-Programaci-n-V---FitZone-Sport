@@ -1,0 +1,168 @@
+:root {
+  --azul: #1e2a5e;
+  --rojo: #f26c6c;
+  --gris-texto: #3a3f52;
+  --gris-claro: #f4f5f9;
+  --borde: #dfe2ec;
+  --verde: #2e7d32;
+  --amarillo: #9a7b00;
+  --blanco: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--gris-claro);
+  color: var(--gris-texto);
+}
+
+.barra {
+  background: var(--azul);
+  color: var(--blanco);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.barra .marca {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.3px;
+}
+
+.barra .marca span { color: var(--rojo); }
+
+.barra nav a {
+  color: var(--blanco);
+  text-decoration: none;
+  margin-left: 18px;
+  font-size: 0.92rem;
+  opacity: 0.9;
+}
+.barra nav a:hover { opacity: 1; text-decoration: underline; }
+
+.contenedor {
+  max-width: 880px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+.tarjeta {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(30, 42, 94, 0.06);
+}
+
+.tarjeta h1, .tarjeta h2 { margin-top: 0; color: var(--azul); }
+
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-caja {
+  width: 100%;
+  max-width: 380px;
+  padding: 10px;
+}
+
+.login-caja .logo {
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--azul);
+}
+.login-caja .logo span { color: var(--rojo); }
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--gris-texto);
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+  font-family: inherit;
+}
+input:focus, select:focus { outline: 2px solid var(--azul); outline-offset: 1px; }
+
+button, .boton {
+  background: var(--azul);
+  color: var(--blanco);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+button:hover, .boton:hover { background: #16224a; }
+button.secundario { background: var(--blanco); color: var(--azul); border: 1px solid var(--azul); }
+button.secundario:hover { background: var(--gris-claro); }
+
+.fila-botones { display: flex; gap: 10px; align-items: center; }
+
+.mensaje-error {
+  background: #fdecec;
+  color: #a33;
+  border: 1px solid #f3c7c7;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+}
+.mensaje-ok {
+  background: #eaf6ea;
+  color: var(--verde);
+  border: 1px solid #c8e6c9;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+}
+
+.pie-login { text-align: center; margin-top: 10px; font-size: 0.88rem; }
+.pie-login a { color: var(--azul); }
+
+.grilla-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 640px) { .grilla-dos { grid-template-columns: 1fr; } }
+
+.dato { margin-bottom: 10px; }
+.dato .etiqueta { font-size: 0.78rem; color: #8a8f9e; text-transform: uppercase; letter-spacing: 0.4px; }
+.dato .valor { font-size: 1rem; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.pill.activo { background: #eaf6ea; color: var(--verde); }
+.pill.vencido, .pill.suspendido { background: #fdecec; color: #a33; }
+.pill.socio { background: #e8ecfb; color: var(--azul); }
+.pill.cliente_externo { background: #fff3e0; color: #9a6400; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borde); }
+th { color: #8a8f9e; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.4px; }
+tr:hover td { background: var(--gris-claro); }
+
+.cargando, .vacio { color: #8a8f9e; font-style: italic; padding: 10px 0; }
