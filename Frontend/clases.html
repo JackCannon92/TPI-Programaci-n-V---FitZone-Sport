@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports · Clases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div class="cabecera">
+      <h1>Clases</h1>
+      <p>Reservá tu lugar hasta 48 horas antes. Si la clase está llena, anotate en la lista de espera: si alguien cancela, te avisamos.</p>
+    </div>
+    <div id="mensaje"></div>
+
+    <section class="panel">
+      <div class="fila-campos" style="max-width:420px">
+        <div class="campo"><label for="sede">Sede</label><select id="sede"><option value="">Todas las sedes</option></select></div>
+      </div>
+      <div id="lista" class="cargando">Cargando clases…</div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/reservas-comun.js"></script>
+  <script src="js/clases.js"></script>
+</body>
+</html>

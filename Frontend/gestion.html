@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports · Gestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div class="cabecera">
+      <h1>Gestión</h1>
+      <p>Cargá sedes y canchas, pasá una cancha a mantenimiento y programá clases.</p>
+    </div>
+    <div id="mensaje"></div>
+
+    <div class="pestanas" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="canchas">Canchas</button>
+      <button role="tab" aria-selected="false" data-tab="clases">Clases</button>
+      <button role="tab" aria-selected="false" data-tab="sedes">Sedes</button>
+    </div>
+
+    <!-- Canchas -->
+    <div data-panel="canchas" class="columnas">
+      <section class="panel">
+        <div class="campo" style="max-width:320px"><label for="c-sede-filtro">Sede</label><select id="c-sede-filtro"></select></div>
+        <div id="lista-canchas" class="cargando">Cargando…</div>
+      </section>
+      <section class="panel">
+        <h2>Nueva cancha</h2>
+        <div id="c-msg"></div>
+        <form id="form-cancha" novalidate>
+          <div class="campo"><label for="c-sede">Sede</label><select id="c-sede"></select></div>
+          <div class="campo"><label for="c-nombre">Nombre</label><input id="c-nombre" placeholder="Pádel 2"></div>
+          <div class="fila-campos">
+            <div class="campo"><label for="c-tipo">Deporte</label>
+              <select id="c-tipo"><option value="PADEL">Pádel</option><option value="FUTBOL">Fútbol</option></select></div>
+            <div class="campo"><label for="c-precio">Precio por hora</label><input id="c-precio" type="number" min="0" step="100" value="1000"></div>
+          </div>
+          <button class="boton" type="submit">Crear cancha</button>
+        </form>
+      </section>
+    </div>
+
+    <!-- Clases -->
+    <div data-panel="clases" class="columnas oculto">
+      <section class="panel">
+        <h2>Próximas clases</h2>
+        <div id="lista-clases" class="cargando">Cargando…</div>
+      </section>
+      <section class="panel">
+        <h2>Programar clase</h2>
+        <div id="cl-msg"></div>
+        <form id="form-clase" novalidate>
+          <div class="campo"><label for="cl-sede">Sede</label><select id="cl-sede"></select></div>
+          <div class="fila-campos">
+            <div class="campo"><label for="cl-tipo">Actividad</label><input id="cl-tipo" placeholder="Funcional" list="actividades"></div>
+            <div class="campo"><label for="cl-instructor">Instructor</label><input id="cl-instructor" placeholder="Ana Pérez"></div>
+          </div>
+          <datalist id="actividades"><option value="Funcional"><option value="Yoga"><option value="Spinning"><option value="Crossfit"><option value="Pilates"></datalist>
+          <div class="fila-campos">
+            <div class="campo"><label for="cl-fecha">Día y hora</label><input id="cl-fecha" type="datetime-local"></div>
+            <div class="campo"><label for="cl-cupo">Cupo</label><input id="cl-cupo" type="number" min="1" value="15"></div>
+          </div>
+          <button class="boton" type="submit">Programar clase</button>
+        </form>
+      </section>
+    </div>
+
+    <!-- Sedes -->
+    <div data-panel="sedes" class="columnas oculto">
+      <section class="panel">
+        <h2>Sedes</h2>
+        <div id="lista-sedes" class="cargando">Cargando…</div>
+      </section>
+      <section class="panel">
+        <h2>Nueva sede</h2>
+        <div id="s-msg"></div>
+        <form id="form-sede" novalidate>
+          <div class="campo"><label for="s-nombre">Nombre</label><input id="s-nombre" placeholder="Sede Norte"></div>
+          <div class="campo"><label for="s-direccion">Dirección (opcional)</label><input id="s-direccion"></div>
+          <div class="campo"><label for="s-aforo">Aforo máximo</label><input id="s-aforo" type="number" min="1" value="100">
+            <div class="ayuda">Cuántas personas pueden estar adentro a la vez (RF-05).</div></div>
+          <button class="boton" type="submit">Crear sede</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/gestion.js"></script>
+</body>
+</html>

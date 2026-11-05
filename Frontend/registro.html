@@ -3,36 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitZone Sports - Registrarse</title>
+<title>FitZone Sports · Crear usuario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="login-wrap">
-    <div class="login-caja">
-      <div class="logo">FitZone <span>Sports</span></div>
-      <div class="tarjeta">
-        <h2 style="margin-bottom:4px;">Crear usuario</h2>
+  <div class="acceso-wrap">
+    <section class="acceso-arte">
+      <a class="marca" href="index.html" id="marca-login">FitZone Sports</a>
+      <div class="cancha-fondo" aria-hidden="true"></div>
+      <div>
+        <h1>Socio o solo canchas.</h1>
+        <p>Los socios tienen descuento en canchas, reservan clases y entran con su QR. Si solo querés alquilar una cancha, creá un usuario de cliente externo.</p>
+      </div>
+      <p class="chico">Programación V · FCAD-UNER</p>
+    </section>
+
+    <section class="acceso-form">
+      <div>
+        <h2>Crear usuario</h2>
         <div id="mensaje"></div>
-        <form id="form-registro">
-          <label for="dni">DNI</label>
-          <input type="text" id="dni" required>
-
-          <label for="nombre">Nombre completo</label>
-          <input type="text" id="nombre" required>
-
-          <label for="email">Email</label>
-          <input type="email" id="email" required>
-
-          <label for="telefono">Teléfono (opcional)</label>
-          <input type="text" id="telefono">
-
-          <label for="tipo">Tipo de usuario</label>
-          <select id="tipo">
-            <option value="SOCIO">Socio (con membresía)</option>
-            <option value="CLIENTE_EXTERNO">Cliente externo (alquila sin membresía)</option>
-          </select>
-
-          <div id="bloque-membresia">
+        <form id="form-registro" novalidate>
+          <div class="campo"><label for="dni">DNI</label><input type="text" id="dni" inputmode="numeric" required></div>
+          <div class="campo"><label for="nombre">Nombre completo</label><input type="text" id="nombre" autocomplete="name" required></div>
+          <div class="campo"><label for="email">Email</label><input type="email" id="email" autocomplete="email" required></div>
+          <div class="campo"><label for="telefono">Teléfono (opcional)</label><input type="tel" id="telefono" autocomplete="tel"></div>
+          <div class="campo">
+            <label for="tipo">Tipo de usuario</label>
+            <select id="tipo">
+              <option value="SOCIO">Socio, con membresía</option>
+              <option value="CLIENTE_EXTERNO">Cliente externo, solo alquila canchas</option>
+            </select>
+          </div>
+          <div class="campo" id="bloque-membresia">
             <label for="plan">Plan de membresía</label>
             <select id="plan">
               <option value="MENSUAL">Mensual</option>
@@ -40,16 +45,16 @@
               <option value="ANUAL">Anual</option>
             </select>
           </div>
-
-          <button type="submit" style="width:100%;">Registrarme</button>
+          <button type="submit" class="boton ancho">Crear usuario</button>
         </form>
-        <p class="pie-login"><a href="index.html">Volver a ingresar</a></p>
+        <p class="pie"><a href="index.html">Ya tengo usuario</a></p>
       </div>
-    </div>
+    </section>
   </div>
 
   <script src="js/api.js"></script>
   <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
   <script src="js/registro.js"></script>
 </body>
 </html>

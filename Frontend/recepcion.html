@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports · Recepción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div class="saludo">
+      <div>
+        <h1>Recepción</h1>
+        <p class="texto-2" style="margin:0">Escaneá el QR que muestra cada persona: el sistema reconoce solo qué tipo de QR es.</p>
+      </div>
+      <div style="min-width:240px">
+        <label for="sede">Sede</label>
+        <select id="sede"></select>
+      </div>
+    </div>
+    <div id="mensaje"></div>
+
+    <div class="columnas">
+      <div class="pila">
+        <section class="panel">
+          <h2>Escanear un QR</h2>
+          <div class="camara oculto" id="camara">
+            <video id="video" playsinline muted></video>
+            <div class="mira" aria-hidden="true"></div>
+          </div>
+          <div class="acciones" style="margin-bottom:16px">
+            <button type="button" class="boton tinta" id="btn-camara">Usar la cámara</button>
+            <span class="texto-2 chico" id="estado-camara"></span>
+          </div>
+          <form id="form-codigo" novalidate>
+            <div class="campo">
+              <label for="codigo">O pegá el código del QR</label>
+              <textarea id="codigo" spellcheck="false" placeholder="Pegá acá el código que copiaste desde Mi acceso o Mis reservas"></textarea>
+            </div>
+            <button type="submit" class="boton">Validar</button>
+          </form>
+        </section>
+
+        <section class="resultado-escaneo" id="resultado" aria-live="assertive">
+          <div class="grande">Esperando un QR</div>
+          <p class="texto-2" style="margin:6px 0 0">Sirve el QR del socio, el de una reserva de cancha, el de asistencia a clase, el de acceso sin conexión y el del comprobante.</p>
+        </section>
+      </div>
+
+      <aside class="pila">
+        <section class="panel">
+          <h2>Aforo</h2>
+          <div id="aforo" class="cargando">Cargando…</div>
+        </section>
+        <section class="panel">
+          <h2>Adentro ahora</h2>
+          <div id="presentes" class="cargando">Cargando…</div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/recepcion.js"></script>
+</body>
+</html>

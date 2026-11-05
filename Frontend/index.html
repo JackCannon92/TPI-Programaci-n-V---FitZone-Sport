@@ -3,32 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitZone Sports - Ingresar</title>
+<title>FitZone Sports · Ingresar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="login-wrap">
-    <div class="login-caja">
-      <div class="logo">FitZone <span>Sports</span></div>
-      <div class="tarjeta">
-        <h2 style="margin-bottom:4px;">Ingresar</h2>
-        <p style="margin-top:0;color:#8a8f9e;font-size:0.88rem;">
-          Buscá tu usuario por DNI. (El sistema todavía no tiene contraseña;
-          es una selección simple para poder probar la app.)
-        </p>
-        <div id="mensaje"></div>
-        <form id="form-login">
-          <label for="dni">DNI</label>
-          <input type="text" id="dni" name="dni" placeholder="Ej: 30111222" required>
-          <button type="submit" style="width:100%;">Ingresar</button>
-        </form>
-        <p class="pie-login">¿No tenés usuario todavía? <a href="registro.html">Registrate acá</a></p>
+  <div class="acceso-wrap">
+    <section class="acceso-arte">
+      <a class="marca" href="index.html" id="marca-login">FitZone Sports</a>
+      <div class="cancha-fondo" aria-hidden="true"></div>
+      <div>
+        <h1>Tu cancha, tu clase, tu QR.</h1>
+        <p>Reservá un turno, pagalo y entrá a cualquier sede de la cadena mostrando el QR del celular.</p>
       </div>
-    </div>
+      <p class="chico">Programación V · FCAD-UNER</p>
+    </section>
+
+    <section class="acceso-form">
+      <div>
+        <h2>Ingresar</h2>
+        <p class="texto-2">Escribí tu DNI. Por ahora el sistema no pide contraseña: es un ingreso simple para probar la aplicación.</p>
+        <div id="mensaje"></div>
+        <form id="form-login" novalidate>
+          <div class="campo">
+            <label for="dni">DNI</label>
+            <input type="text" id="dni" name="dni" inputmode="numeric" autocomplete="username" placeholder="30111222" required>
+          </div>
+          <button type="submit" class="boton ancho">Ingresar</button>
+        </form>
+        <p class="pie">¿Todavía no tenés usuario? <a href="registro.html">Crear usuario</a></p>
+      </div>
+    </section>
   </div>
 
   <script src="js/api.js"></script>
   <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
   <script src="js/login.js"></script>
 </body>
 </html>

@@ -2,10 +2,9 @@
 
 /**
  * El backend todavía no tiene login con contraseña (los usuarios no tienen
- * ese campo). Esto es una "sesión" liviana: guardamos el id del usuario
- * elegido en sessionStorage y lo usamos para el resto de las pantallas.
- * Cuando el backend tenga autenticación de verdad, solo hay que cambiar
- * este archivo.
+ * ese campo). Esto es una "sesión" liviana: se guarda el id del usuario que
+ * ingresó en sessionStorage y lo usan las demás pantallas. Cuando el backend
+ * tenga autenticación de verdad, solo hay que cambiar este archivo.
  */
 const SESION_KEY = 'fitzone_usuario_id';
 

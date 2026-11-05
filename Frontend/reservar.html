@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports · Reservar cancha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div class="cabecera">
+      <h1>Reservar cancha</h1>
+      <p>Elegí sede, cancha y horario. El precio se calcula en el momento: los socios tienen 15 % de descuento y de 19 a 21 hs hay recargo por horario pico.</p>
+    </div>
+    <div id="mensaje"></div>
+
+    <div class="columnas">
+      <div class="pila">
+        <section class="panel">
+          <h2>Dónde</h2>
+          <div class="campo" style="max-width:360px">
+            <label for="sede">Sede</label>
+            <select id="sede"></select>
+          </div>
+          <div class="etiqueta">Cancha</div>
+          <div id="canchas" class="canchas-opciones"><p class="cargando">Cargando…</p></div>
+        </section>
+
+        <section class="panel">
+          <h2>Cuándo</h2>
+          <div class="etiqueta">Día</div>
+          <div class="dias" id="dias" role="group" aria-label="Día"></div>
+          <div class="etiqueta" style="margin-top:18px">Horario (turnos de 1 hora)</div>
+          <div id="turnos" class="turnos"><p class="cargando">Elegí una cancha para ver los horarios.</p></div>
+          <div class="leyenda">
+            <span><i class="l-libre"></i>Libre</span>
+            <span><i class="l-pico"></i>Libre, horario pico</span>
+            <span><i class="l-ocupado"></i>Ocupado o pasado</span>
+          </div>
+        </section>
+      </div>
+
+      <aside class="panel resumen" aria-live="polite">
+        <h2>Tu reserva</h2>
+        <div id="resumen"><p class="texto-2">Elegí cancha, día y horario.</p></div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/reservas-comun.js"></script>
+  <script src="js/reservar.js"></script>
+</body>
+</html>

@@ -3,42 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitZone Sports - Usuarios</title>
+<title>FitZone Sports · Usuarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="barra">
-    <div class="marca">FitZone <span>Sports</span></div>
-    <nav>
-      <a href="dashboard.html">Panel</a>
-      <a href="usuarios.html">Usuarios</a>
-      <a href="#" id="link-salir">Salir</a>
-    </nav>
-  </div>
-
-  <div class="contenedor">
-    <div class="tarjeta">
-      <h1>Usuarios registrados</h1>
-      <div id="mensaje"></div>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>DNI</th>
-            <th>Email</th>
-            <th>Tipo</th>
-            <th>Membresía</th>
-          </tr>
-        </thead>
-        <tbody id="cuerpo-tabla">
-          <tr><td colspan="5" class="cargando">Cargando usuarios...</td></tr>
-        </tbody>
-      </table>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div class="cabecera">
+      <h1>Usuarios</h1>
+      <p>Socios y clientes externos registrados, con el estado de su membresía.</p>
     </div>
-  </div>
+    <div id="mensaje"></div>
+    <section class="panel">
+      <div class="fila-campos" style="max-width:640px">
+        <div class="campo"><label for="buscar">Buscar</label><input id="buscar" type="search" placeholder="Nombre, DNI o email"></div>
+        <div class="campo"><label for="filtro">Mostrar</label>
+          <select id="filtro"><option value="">Todos</option><option value="SOCIO">Socios</option><option value="CLIENTE_EXTERNO">Clientes externos</option></select></div>
+      </div>
+      <div class="tabla-envoltura">
+        <table>
+          <thead><tr><th>Nombre</th><th>DNI</th><th>Email</th><th>Tipo</th><th>Membresía</th></tr></thead>
+          <tbody id="cuerpo-tabla"><tr><td colspan="5" class="cargando">Cargando usuarios…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
   <script src="js/api.js"></script>
   <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
   <script src="js/usuarios.js"></script>
 </body>
 </html>

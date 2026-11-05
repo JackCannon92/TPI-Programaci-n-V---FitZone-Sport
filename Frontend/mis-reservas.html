@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports · Mis reservas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div class="cabecera">
+      <h1>Mis reservas</h1>
+      <p>Tus turnos de cancha, tus clases y tus pagos. Desde acá pagás lo pendiente, sacás el QR de ingreso o descargás el comprobante.</p>
+    </div>
+    <div id="mensaje"></div>
+
+    <div class="pestanas" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="canchas">Canchas</button>
+      <button role="tab" aria-selected="false" data-tab="clases" id="tab-clases">Clases</button>
+      <button role="tab" aria-selected="false" data-tab="pagos">Pagos</button>
+    </div>
+
+    <section class="panel" data-panel="canchas"><div id="lista-canchas" class="cargando">Cargando…</div></section>
+    <section class="panel oculto" data-panel="clases"><div id="lista-clases" class="cargando">Cargando…</div></section>
+    <section class="panel oculto" data-panel="pagos"><div id="lista-pagos" class="cargando">Cargando…</div></section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/reservas-comun.js"></script>
+  <script src="js/mis-reservas.js"></script>
+</body>
+</html>
