@@ -2,11 +2,11 @@
 
 **Programación V** · Licenciatura en Sistemas · FCAD-UNER · Prof. Lic. Juan José Aguirre
 
-Cada integrante documenta por unidad sus actividades, decisiones y problemas encontrados, vinculando el registro a los commits del repositorio (ver consigna, Cierre Integrador).
+Este archivo reúne las decisiones del equipo y los anexos de la Unidad III. Lo que hizo cada integrante, con sus complejidades, está en su bitácora personal (`docs/bitacoras/`).
 
 Formato de cada entrada: `[fecha] (commit) Qué se hizo · Decisión tomada · Problema encontrado y cómo se resolvió`
 
-**Estado al 15/10/2026:** semana 8 de 13. Unidades I, II y III cerradas; Unidad IV en curso.
+**Estado al 02/11/2026:** semana 10 de 13. Unidades I, II y III cerradas; Unidad IV en curso; Unidad V en curso (semana 9, tests: hecha; semana 10, CI/CD: pendiente).
 
 | Integrante | Rol | Unidades a cargo |
 |---|---|---|
@@ -35,83 +35,42 @@ Formato de cada entrada: `[fecha] (commit) Qué se hizo · Decisión tomada · P
 - **[29/08]** La cátedra indica que la Unidad VI (ecosistema móvil) no es obligatoria. · **Decisión:** se elimina la app móvil y todos los roles usan una única Aplicación Web; el QR del socio (RF-04) es una página pensada para verse en el celular. Las semanas de la Unidad VI pasan a ser de refuerzo. → ADR-006. En la misma fecha se elige Supabase (plan gratuito) como hosting de PostgreSQL. → ADR-004.
 - **[29/08 – 16/09]** Revisión externa del material de la Unidad I con otra IA (Gemini). · **Decisión:** cada observación se verificó contra los archivos antes de aplicarla. Se aplicaron las válidas (consistencia de nombres, secciones faltantes en los ADR, pruebas de humo vía Swagger) y se descartaron dos (un error de tipeo que no existía, y pasar a ES Modules, que contradecía el código en CommonJS).
 - **[03/09]** Plan de tareas del TI: 13 semanas (27/08 al Demo Day del 20/11), 76 horas prácticas, liderazgo rotativo cada dos semanas y tareas semanales repartidas entre los tres. · **Problema:** el plan se corrigió dos veces, una por la fecha real de inicio y otra para comprimirlo de 16 a 13 semanas sin perder horas. Ahora se sigue en una planilla con el estado de cada tarea.
+- **[27/10]** Indicaciones de la cátedra en el check-in (líder: Santiago): (1) mantener el plan de actividades en una hoja de Google y enviarlo por mail; (2) no usar CQRS; (3) cada patrón de diseño con su propio ADR; (4) se pueden usar dos QR (a definir con la cátedra qué alcance tiene). · **Decisión:** el 28/10 se quita CQRS del código y de la documentación, el ADR de patrones se separa en ADR-007 (Strategy), ADR-008 (Repository) y ADR-009 (Observer), y el plan pasa a Google Sheets.
+- **[28/10]** Se aclara la indicación (4): se puede usar más de un código QR para resolver necesidades del sistema. · **Decisión:** además del QR del socio (RF-04) se suman cuatro, cada uno con un solo propósito: (1) reserva de cancha, para que el cliente externo pueda entrar a la sede; (2) acceso sin conexión, para que el torno valide sin internet; (3) asistencia a clase, que por fin usa el estado `ASISTIO`; (4) verificación del comprobante PDF. → ADR-010.
+- **[30/10]** La cátedra pide que la bitácora sea personalizada y registre las complejidades encontradas. · **Decisión:** una bitácora por integrante en `docs/bitacoras/`, con una tabla de complejidades (qué pasó, cómo se resolvió y qué se aprendió) y el uso de IA; este archivo queda para las decisiones conjuntas y los anexos.
+- **[05/11]** Ordenamos el repositorio de GitHub: hasta ahora el código se había subido de una sola vez (15/10). · **Decisión:** desde hoy cada cambio se sube en commits separados por tema, cada integrante desde su propia cuenta, y las bitácoras citan esos commits.
 
 ---
 
-## Franco Ayala — Arquitecto / Backend Lead
+## Bitácoras personales
 
-### Unidad I — Arquitectura
-- **[27/08 – 29/08]** Modelado C4: nivel 1 (Contexto, con los 4 actores y los sistemas externos) y nivel 2 (Contenedores: Aplicación Web, Backend API y PostgreSQL en Supabase). · **Decisión:** un solo contenedor web para todos los roles, con vistas según el rol. · Entregable: `docs/TP_FitZone_Unidad_I_ADR.pdf`.
-- **[27/08 – 29/08]** Documento de ADR de la Unidad I, con cuatro decisiones: monolito modular, persistencia, patrones GoF y sin app móvil. · **Problema:** los ADR estaban solo dentro del PDF → se pasaron a archivos individuales en `docs/adr/`, con índice y plantilla (commit `740fea1`, 07/09). Se renumeraron como ADR-003 a ADR-006 porque la cátedra fija ADR-001 y ADR-002 para los laboratorios.
+Desde el 30/10, por indicación de la cátedra, cada integrante lleva su propia bitácora, en primera persona, con lo que hizo, las decisiones que tomó y las complejidades con las que se encontró y cómo las resolvió.
 
-### Unidad II — Frameworks
-- **[07/09]** (commit `55ea8de`) Scaffolding del monolito modular en Express: cada módulo con sus rutas, controladores y servicios, todo armado desde un composition root (inyección de dependencias manual, sin contenedor).
-- **[07/09]** (commit `a7e6b2b`, rama `refactor-di`) **Laboratorio 1.** `UsuariosService` pasa a ser una factory que recibe su repositorio; el composition root le inyecta el real y los tests uno en memoria (7 tests unitarios que no necesitan base). · Entregable: `ADR-001-seleccion-framework.md`.
-- **[07/09]** (commit `f50f89d`, rama `contrato-api`) **Laboratorio 2.** Contrato `openapi.yaml` como fuente de verdad, versionado por URL `/api/v1` (ADR-002), cliente tipado con JSDoc (44 métodos, 45 tipos) y un test de 50 casos que verifica que Express cumple el contrato. · **Problema:** dos endpoints tenían consultas N+1 → se midieron con un contador de consultas y se corrigieron: `presentes` pasó de 501 a 2 consultas (con 500 personas) y `reportes/resumen` de 303 a 8 (con 50 sedes). Entregable: `docs/informe-medicion-n+1.md`.
-- **[09/09]** Estructura de carpetas del backend en `src/modules/`, con los lugares reservados para los patrones de la Unidad III (`canchas/strategies/` y `clases/observer/`).
-- **[26/09 – 01/10]** Módulos de Usuarios y Membresías, Sedes, Acceso (QR dinámico firmado con HMAC y control de aforo), Canchas (índice único parcial para RN-02), Clases (reservas y lista de espera) y Pagos (pasarela simulada y comprobante PDF), cableados en el composition root. · **Nota:** el precio de las canchas quedó simulado y los archivos de patrones vacíos; se completaron en la Unidad III.
+| Integrante | Rol | Bitácora |
+|---|---|---|
+| Franco Ayala | Arquitecto / Backend Lead | [`docs/bitacoras/LOG-ayala.md`](bitacoras/LOG-ayala.md) |
+| Martín Emiliano Sirizzotti | Backend Developer / QA-DevOps | [`docs/bitacoras/LOG-sirizzotti.md`](bitacoras/LOG-sirizzotti.md) |
+| Santiago Agustín Villagra | Frontend Developer | [`docs/bitacoras/LOG-villagra.md`](bitacoras/LOG-villagra.md) |
 
-### Cierre
-- [ ] Pendiente (semanas 12 y 13).
+Los nombres siguen los lineamientos de entrega (`LOG-<apellido>.md`). Cada integrante sube y actualiza su propia bitácora desde su cuenta.
 
----
-
-## Martín Emiliano Sirizzotti — Backend Developer / QA-DevOps
-
-### Unidades I y II — apoyo
-- **[27/08 – 09/09]** Líder del Sprint 1 (semanas 1 y 2).
-- **[10/09]** (commits `edafca8`, `262497e`, `2160fb6`) Conexión a Supabase como opción por defecto (`DATABASE_URL` con SSL), comando `db:check` para probar la conexión y modo local con SQLite para trabajar sin Supabase. · **Problema:** `db:check` daba error aunque la conexión anduviera, porque fallaba al leer información extra → se separó lo crítico (la conexión) de lo opcional.
-- **[16/09]** Guía para el check-in del Sprint 2 (lo presenta Franco como líder). · **Decisión:** mostrar solo lo que corresponde a esas semanas según el plan, no adelantar trabajo de semanas posteriores.
-
-### Unidad III — Patrones de diseño
-- **[01/10]** Revisión del backend que armó Franco y creación de las tablas en Supabase con el script SQL del equipo. · **Problema 1:** el modelo de `usuarios` usa borrado lógico (`paranoid: true`) y el script no tenía la columna `deleted_at` → se agregó. · **Problema 2:** crear las tablas con `sequelize.sync({ alter: true })` falló con los ENUM de Postgres ("default for column rol cannot be cast") → se usa solo el script SQL, que define esos campos como VARCHAR con CHECK.
-- **[02/10]** Backend levantado en local y prueba de humo de los endpoints vía Swagger. · **Problema:** el script `npm run dev` usa `nodemon`, que no estaba en las dependencias del `package.json` → se agregó como dependencia de desarrollo.
-- **[13/10]** Relevamiento de olores sobre el código existente: 14 olores, con archivo, línea, evidencia y decisión (Anexo B).
-- **[13/10]** **Strategy (RF-11).** Las tres reglas de precio (base, −15 % socio, +20 % de 19 a 21 hs) en los archivos reservados, más un `Tarifador` que las aplica en orden. · **Decisión:** Strategy y no Decorator. Las reglas se acumulan, pero así cada una se prueba sola y se agrega a una lista sin anidar objetos.
-- **[13/10]** **Repository** para Reserva de cancha y Membresía: puerto con dos adaptadores (Sequelize y memoria). El adaptador traduce el error de la base de RN-02 a `TurnoYaReservadoError` (409). · **Decisión:** el plan lo ubicaba en Pagos; se movió a Reserva y Membresía porque la Clase 2 lo reserva para los agregados con reglas ricas, y en Pagos sería un "repositorio vacío".
-- **[13/10]** **Observer (RF-08).** Al cancelar una reserva de clase se publica el evento `CupoLiberado`, y un oyente avisa al primero de la lista de espera. · **Decisión:** usar el `EventEmitter` de Node en lugar de escribir el patrón a mano, con aislamiento de fallas entre oyentes.
-- **[13/10]** **CQRS nivel 2.** `GET /api/reportes/ocupacion` para el tablero del gerente, con SQL propio que no pasa por el repositorio. · **Decisión:** nivel 2 y no 3: misma base, sin consistencia eventual.
-- **[13/10]** Arreglo de `AppError`. · **Problema:** el manejador de errores leía `status` y la clase guardaba `statusCode`, así que todo error de negocio salía como 400 y el 409 de RN-02 nunca llegaba al cliente → se corrigió en una línea.
-- **[13/10]** Verificación: 32 tests automáticos y un recorrido de la API (27 chequeos) contra dos bases distintas (Anexo C). · **Problema:** en una base creada por Sequelize la lista de espera no funcionaba, porque el cupo de las clases lo descuenta un trigger que esa base no tenía → se dejó el script del trigger en `docs/trigger-cupos-clases.sql`.
-- **[15/10]** ADR-007 (patrones de la Unidad III) y esta bitácora. · **Desvío del plan:** los patrones estaban planificados para las semanas 4 y 5 y se aplicaron en la semana 7, dentro de la ventana que fija la cátedra para el laboratorio (semanas 6 y 7).
-
-### Unidad IV — apoyo
-- **[02/10]** Pantallas base conectadas al backend real (login por DNI, registro de socios y clientes, panel con datos de membresía y aforo de la sede, listado de usuarios), para validar la integración de punta a punta. · **Problema:** el backend todavía no maneja contraseñas → la sesión se simula en el navegador (sessionStorage), y queda documentado en el código.
-
-### Unidad V — Testing y CI/CD
-- [ ] Semanas 9 y 10: tests unitarios y de integración; pipeline CI/CD; Dockerfile y docker-compose.
-
-### Cierre
-- [ ] Pendiente (semanas 12 y 13).
-
----
-
-## Santiago Agustín Villagra — Frontend Developer
-
-- **[24/09 – 07/10]** Líder del Sprint 3 (semanas 5 y 6).
-
-### Unidad IV — Componentes (Aplicación Web vanilla)
-- [ ] **Semana 6 (01/10 – 07/10):** estructura base HTML/CSS/JS, login, dashboard y listado de usuarios. *(Completa Santiago.)*
-- [ ] **Semana 7 (08/10 – 14/10):** modularización de la UI y pantallas de reserva de canchas y de clases. *(Completa Santiago.)*
-- [ ] **Semana 8 (15/10 – 21/10, en curso):** capa de servicio del frontend e integración real con el backend.
-
-### Cierre
-- [ ] Pendiente (semanas 12 y 13).
+Cada uno tuvo su frente difícil: Franco, la **base de datos** (conectar el backend con Supabase, el esquema y los nombres de columnas); Martín, los **tests** (pasar a Jest, probar sin depender de Supabase, entender los dobles de prueba); y Santiago, el **frontend** (armar la interfaz sin framework y conectarla con la API). Para resolver muchos problemas usamos herramientas de IA: Gemini para revisar el material de la Unidad I, y Claude (Martín) para código, explicaciones y documentación. Todo lo generado se probó antes de entregarlo. El detalle está en cada bitácora personal.
 
 ---
 
 # Anexos — Unidad III (Patrones de diseño)
 
-Detalle que pide la consigna del laboratorio. La justificación formal de cada patrón está en `docs/ADR-007-patrones-unidad-iii.md`.
+Detalle que pide la consigna del laboratorio. Cada patrón tiene su propio ADR: `docs/adr/ADR-007-strategy-precio-canchas.md`, `ADR-008-repository-reservas-membresias.md` y `ADR-009-observer-lista-espera.md`.
 
 ## Anexo A — Patrones aplicados y descartados
 
-| Patrón | Requerimiento | Dónde está en el código |
-|---|---|---|
-| Strategy | RF-11 · precio dinámico de canchas | `src/modules/canchas/strategies/` |
-| Repository | RN-02 y RF-02 · reservas de cancha y membresías | `src/modules/canchas/repositorio/` y `src/modules/membresias/repositorio/` |
-| Observer | RF-08 · aviso a la lista de espera | `src/common/bus-eventos.js` y `src/modules/clases/observer/` |
-| CQRS (nivel 2) | Tablero del gerente: ocupación entre sedes | `src/modules/reportes/` |
+| Patrón | Requerimiento | Dónde está en el código | ADR |
+|---|---|---|---|
+| Strategy | RF-11 · precio dinámico de canchas | `src/modules/canchas/strategies/` | ADR-007 |
+| Repository | RN-02 y RF-02 · reservas de cancha y membresías | `src/modules/canchas/repositorio/` y `src/modules/membresias/repositorio/` | ADR-008 |
+| Observer | RF-08 · aviso a la lista de espera | `src/common/bus-eventos.js` y `src/modules/clases/observer/` | ADR-009 |
+
+CQRS (nivel 2) se aplicó el 13/10 para el tablero del gerente y se quitó el 28/10 por indicación de la cátedra.
 
 Criterio: un patrón se justifica con una variación real y conocida, no con una imaginada.
 
@@ -144,19 +103,22 @@ Relevamiento sobre el código **antes** de aplicar los patrones; las líneas son
 | O-9 | `clases/clases.service.js:64` y `:82` | Responsabilidad repartida | El cupo lo descuenta un trigger de la base, pero lo suma el servicio. Sin el trigger, la clase nunca se llena y RF-08 no se puede usar. | **Documentado.** Aplicar `docs/trigger-cupos-clases.sql` si falta. Queda para decidir en equipo un único dueño del cupo. |
 | O-10 | `clases/clases.service.js:78` | Dato que se pierde en silencio | Se asigna `conPenalidad`, pero el modelo no tiene ese campo. | **No se corrige** (cambio funcional). Anotado. |
 | O-11 | `usuarios/usuarios.service.js:48`, `membresias/membresias.service.js:37` | Errores inconsistentes | "No encontrado" sale como 400 en vez de 404. | **No se corrige en este refactoring.** |
-| O-12 | `pagos/comprobante-pdf.js:25`, `acceso/acceso.service.js:57` y `:77` | Nombre de campo equivocado | Lee `nombreCompleto`, pero el campo es `nombre_completo`: el comprobante dice "Cliente: undefined". | **Fuera del alcance de patrones.** Commit `fix:` aparte. |
-| O-13 | `core/errorHandler.js`, `membresias/membresias.validators.js` | Archivos vacíos | Dos archivos de 0 bytes que nadie importa. | **Borrar.** |
+| O-12 | `pagos/comprobante-pdf.js:25`, `acceso/acceso.service.js:57` y `:77` | Nombre de campo equivocado | Lee `nombreCompleto`, pero el campo es `nombre_completo`: el comprobante dice "Cliente: undefined". | **Corregido el 28/10** (en acceso y en el comprobante), en un commit `fix:` aparte. |
+| O-13 | `core/errorHandler.js`, `membresias/membresias.validators.js` | Archivos vacíos | Dos archivos de 0 bytes que nadie importa. | `errorHandler.js` **se usó** (28/10): ahí vive el manejador global de errores. `membresias.validators.js`: **borrar**. |
 | O-14 | `usuarios/usuarios.service.js:21` | Dos caminos de escritura del mismo agregado | Al registrar un socio, la membresía se crea salteando el repositorio. | **No se corrige ahora:** ocurre dentro de la transacción del registro, y el repositorio todavía no acepta transacciones. |
+| O-15 | `pagos/pagos.service.js` (detectado el 28/10) | Nombre de columna equivocado | El historial de pagos ordena por `createdAt`, pero la columna es `created_at`: `GET /api/pagos/usuario/{id}` respondía error. | **Corregido el 28/10**, commit `fix:` aparte. |
 
-Resumen: 4 corregidos, 1 corregido en parte, 2 marcados para borrar y 7 documentados sin corregir a propósito. Los controladores no tienen reglas de negocio (no hay "controlador gordo").
+Resumen (al 28/10): 6 corregidos (O-12 y O-15 después de la Unidad III), 1 corregido en parte, 2 marcados para borrar y 6 documentados sin corregir a propósito. Los controladores no tienen reglas de negocio (no hay "controlador gordo").
 
 ## Anexo C — Verificación
 
-- **32 tests automáticos** (`node --test`), todos en verde, también con la zona horaria de Argentina. Corren en menos de un segundo, sin base de datos.
-  - `precios.test.js`: cada regla sola, la combinación, los bordes del horario pico y una regla nueva agregada sin tocar el `Tarifador`.
-  - `reservas-cancha.test.js`: el servicio real con el repositorio en memoria. RN-02 (409), la cancelación que libera el turno y la grilla de disponibilidad.
-  - `membresias.test.js`: tests de **caracterización**, verificados también contra el servicio original. Incluyen la rareza O-6.
-  - `lista-espera.test.js`: el aviso al primero de la lista, la entrega del evento a varios oyentes y el aislamiento de fallas.
+- **Tests automáticos:** en la Unidad III fueron 32, con el runner de Node. El 28/10 (Unidad V) se pasaron a Jest y se sumaron los de integración con Supertest (54). Con los de los códigos QR hoy son **99** (`npm test`: 72 unitarios y 27 de integración), todos en verde, también con la zona horaria de Argentina, y sin base de datos.
+  - `test/unit/precios.test.js`: cada regla sola, la combinación, los bordes del horario pico y una regla nueva agregada sin tocar el `Tarifador`.
+  - `test/unit/reservas-cancha.test.js`: el servicio real con el repositorio en memoria. RN-02 (409), la cancelación que libera el turno y la grilla de disponibilidad.
+  - `test/unit/membresias.test.js`: tests de **caracterización**, verificados también contra el servicio original. Incluyen la rareza O-6.
+  - `test/unit/lista-espera.test.js`: el aviso al primero de la lista, la entrega del evento a varios oyentes y el aislamiento de fallas.
+  - `test/integracion/*.api.test.js` y `app.test.js`: la API por HTTP con Supertest.
+  - `test/unit/qr-*.test.js` y `test/integracion/qr.api.test.js`: los cuatro QR (firma, vigencia, tipo equivocado, QR adulterado, uso repetido, sede equivocada).
 - **Recorrido de la API:** 27 chequeos de punta a punta contra dos bases (una creada con el script SQL del equipo y otra creada por Sequelize). Pasaron todos; en la segunda, la lista de espera recién funcionó después de agregar el trigger (O-9).
 - **Adaptación de la consigna:** la consigna pide tests de caracterización sobre el precio actual, pero el precio era un mock sin comportamiento que caracterizar. Se hicieron sobre Membresías, que sí tenía reglas, incluida una rareza.
 
@@ -164,23 +126,38 @@ Resumen: 4 corregidos, 1 corregido en parte, 2 marcados para borrar y 7 document
 
 | # | Entregable | Estado | Dónde |
 |---|---|---|---|
-| 1 | Tests de caracterización, incluida una rareza | Hecho (sobre Membresías) | `test/membresias.test.js` |
+| 1 | Tests de caracterización, incluida una rareza | Hecho (sobre Membresías) | `test/unit/membresias.test.js` |
 | 2 | Planilla de olores (mínimo 5) | Hecho: 14 olores | Anexo B |
 | 3 | Refactoring del módulo de precios, un commit por paso | Código hecho; **falta subir el historial** | Anexo E |
 | 4 | Repositorio de dominio para Reserva y Membresía, con traducción de RN-02 y test en memoria | Hecho | `*/repositorio/*` |
-| 5 | Consulta de lectura separada (CQRS nivel 2) | Hecho | `modules/reportes/*` |
-| 6 | ADR de patrones | Hecho | `docs/ADR-007-patrones-unidad-iii.md` |
+| 5 | Consulta de lectura separada (CQRS nivel 2) | Hecha el 13/10 y **quitada el 28/10 por indicación de la cátedra** | — |
+| 6 | ADR de patrones | Hecho: un ADR por patrón | `docs/adr/ADR-007` (Strategy), `ADR-008` (Repository), `ADR-009` (Observer) |
 
-## Anexo E — Commits previstos de la Unidad III
+## Anexo E — Commits previstos
 
+**Unidad III**
 1. `fix: AppError expone status para el manejador de errores (O-8)`
 2. `feat: RF-11 estrategias de precio y Tarifador`
 3. `feat: RF-11 cotizar usa el Tarifador; esHorarioPico en la grilla (O-1, O-2)`
 4. `refactor: Repository para reservas de cancha, con traducción de RN-02 (O-3)`
 5. `refactor: Repository para membresías + Extract Method calcularVencimiento (O-5)`
 6. `feat: RF-08 aviso a la lista de espera con eventos de dominio (Observer)`
-7. `feat: tablero del gerente con consulta de lectura separada (CQRS nivel 2)`
-8. `chore: borrar código muerto (O-4, O-13)`
-9. `docs: ADR-007 y bitácora de la Unidad III`
+7. `chore: borrar código muerto (O-4, O-13)`
+8. `docs: un ADR por patrón (ADR-007 Strategy, ADR-008 Repository, ADR-009 Observer) y bitácora`
 
-Cuando estén subidos, se agrega el hash de cada uno a las entradas del 13/10 y 15/10.
+**Unidad V (semana 9)**
+9. `refactor: el manejador global de errores pasa a core/errorHandler.js`
+10. `test: tests unitarios con Jest`
+11. `test: tests de integración de la API con Supertest`
+
+**Códigos QR (ADR-010)**
+12. `fix: leer nombre_completo en acceso y en el comprobante (O-12)`
+13. `fix: historial de pagos ordenado por created_at (O-15)`
+14. `feat: QR firmados; QR de reserva de cancha para el ingreso del cliente externo`
+15. `feat: QR de acceso sin conexión con firma Ed25519`
+16. `feat: QR de asistencia a clase (estado ASISTIO)`
+17. `feat: comprobante con QR de ingreso y QR de verificación`
+18. `test: tests de los códigos QR`
+19. `docs: ADR-010 códigos QR, bitácora y README`
+
+Cuando estén subidos, se agrega el hash de cada uno a sus entradas.
