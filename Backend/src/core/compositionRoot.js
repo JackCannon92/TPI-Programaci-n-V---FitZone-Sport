@@ -29,7 +29,7 @@ const { crearClasesService } = require('../modules/clases/clases.service');
 const { crearPagosService } = require('../modules/pagos/pagos.service');
 const { crearPasarelaMock } = require('../modules/pagos/pasarela-mock');
 
-// Unidad III · Patrones de diseño (ver docs/ADR-007-patrones-unidad-iii.md)
+// Unidad III · Patrones de diseño (un ADR por patrón: docs/adr/ADR-007, ADR-008 y ADR-009)
 // Strategy (RF-11): precio de canchas
 const { crearTarifador } = require('../modules/canchas/strategies/tarifador');
 const { crearPrecioEstandar } = require('../modules/canchas/strategies/standarPricing');
@@ -41,9 +41,6 @@ const { crearMembresiasRepositorySequelize } = require('../modules/membresias/re
 // Observer (RF-08): aviso a la lista de espera
 const { crearBusEventos, Eventos } = require('../common/bus-eventos');
 const { crearAvisoListaEspera } = require('../modules/clases/observer/waitlistNotifier');
-// CQRS nivel 2: tablero del gerente
-const { crearOcupacionQuery } = require('../modules/reportes/ocupacion.query');
-const { crearReportesRouter } = require('../modules/reportes/reportes.routes');
 
 // ==========================================
 // 3. IMPORTAR CAPA DE CONTROLADORES
@@ -92,8 +89,6 @@ const setupCompositionRoot = () => {
     const eventos = crearBusEventos();
     eventos.suscribir(Eventos.CUPO_LIBERADO, crearAvisoListaEspera({ ListaEsperaModel: ListaEspera }));
 
-    // CQRS nivel 2: la lectura del tablero no pasa por el repositorio.
-    const ocupacionQuery = crearOcupacionQuery({ sequelize });
 
     // ------------------------------------------
     // B. INYECCIÓN EN SERVICIOS (Lógica)
@@ -105,11 +100,6 @@ const setupCompositionRoot = () => {
     // Nivel 2: Dependen de Nivel 1
     const membresiasService = crearMembresiasService({ membresiasRepo });
     
-const accesoService = crearAccesoService({ 
-    usuariosService, 
-    sedesService, 
-    RegistroAccesoModel: RegistroAcceso 
-});
 
     const canchasService = crearCanchasService({
         CanchaModel: Cancha,
@@ -129,6 +119,14 @@ const accesoService = crearAccesoService({
         eventos
     });
     
+    // Acceso usa el servicio de canchas para el QR de reserva (ADR-010)
+    const accesoService = crearAccesoService({
+        usuariosService,
+        sedesService,
+        canchasService,
+        RegistroAccesoModel: RegistroAcceso
+    });
+
     const pasarela = crearPasarelaMock();
    
     // Nivel 3: Dependen de Nivel 2 y Sistemas Externos
@@ -162,7 +160,6 @@ const accesoService = crearAccesoService({
     const canchasRouter = crearCanchasRouter(canchasController);
     const clasesRouter = crearClasesRouter(clasesController);
     const pagosRouter = crearPagosRouter(pagosController);
-    const reportesRouter = crearReportesRouter({ ocupacionQuery });
 
     // Retornamos todas las rutas listas para ser montadas en Express
     return {
@@ -172,8 +169,7 @@ const accesoService = crearAccesoService({
         accesoRouter,
         canchasRouter,
         clasesRouter,
-        pagosRouter,
-        reportesRouter
+        pagosRouter
     };
 };
 
