@@ -149,6 +149,47 @@ const { validar } = require('../../common/validar');
  *       200:
  *         description: Lista de espera actual
  */
+/**
+ * @swagger
+ * /api/clases/reservas/{id}/qr:
+ *   get:
+ *     summary: QR de asistencia de una reserva de clase confirmada (QR 3 — ADR-010)
+ *     description: Vale desde 30 minutos antes de la clase hasta 60 minutos después de que empezó.
+ *     tags: [Clases]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la reserva de clase
+ *     responses:
+ *       200:
+ *         description: Token, ventana de validez e imagen SVG
+ *       409:
+ *         description: La reserva no está confirmada
+ *
+ * /api/clases/asistencia:
+ *   post:
+ *     summary: Marca la asistencia escaneando el QR (la reserva pasa a ASISTIO) (QR 3)
+ *     tags: [Clases]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Reserva con estado ASISTIO
+ *       401:
+ *         description: QR inválido o fuera del horario de la clase
+ *       409:
+ *         description: La asistencia ya estaba registrada o la reserva fue cancelada
+ */
 function crearClasesRouter(c) {
   const router = Router();
   router.post('/', v.crearClaseValidators, validar, c.crear);
@@ -156,6 +197,8 @@ function crearClasesRouter(c) {
   router.post('/reservas', v.reservaValidators, validar, c.reservar);
   router.get('/reservas/usuario/:usuarioId', v.usuarioIdParam, validar, c.reservasDeUsuario);
   router.patch('/reservas/:id/cancelar', v.idParam, validar, c.cancelar);
+  router.get('/reservas/:id/qr', v.idParam, validar, c.qrAsistencia);
+  router.post('/asistencia', v.tokenValidators, validar, c.asistencia);
   router.post('/lista-espera', v.reservaValidators, validar, c.listaEspera);
   router.get('/:id/lista-espera', v.idParam, validar, c.verListaEspera);
   router.get('/:id', v.idParam, validar, c.obtener);

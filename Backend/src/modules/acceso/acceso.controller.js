@@ -22,7 +22,19 @@ function crearAccesoController(accesoService) {
   async function presentes(req, res, next) {
     try { res.json(await accesoService.presentes(req.params.sedeId)); } catch (e) { next(e); }
   }
-  return { qr, qrSvg, ingreso, egreso, aforo, presentes };
+  async function ingresoReserva(req, res, next) {
+    try { res.status(201).json(await accesoService.registrarIngresoConReserva(req.body)); } catch (e) { next(e); }
+  }
+  async function qrOffline(req, res, next) {
+    try { res.json(await accesoService.generarQrOffline(req.params.usuarioId)); } catch (e) { next(e); }
+  }
+  function validarOffline(req, res) {
+    res.json(accesoService.validarQrOffline(req.body.token));
+  }
+  function clavePublica(req, res) {
+    res.json(accesoService.clavePublicaOffline());
+  }
+  return { qr, qrSvg, ingreso, egreso, aforo, presentes, ingresoReserva, qrOffline, validarOffline, clavePublica };
 }
 
 module.exports = { crearAccesoController };

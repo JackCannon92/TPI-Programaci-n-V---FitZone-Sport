@@ -4,9 +4,19 @@ const { Op } = require('sequelize');
 const { AppError } = require('../../common/app-error');
 const { EstadoReservaClase } = require('../../common/enums');
 const { Eventos } = require('../../common/bus-eventos');
+const { firmarQr, verificarQr, qrSvg, TiposQr, MotivosQr } = require('../../common/qr-firmado');
 
 const HORAS_ANTICIPACION_MAX = 48;
 const HORAS_CANCELACION_LIBRE = 2;
+// QR de asistencia: vale desde 30 minutos antes de la clase hasta 60 minutos después de que empezó.
+const MINUTOS_ANTES_ASISTENCIA = 30;
+const MINUTOS_DESPUES_ASISTENCIA = 60;
+
+const MENSAJES_QR_ASISTENCIA = {
+  [MotivosQr.INVALIDO]: 'QR de asistencia inválido.',
+  [MotivosQr.TODAVIA_NO_VALE]: 'Todavía no se puede marcar la asistencia: se habilita 30 minutos antes de la clase.',
+  [MotivosQr.VENCIDO]: 'Ya pasó el horario para marcar la asistencia a esta clase.',
+};
 
 // Si nadie inyecta un bus (ej.: un test viejo), publicar no hace nada.
 const SIN_EVENTOS = { publicar: () => Promise.resolve() };
@@ -75,6 +85,9 @@ async function crearClase(datos) {
     const reserva = await ReservaClaseModel.findByPk(reservaId);
     if (!reserva) throw new AppError('Reserva no encontrada.', 404);
     if (reserva.estado === EstadoReservaClase.CANCELADA) return reserva;
+    if (reserva.estado === EstadoReservaClase.ASISTIO) {
+      throw new AppError('No se puede cancelar una clase a la que ya se asistió.', 409);
+    }
 
     const clase = await obtenerClase(reserva.claseId);
     const horasFaltan = (new Date(clase.fechaHora) - Date.now()) / 36e5;
@@ -117,9 +130,49 @@ function reservasDeUsuario(usuarioId) {
       order: [['created_at', 'ASC']] 
     });
   }
+  /**
+   * QR 3 · QR de asistencia a una clase (ADR-010).
+   * Se emite para una reserva confirmada; el recepcionista o el instructor lo
+   * escanea al empezar la clase y la reserva pasa a ASISTIO.
+   */
+  async function generarQrAsistencia(reservaId) {
+    const reserva = await ReservaClaseModel.findByPk(reservaId);
+    if (!reserva) throw new AppError('Reserva no encontrada.', 404);
+    if (reserva.estado !== EstadoReservaClase.CONFIRMADA) {
+      throw new AppError('Solo una reserva confirmada tiene QR de asistencia.', 409);
+    }
+    const clase = await obtenerClase(reserva.claseId);
+    const inicio = new Date(clase.fechaHora).getTime();
+    const validoDesde = new Date(inicio - MINUTOS_ANTES_ASISTENCIA * 60 * 1000);
+    const validoHasta = new Date(inicio + MINUTOS_DESPUES_ASISTENCIA * 60 * 1000);
+
+    const token = firmarQr(
+      TiposQr.ASISTENCIA_CLASE,
+      { reservaId: reserva.id, claseId: clase.id, usuarioId: reserva.usuarioId },
+      { desde: validoDesde, hasta: validoHasta }
+    );
+    return { reservaId: reserva.id, token, validoDesde, validoHasta, svg: await qrSvg(token) };
+  }
+
+  /** QR 3 · Se escanea el QR y la reserva queda como ASISTIO. */
+  async function registrarAsistencia({ token }) {
+    const resultado = verificarQr(token, TiposQr.ASISTENCIA_CLASE);
+    if (!resultado.ok) throw new AppError(MENSAJES_QR_ASISTENCIA[resultado.motivo], 401);
+
+    const reserva = await ReservaClaseModel.findByPk(resultado.datos.reservaId);
+    if (!reserva) throw new AppError('Reserva no encontrada.', 404);
+    if (reserva.estado === EstadoReservaClase.ASISTIO) throw new AppError('La asistencia ya estaba registrada.', 409);
+    if (reserva.estado === EstadoReservaClase.CANCELADA) throw new AppError('La reserva fue cancelada.', 409);
+
+    reserva.estado = EstadoReservaClase.ASISTIO;
+    await reserva.save();
+    return reserva;
+  }
+
   return {
     crearClase, obtenerClase, listarProximas, reservar, cancelarReserva,
-    anotarEnListaEspera, reservasDeUsuario, listaEsperaDeClase
+    anotarEnListaEspera, reservasDeUsuario, listaEsperaDeClase,
+    generarQrAsistencia, registrarAsistencia
   };
 }
 

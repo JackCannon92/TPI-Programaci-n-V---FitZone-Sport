@@ -95,6 +95,25 @@ const { validar } = require('../../common/validar');
  *       200:
  *         description: Datos del pago y token almacenado (RNF-02)
  */
+/**
+ * @swagger
+ * /api/pagos/verificar/{token}:
+ *   get:
+ *     summary: Verifica un comprobante a partir de su QR (QR 4 — ADR-010)
+ *     description: >
+ *       Es el link que lleva el QR impreso en el comprobante PDF. Confirma que el
+ *       pago existe, está aprobado y que el monto coincide con el cobrado.
+ *     tags: [Pagos]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: "{ valido: true, comprobante } o { valido: false, motivo }"
+ */
 function crearPagosRouter(c) {
   const router = Router();
 
@@ -111,6 +130,8 @@ function crearPagosRouter(c) {
   
   router.get('/:id/comprobante', [param('id').isUUID()], validar, c.comprobantePdf);
   
+  router.get('/verificar/:token', [param('token').isString().notEmpty()], validar, c.verificarComprobante);
+
   router.get('/:id', [param('id').isUUID()], validar, c.obtenerPago);
 
   return router;

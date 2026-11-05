@@ -3,9 +3,12 @@
 const { AppError } = require('../../common/app-error');
 const { EstadoCancha, EstadoReservaCancha } = require('../../common/enums');
 const { esHorarioPico } = require('./strategies/peakHourPricing');
+const { firmarQr, qrSvg, TiposQr } = require('../../common/qr-firmado');
 
 const HORA_APERTURA = 8;
 const HORA_CIERRE = 23;
+// QR de la reserva: se puede entrar a la sede desde 30 minutos antes del turno.
+const MINUTOS_ANTES_DEL_TURNO = 30;
 
 /**
  * Servicio de canchas.
@@ -109,6 +112,31 @@ function crearCanchasService({ CanchaModel, reservasRepo, tarifador, usuariosSer
     return reservasRepo.cambiarEstado(id, EstadoReservaCancha.CANCELADA);
   }
 
+  /**
+   * QR de la reserva de cancha (ADR-010, QR 1).
+   *
+   * Es el QR de ingreso de quien alquila una cancha: lo necesita sobre todo el
+   * cliente externo, que no tiene membresía y por eso no puede usar el QR de
+   * socio (RF-04). Solo se emite para reservas pagas, y vale para la sede de
+   * esa cancha, desde 30 minutos antes del turno hasta que termina.
+   */
+  async function generarQrReserva(reservaId) {
+    const reserva = await obtenerReserva(reservaId);
+    if (reserva.estado !== EstadoReservaCancha.CONFIRMADA) {
+      throw new AppError('El QR de ingreso se genera cuando la reserva está paga (CONFIRMADA).', 409);
+    }
+    const cancha = await obtenerCancha(reserva.canchaId);
+    const validoDesde = new Date(reserva.fechaHoraInicio.getTime() - MINUTOS_ANTES_DEL_TURNO * 60 * 1000);
+    const validoHasta = new Date(reserva.fechaHoraFin);
+
+    const token = firmarQr(
+      TiposQr.RESERVA_CANCHA,
+      { reservaId: reserva.id, usuarioId: reserva.usuarioId, sedeId: cancha.sedeId },
+      { desde: validoDesde, hasta: validoHasta }
+    );
+    return { reservaId: reserva.id, token, validoDesde, validoHasta, svg: await qrSvg(token) };
+  }
+
   async function confirmarReserva(reservaId) {
     await obtenerReserva(reservaId);
     return reservasRepo.cambiarEstado(reservaId, EstadoReservaCancha.CONFIRMADA);
@@ -117,6 +145,7 @@ function crearCanchasService({ CanchaModel, reservasRepo, tarifador, usuariosSer
   return {
     crearCancha, obtenerCancha, listarPorSede, cambiarEstado, disponibilidad,
     cotizar, reservar, obtenerReserva, reservasDeUsuario, cancelarReserva, confirmarReserva,
+    generarQrReserva,
   };
 }
 

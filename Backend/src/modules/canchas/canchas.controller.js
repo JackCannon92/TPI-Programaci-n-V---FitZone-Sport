@@ -13,6 +13,7 @@ function crearCanchasController(canchasService) {
     obtenerReserva: wrap(async (req, res) => res.json(await canchasService.obtenerReserva(req.params.id))),
     reservasDeUsuario: wrap(async (req, res) => res.json(await canchasService.reservasDeUsuario(req.params.usuarioId))),
     cancelarReserva: wrap(async (req, res) => res.json(await canchasService.cancelarReserva(req.params.id))),
+    qrReserva: wrap(async (req, res) => res.json(await canchasService.generarQrReserva(req.params.id))),
   };
 }
 

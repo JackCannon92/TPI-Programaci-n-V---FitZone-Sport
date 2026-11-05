@@ -13,6 +13,8 @@ function crearPagosController(pagosService) {
     
     obtenerPago: wrap(async (req, res) => res.json(await pagosService.obtenerPago(req.params.id))),
     
+    verificarComprobante: wrap(async (req, res) => res.json(await pagosService.verificarComprobante(req.params.token))),
+    
     comprobantePdf: wrap(async (req, res) => {
       const pdf = await pagosService.comprobantePdf(req.params.id);
       res.set('Content-Type', 'application/pdf')

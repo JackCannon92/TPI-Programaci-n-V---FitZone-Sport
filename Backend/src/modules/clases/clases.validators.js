@@ -11,7 +11,8 @@ const crearClaseValidators = [
 ];
 const reservaValidators = [body('claseId').isUUID(), body('usuarioId').isUUID()];
 const idParam = [param('id').isUUID()];
+const tokenValidators = [body('token').isString().notEmpty()];
 const usuarioIdParam = [param('usuarioId').isUUID()];
 const sedeQuery = [query('sedeId').optional().isUUID()];
 
-module.exports = { crearClaseValidators, reservaValidators, idParam, usuarioIdParam, sedeQuery };
+module.exports = { crearClaseValidators, reservaValidators, idParam, tokenValidators, usuarioIdParam, sedeQuery };

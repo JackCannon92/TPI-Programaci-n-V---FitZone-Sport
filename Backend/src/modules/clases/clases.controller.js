@@ -11,6 +11,8 @@ function crearClasesController(clasesService) {
     listaEspera: wrap(async (req, res) => res.status(201).json(await clasesService.anotarEnListaEspera(req.body))),
     verListaEspera: wrap(async (req, res) => res.json(await clasesService.listaEsperaDeClase(req.params.id))),
     reservasDeUsuario: wrap(async (req, res) => res.json(await clasesService.reservasDeUsuario(req.params.usuarioId))),
+    qrAsistencia: wrap(async (req, res) => res.json(await clasesService.generarQrAsistencia(req.params.id))),
+    asistencia: wrap(async (req, res) => res.json(await clasesService.registrarAsistencia(req.body))),
   };
 }
 

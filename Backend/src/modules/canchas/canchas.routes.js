@@ -145,12 +145,36 @@ const { validar } = require('../../common/validar');
  *       409:
  *         description: Conflicto - La cancha está en mantenimiento o el turno acaba de ser tomado por otro usuario
  */
+/**
+ * @swagger
+ * /api/canchas/reservas/{id}/qr:
+ *   get:
+ *     summary: QR de ingreso de una reserva de cancha paga (QR 1 — ADR-010)
+ *     description: >
+ *       Lo usa quien alquiló la cancha para entrar a la sede, sobre todo el cliente
+ *       externo, que no tiene QR de socio. Vale desde 30 minutos antes del turno
+ *       hasta que termina, y solo en la sede de esa cancha.
+ *     tags: [Canchas]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la reserva
+ *     responses:
+ *       200:
+ *         description: Token del QR, ventana de validez e imagen SVG
+ *       409:
+ *         description: La reserva todavía no está paga
+ */
 function crearCanchasRouter(c) {
   const router = Router();
   router.post('/', v.crearCanchaValidators, validar, c.crear);
   router.get('/sede/:sedeId', v.sedeIdParam, validar, c.listarPorSede);
   router.post('/reservas', v.reservarValidators, validar, c.reservar);
   router.get('/reservas/usuario/:usuarioId', v.usuarioIdParam, validar, c.reservasDeUsuario);
+  router.get('/reservas/:id/qr', v.idParam, validar, c.qrReserva);
   router.get('/reservas/:id', v.idParam, validar, c.obtenerReserva);
   router.patch('/reservas/:id/cancelar', v.idParam, validar, c.cancelarReserva);
   router.get('/:id/disponibilidad', v.idParam, v.disponibilidadValidators, validar, c.disponibilidad);
