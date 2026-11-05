@@ -17,7 +17,7 @@
  *     los tests puedan esperarla.
  *
  * Los eventos se nombran en pasado (son hechos) y están listados, con sus
- * oyentes, en docs/ADR-007-patrones-unidad-iii.md.
+ * oyentes, en docs/adr/ADR-009-observer-lista-espera.md.
  */
 const { EventEmitter } = require('node:events');
 

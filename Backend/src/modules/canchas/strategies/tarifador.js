@@ -7,7 +7,7 @@
  * precio base y una lista ordenada de reglas, y aplica en orden las que
  * corresponden a la reserva.
  *
- * Por qué Strategy y no Decorator (ver docs/ADR-007-patrones-unidad-iii.md):
+ * Por qué Strategy y no Decorator (ver docs/adr/ADR-007-strategy-precio-canchas.md):
  * las reglas se ACUMULAN sobre el mismo precio (descuento y además recargo).
  * En rigor, recorrer la lista con reduce es una cadena de decoradores armada
  * desde afuera; elegimos el nombre Strategy porque cada regla se puede probar
