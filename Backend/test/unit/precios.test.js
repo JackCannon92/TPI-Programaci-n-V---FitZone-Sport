@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * RF-11 · Precio dinámico de canchas (patrón Strategy — ADR-007).
+ * RF-11 · Precio dinámico de canchas (patrón Strategy — ADR-013).
  * Cada regla se prueba sola, sin base de datos, sin Express y sin red.
  */
 const { crearTarifador } = require('../../src/modules/canchas/strategies/tarifador');

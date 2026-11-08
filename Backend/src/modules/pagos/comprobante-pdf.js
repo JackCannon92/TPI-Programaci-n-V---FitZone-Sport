@@ -8,7 +8,7 @@ const fechaHora = (fecha) => new Date(fecha).toLocaleString('es-AR', { hour12: f
 /**
  * RF-14 — Genera el ticket/factura en PDF con cancha, horario y monto.
  *
- * Lleva dos QR (ADR-010):
+ * Lleva dos QR (ADR-016):
  *  - QR de ingreso (QR 1): para entrar a la sede el día del turno.
  *  - QR de verificación (QR 4): confirma que el comprobante es auténtico.
  */
@@ -41,7 +41,7 @@ function generarComprobantePdf({ pago, reserva, cancha, sede, usuario, qrs = {} 
     fila('Turno:', `${ini.toLocaleDateString('es-AR')} de ${ini.toLocaleTimeString('es-AR', f24)} a ${fin.toLocaleTimeString('es-AR', f24)} hs`);
     doc.moveDown(0.5);
 
-    // Detalle que arma el Tarifador (ADR-007): { concepto, monto }
+    // Detalle que arma el Tarifador (ADR-013): { concepto, monto }
     if (Array.isArray(reserva.detallePrecio)) {
       doc.fillColor('#5a6072').fontSize(9).text('Detalle del precio:');
       for (const d of reserva.detallePrecio) {

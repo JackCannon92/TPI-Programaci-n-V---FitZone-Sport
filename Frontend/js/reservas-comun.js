@@ -3,7 +3,7 @@
 /**
  * Piezas que comparten "Reservar cancha" y "Mis reservas":
  * el pago con la pasarela simulada (RF-13) y el QR de ingreso de la reserva
- * con su comprobante (QR 1 y QR 4 del ADR-010).
+ * con su comprobante (QR 1 y QR 4 del ADR-016).
  */
 const reservasComun = (() => {
   /** Detalle del precio que arma el Tarifador (Strategy, RF-11). */

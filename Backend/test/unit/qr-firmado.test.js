@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR firmados (ADR-010): la pieza común de los QR de reserva, asistencia y comprobante.
+ * QR firmados (ADR-016): la pieza común de los QR de reserva, asistencia y comprobante.
  */
 const { firmarQr, verificarQr, qrSvg, qrPng, TiposQr, MotivosQr } = require('../../src/common/qr-firmado');
 

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Reservas de cancha con el repositorio EN MEMORIA (patrón Repository — ADR-008).
+ * Reservas de cancha con el repositorio EN MEMORIA (patrón Repository — ADR-014).
  * El servicio real de canchas, el Tarifador real y el repositorio en memoria.
  */
 const { crearCanchasService } = require('../../src/modules/canchas/canchas.service');

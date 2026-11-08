@@ -93,7 +93,7 @@ const { validar } = require('../../common/validar');
  * @swagger
  * /api/acceso/ingreso-reserva:
  *   post:
- *     summary: Ingreso a la sede con el QR de una reserva de cancha (QR 1 — ADR-010)
+ *     summary: Ingreso a la sede con el QR de una reserva de cancha (QR 1 — ADR-016)
  *     description: >
  *       Para quien alquiló una cancha, sobre todo el cliente externo, que no tiene
  *       membresía. Valida la firma, el horario (desde 30 minutos antes del turno),
@@ -123,7 +123,7 @@ const { validar } = require('../../common/validar');
  *
  * /api/acceso/qr-offline/{usuarioId}:
  *   get:
- *     summary: QR de acceso sin conexión para un socio activo (QR 2 — ADR-010)
+ *     summary: QR de acceso sin conexión para un socio activo (QR 2 — ADR-016)
  *     description: >
  *       Firmado con Ed25519 y válido por 24 horas (o hasta que vence la membresía).
  *       El torno lo valida sin internet, solo con la clave pública.

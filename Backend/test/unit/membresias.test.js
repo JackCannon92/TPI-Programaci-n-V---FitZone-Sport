@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * RF-02 · Membresías con el repositorio EN MEMORIA (patrón Repository — ADR-008).
+ * RF-02 · Membresías con el repositorio EN MEMORIA (patrón Repository — ADR-014).
  *
  * Tests de caracterización: fijan el comportamiento que ya tenía el servicio
  * original (verificados también contra esa versión). El refactoring hacia

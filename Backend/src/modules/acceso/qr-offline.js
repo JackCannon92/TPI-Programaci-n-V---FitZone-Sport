@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR de acceso sin conexión (ADR-010, QR 2).
+ * QR de acceso sin conexión (ADR-016, QR 2).
  *
  * La consigna pide que el control de acceso (los tornos) funcione aunque se
  * caiga la conexión a internet (disponibilidad del 99,5 %). El QR dinámico del

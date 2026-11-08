@@ -46,7 +46,7 @@ function crearPagosService({ PagoModel, canchasService, usuariosService, sedesSe
     return p;
   }
 
-  /** QR 4 · Link de verificación del comprobante (ADR-010). Lleva firmados el pago y su monto. */
+  /** QR 4 · Link de verificación del comprobante (ADR-016). Lleva firmados el pago y su monto. */
   function urlVerificacion(pago) {
     const token = firmarQr(TiposQr.COMPROBANTE, { pagoId: pago.id, monto: Number(pago.monto) });
     return `${URL_PUBLICA}/api/pagos/verificar/${token}`;

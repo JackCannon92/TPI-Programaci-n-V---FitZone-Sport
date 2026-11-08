@@ -113,7 +113,7 @@ function crearCanchasService({ CanchaModel, reservasRepo, tarifador, usuariosSer
   }
 
   /**
-   * QR de la reserva de cancha (ADR-010, QR 1).
+   * QR de la reserva de cancha (ADR-016, QR 1).
    *
    * Es el QR de ingreso de quien alquila una cancha: lo necesita sobre todo el
    * cliente externo, que no tiene membresía y por eso no puede usar el QR de

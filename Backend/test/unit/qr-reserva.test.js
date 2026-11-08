@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR 1 · QR de la reserva de cancha (ADR-010).
+ * QR 1 · QR de la reserva de cancha (ADR-016).
  * Sirve para que quien alquiló una cancha (sobre todo el cliente externo) entre a la sede.
  */
 const { CANCHA, SOCIO, EXTERNO, crearCanchasDePrueba, crearAccesoDePrueba } = require('../dobles/fitzone');

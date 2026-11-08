@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR 2 · Acceso sin conexión (ADR-010).
+ * QR 2 · Acceso sin conexión (ADR-016).
  * El torno valida con la clave PÚBLICA y sin tocar la base de datos.
  */
 const crypto = require('crypto');

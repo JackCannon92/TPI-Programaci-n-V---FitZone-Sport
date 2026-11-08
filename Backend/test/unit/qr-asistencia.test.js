@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR 3 · QR de asistencia a clase (ADR-010).
+ * QR 3 · QR de asistencia a clase (ADR-016).
  * Al escanearlo en el horario de la clase, la reserva pasa a ASISTIO.
  */
 const { crearClasesService } = require('../../src/modules/clases/clases.service');

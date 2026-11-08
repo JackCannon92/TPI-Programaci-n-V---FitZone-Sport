@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR firmados: la pieza común de los QR de FitZone (ver ADR-010).
+ * QR firmados: la pieza común de los QR de FitZone (ver ADR-016).
  *
  * Un QR firmado lleva adentro un dato (payload) y una firma HMAC con el
  * secreto del servidor. Nadie puede inventar uno ni modificarlo (por ejemplo,

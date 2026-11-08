@@ -149,7 +149,7 @@ const { validar } = require('../../common/validar');
  * @swagger
  * /api/canchas/reservas/{id}/qr:
  *   get:
- *     summary: QR de ingreso de una reserva de cancha paga (QR 1 — ADR-010)
+ *     summary: QR de ingreso de una reserva de cancha paga (QR 1 — ADR-016)
  *     description: >
  *       Lo usa quien alquiló la cancha para entrar a la sede, sobre todo el cliente
  *       externo, que no tiene QR de socio. Vale desde 30 minutos antes del turno

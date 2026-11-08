@@ -99,7 +99,7 @@ const { validar } = require('../../common/validar');
  * @swagger
  * /api/pagos/verificar/{token}:
  *   get:
- *     summary: Verifica un comprobante a partir de su QR (QR 4 — ADR-010)
+ *     summary: Verifica un comprobante a partir de su QR (QR 4 — ADR-016)
  *     description: >
  *       Es el link que lleva el QR impreso en el comprobante PDF. Confirma que el
  *       pago existe, está aprobado y que el monto coincide con el cobrado.

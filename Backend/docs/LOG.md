@@ -30,13 +30,13 @@ Formato de cada entrada: `[fecha] (commit) Qué se hizo · Decisión tomada · P
 
 ## Decisiones del equipo (trabajo conjunto)
 
-- **[27/08]** Debate arquitectónico de la semana 1, entre los tres. · **Decisión:** monolito modular sobre Node.js + Express, con un módulo por dominio (usuarios, membresías, acceso, clases, canchas, pagos). Se descartan los microservicios: evitar la sobreventa de canchas (RN-02) exigiría transacciones distribuidas, y un equipo de 3 no tiene la escala operativa que piden. → ADR-003 y ADR-001. · **Problema:** la cátedra sugiere un equipo de 4 roles y somos 3 → se fusionan los roles, pero cada unidad mantiene un responsable claro.
-- **[29/08]** · **Decisión:** se descartan TypeScript, NestJS y React; backend y frontend en JavaScript vanilla. La curva de aprendizaje de esas herramientas se comía el tiempo que la materia pide dedicar a arquitectura, patrones y persistencia. → ADR-001 (revisado).
-- **[29/08]** La cátedra indica que la Unidad VI (ecosistema móvil) no es obligatoria. · **Decisión:** se elimina la app móvil y todos los roles usan una única Aplicación Web; el QR del socio (RF-04) es una página pensada para verse en el celular. Las semanas de la Unidad VI pasan a ser de refuerzo. → ADR-006. En la misma fecha se elige Supabase (plan gratuito) como hosting de PostgreSQL. → ADR-004.
+- **[27/08]** Debate arquitectónico de la semana 1, entre los tres. · **Decisión:** monolito modular sobre Node.js + Express, con un módulo por dominio (usuarios, membresías, acceso, clases, canchas, pagos). Se descartan los microservicios: evitar la sobreventa de canchas (RN-02) exigiría transacciones distribuidas, y un equipo de 3 no tiene la escala operativa que piden. → ADR-001 y ADR-005. · **Problema:** la cátedra sugiere un equipo de 4 roles y somos 3 → se fusionan los roles, pero cada unidad mantiene un responsable claro.
+- **[29/08]** · **Decisión:** se descartan TypeScript, NestJS y React; backend y frontend en JavaScript vanilla. La curva de aprendizaje de esas herramientas se comía el tiempo que la materia pide dedicar a arquitectura, patrones y persistencia. → ADR-005 (revisado).
+- **[29/08]** La cátedra indica que la Unidad VI (ecosistema móvil) no es obligatoria. · **Decisión:** se elimina la app móvil y todos los roles usan una única Aplicación Web; el QR del socio (RF-04) es una página pensada para verse en el celular. Las semanas de la Unidad VI pasan a ser de refuerzo. → ADR-012. En la misma fecha se elige Supabase (plan gratuito) como hosting de PostgreSQL. → ADR-002.
 - **[29/08 – 16/09]** Revisión externa del material de la Unidad I con otra IA (Gemini). · **Decisión:** cada observación se verificó contra los archivos antes de aplicarla. Se aplicaron las válidas (consistencia de nombres, secciones faltantes en los ADR, pruebas de humo vía Swagger) y se descartaron dos (un error de tipeo que no existía, y pasar a ES Modules, que contradecía el código en CommonJS).
 - **[03/09]** Plan de tareas del TI: 13 semanas (27/08 al Demo Day del 20/11), 76 horas prácticas, liderazgo rotativo cada dos semanas y tareas semanales repartidas entre los tres. · **Problema:** el plan se corrigió dos veces, una por la fecha real de inicio y otra para comprimirlo de 16 a 13 semanas sin perder horas. Ahora se sigue en una planilla con el estado de cada tarea.
-- **[27/10]** Indicaciones de la cátedra en el check-in (líder: Santiago): (1) mantener el plan de actividades en una hoja de Google y enviarlo por mail; (2) no usar CQRS; (3) cada patrón de diseño con su propio ADR; (4) se pueden usar dos QR (a definir con la cátedra qué alcance tiene). · **Decisión:** el 28/10 se quita CQRS del código y de la documentación, el ADR de patrones se separa en ADR-007 (Strategy), ADR-008 (Repository) y ADR-009 (Observer), y el plan pasa a Google Sheets.
-- **[28/10]** Se aclara la indicación (4): se puede usar más de un código QR para resolver necesidades del sistema. · **Decisión:** además del QR del socio (RF-04) se suman cuatro, cada uno con un solo propósito: (1) reserva de cancha, para que el cliente externo pueda entrar a la sede; (2) acceso sin conexión, para que el torno valide sin internet; (3) asistencia a clase, que por fin usa el estado `ASISTIO`; (4) verificación del comprobante PDF. → ADR-010.
+- **[27/10]** Indicaciones de la cátedra en el check-in (líder: Santiago): (1) mantener el plan de actividades en una hoja de Google y enviarlo por mail; (2) no usar CQRS; (3) cada patrón de diseño con su propio ADR; (4) se pueden usar dos QR (a definir con la cátedra qué alcance tiene). · **Decisión:** el 28/10 se quita CQRS del código y de la documentación, el ADR de patrones se separa en ADR-013 (Strategy), ADR-014 (Repository) y ADR-015 (Observer), y el plan pasa a Google Sheets.
+- **[28/10]** Se aclara la indicación (4): se puede usar más de un código QR para resolver necesidades del sistema. · **Decisión:** además del QR del socio (RF-04) se suman cuatro, cada uno con un solo propósito: (1) reserva de cancha, para que el cliente externo pueda entrar a la sede; (2) acceso sin conexión, para que el torno valide sin internet; (3) asistencia a clase, que por fin usa el estado `ASISTIO`; (4) verificación del comprobante PDF. → ADR-016.
 - **[30/10]** La cátedra pide que la bitácora sea personalizada y registre las complejidades encontradas. · **Decisión:** una bitácora por integrante en `docs/bitacoras/`, con una tabla de complejidades (qué pasó, cómo se resolvió y qué se aprendió) y el uso de IA; este archivo queda para las decisiones conjuntas y los anexos.
 - **[05/11]** Ordenamos el repositorio de GitHub: hasta ahora el código se había subido de una sola vez (15/10). · **Decisión:** desde hoy cada cambio se sube en commits separados por tema, cada integrante desde su propia cuenta, y las bitácoras citan esos commits.
 
@@ -60,15 +60,15 @@ Cada uno tuvo su frente difícil: Franco, la **base de datos** (conectar el back
 
 # Anexos — Unidad III (Patrones de diseño)
 
-Detalle que pide la consigna del laboratorio. Cada patrón tiene su propio ADR: `docs/adr/ADR-007-strategy-precio-canchas.md`, `ADR-008-repository-reservas-membresias.md` y `ADR-009-observer-lista-espera.md`.
+Detalle que pide la consigna del laboratorio. Cada patrón tiene su propio ADR: `docs/adr/ADR-013-strategy-precio-canchas.md`, `ADR-014-repository-reservas-membresias.md` y `ADR-015-observer-lista-espera.md`.
 
 ## Anexo A — Patrones aplicados y descartados
 
 | Patrón | Requerimiento | Dónde está en el código | ADR |
 |---|---|---|---|
-| Strategy | RF-11 · precio dinámico de canchas | `src/modules/canchas/strategies/` | ADR-007 |
-| Repository | RN-02 y RF-02 · reservas de cancha y membresías | `src/modules/canchas/repositorio/` y `src/modules/membresias/repositorio/` | ADR-008 |
-| Observer | RF-08 · aviso a la lista de espera | `src/common/bus-eventos.js` y `src/modules/clases/observer/` | ADR-009 |
+| Strategy | RF-11 · precio dinámico de canchas | `src/modules/canchas/strategies/` | ADR-013 |
+| Repository | RN-02 y RF-02 · reservas de cancha y membresías | `src/modules/canchas/repositorio/` y `src/modules/membresias/repositorio/` | ADR-014 |
+| Observer | RF-08 · aviso a la lista de espera | `src/common/bus-eventos.js` y `src/modules/clases/observer/` | ADR-015 |
 
 CQRS (nivel 2) se aplicó el 13/10 para el tablero del gerente y se quitó el 28/10 por indicación de la cátedra.
 
@@ -131,7 +131,7 @@ Resumen (al 28/10): 6 corregidos (O-12 y O-15 después de la Unidad III), 1 corr
 | 3 | Refactoring del módulo de precios, un commit por paso | Código hecho; **falta subir el historial** | Anexo E |
 | 4 | Repositorio de dominio para Reserva y Membresía, con traducción de RN-02 y test en memoria | Hecho | `*/repositorio/*` |
 | 5 | Consulta de lectura separada (CQRS nivel 2) | Hecha el 13/10 y **quitada el 28/10 por indicación de la cátedra** | — |
-| 6 | ADR de patrones | Hecho: un ADR por patrón | `docs/adr/ADR-007` (Strategy), `ADR-008` (Repository), `ADR-009` (Observer) |
+| 6 | ADR de patrones | Hecho: un ADR por patrón | `docs/adr/ADR-013` (Strategy), `ADR-014` (Repository), `ADR-015` (Observer) |
 
 ## Anexo E — Commits previstos
 
@@ -143,14 +143,14 @@ Resumen (al 28/10): 6 corregidos (O-12 y O-15 después de la Unidad III), 1 corr
 5. `refactor: Repository para membresías + Extract Method calcularVencimiento (O-5)`
 6. `feat: RF-08 aviso a la lista de espera con eventos de dominio (Observer)`
 7. `chore: borrar código muerto (O-4, O-13)`
-8. `docs: un ADR por patrón (ADR-007 Strategy, ADR-008 Repository, ADR-009 Observer) y bitácora`
+8. `docs: un ADR por patrón (ADR-013 Strategy, ADR-014 Repository, ADR-015 Observer) y bitácora`
 
 **Unidad V (semana 9)**
 9. `refactor: el manejador global de errores pasa a core/errorHandler.js`
 10. `test: tests unitarios con Jest`
 11. `test: tests de integración de la API con Supertest`
 
-**Códigos QR (ADR-010)**
+**Códigos QR (ADR-016)**
 12. `fix: leer nombre_completo en acceso y en el comprobante (O-12)`
 13. `fix: historial de pagos ordenado por created_at (O-15)`
 14. `feat: QR firmados; QR de reserva de cancha para el ingreso del cliente externo`
@@ -158,6 +158,6 @@ Resumen (al 28/10): 6 corregidos (O-12 y O-15 después de la Unidad III), 1 corr
 16. `feat: QR de asistencia a clase (estado ASISTIO)`
 17. `feat: comprobante con QR de ingreso y QR de verificación`
 18. `test: tests de los códigos QR`
-19. `docs: ADR-010 códigos QR, bitácora y README`
+19. `docs: ADR-016 códigos QR, bitácora y README`
 
 Cuando estén subidos, se agrega el hash de cada uno a sus entradas.

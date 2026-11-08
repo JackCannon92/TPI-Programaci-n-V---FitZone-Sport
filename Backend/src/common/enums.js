@@ -30,7 +30,7 @@ const EstadoPago = {
 const EstadoReservaClase = Object.freeze({
   CONFIRMADA: 'CONFIRMADA',
   CANCELADA: 'CANCELADA',
-  ASISTIO: 'ASISTIO', // QR 3: se marcó la asistencia escaneando el QR (ADR-010)
+  ASISTIO: 'ASISTIO', // QR 3: se marcó la asistencia escaneando el QR (ADR-016)
 });
 
 module.exports = {

@@ -85,7 +85,7 @@ const api = {
   qrAsistencia: (reservaId) => apiFetch(`/clases/reservas/${reservaId}/qr`),
   registrarAsistencia: (token) => post('/clases/asistencia', { token }),
 
-  // Acceso (RF-04, RF-05 y QR del ADR-010)
+  // Acceso (RF-04, RF-05 y QR del ADR-016)
   qrSocio: (usuarioId) => apiFetch(`/acceso/qr/${usuarioId}`),
   qrOffline: (usuarioId) => apiFetch(`/acceso/qr-offline/${usuarioId}`),
   ingreso: (token, sedeId) => post('/acceso/ingreso', { token, sedeId }),

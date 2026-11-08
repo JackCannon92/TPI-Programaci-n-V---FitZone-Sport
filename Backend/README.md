@@ -127,7 +127,7 @@ Todas las rutas empiezan con `/api`. El detalle de cada una (parámetros, cuerpo
 
 ## Códigos QR
 
-Además del QR del socio hay cuatro, cada uno para una sola cosa ([ADR-010](docs/adr/ADR-010-codigos-qr.md)). Ninguno se guarda en la base: llevan sus datos firmados, y un QR de un tipo no sirve para otro.
+Además del QR del socio hay cuatro, cada uno para una sola cosa ([ADR-016](docs/adr/ADR-016-codigos-qr.md)). Ninguno se guarda en la base: llevan sus datos firmados, y un QR de un tipo no sirve para otro.
 
 | QR | Para qué | Cómo se obtiene → dónde se usa | Vigencia |
 |---|---|---|---|
@@ -142,9 +142,9 @@ Cada patrón tiene su propio ADR, con el requerimiento que lo motiva, las altern
 
 | Patrón | Para qué | Dónde | ADR |
 |---|---|---|---|
-| **Strategy** | Precio dinámico de canchas (RF-11): cada regla es una estrategia y el `Tarifador` las aplica en orden | `src/modules/canchas/strategies/` | [ADR-007](docs/adr/ADR-007-strategy-precio-canchas.md) |
-| **Repository** | Aislar la base de datos en Reserva de cancha y Membresía, y traducir el error de RN-02 a un 409 | `src/modules/canchas/repositorio/` · `src/modules/membresias/repositorio/` | [ADR-008](docs/adr/ADR-008-repository-reservas-membresias.md) |
-| **Observer** | Avisar a la lista de espera cuando se libera un cupo, sin acoplar la cancelación al aviso (RF-08) | `src/common/bus-eventos.js` · `src/modules/clases/observer/` | [ADR-009](docs/adr/ADR-009-observer-lista-espera.md) |
+| **Strategy** | Precio dinámico de canchas (RF-11): cada regla es una estrategia y el `Tarifador` las aplica en orden | `src/modules/canchas/strategies/` | [ADR-013](docs/adr/ADR-013-strategy-precio-canchas.md) |
+| **Repository** | Aislar la base de datos en Reserva de cancha y Membresía, y traducir el error de RN-02 a un 409 | `src/modules/canchas/repositorio/` · `src/modules/membresias/repositorio/` | [ADR-014](docs/adr/ADR-014-repository-reservas-membresias.md) |
+| **Observer** | Avisar a la lista de espera cuando se libera un cupo, sin acoplar la cancelación al aviso (RF-08) | `src/common/bus-eventos.js` · `src/modules/clases/observer/` | [ADR-015](docs/adr/ADR-015-observer-lista-espera.md) |
 
 Los patrones que se evaluaron y no se aplicaron (Builder, State, Chain of Responsibility, Template Method, Abstract Factory, Command y Singleton), con su motivo, están en el Anexo A de [`docs/LOG.md`](docs/LOG.md).
 
@@ -154,7 +154,7 @@ Los patrones que se evaluaron y no se aplicaron (Builder, State, Chain of Respon
 |---|---|
 | [`docs/LOG.md`](docs/LOG.md) | Bitácora del equipo: decisiones conjuntas y anexos de la Unidad III |
 | [`docs/bitacoras/`](docs/bitacoras/) | Bitácora personal de cada integrante, con las complejidades que encontró y cómo las resolvió |
-| [`docs/adr/`](docs/adr/README.md) | Registro de decisiones de arquitectura (ADR-001 a ADR-010) |
+| [`docs/adr/`](docs/adr/README.md) | Registro de decisiones de arquitectura (ADR-005 a ADR-016) |
 | [`docs/esquema-base.sql`](docs/esquema-base.sql) | Script para crear la base completa en Supabase |
 | [`docs/trigger-cupos-clases.sql`](docs/trigger-cupos-clases.sql) | Solo el trigger de cupos, para bases ya existentes |
 

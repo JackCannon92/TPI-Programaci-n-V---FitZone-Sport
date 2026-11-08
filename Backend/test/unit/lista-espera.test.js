@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * RF-08 · Aviso a la lista de espera (patrón Observer — ADR-009).
+ * RF-08 · Aviso a la lista de espera (patrón Observer — ADR-015).
  */
 const { crearBusEventos, Eventos } = require('../../src/common/bus-eventos');
 const { crearAvisoListaEspera } = require('../../src/modules/clases/observer/waitlistNotifier');

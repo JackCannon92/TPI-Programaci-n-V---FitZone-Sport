@@ -22,7 +22,7 @@ En esta bitácora cuento lo que hice en el TPI, las decisiones que tomé y, sobr
 | 8 | La lista de espera no avisaba nunca | En una base creada por Sequelize las clases nunca se llenaban: el cupo lo descuenta un trigger que esa base no tenía. | Dejé el trigger en un script aparte (`docs/trigger-cupos-clases.sql`) y lo anoté como olor O-9. | Que una regla de negocio escondida en la base es fácil de perder. |
 | 9 | **El front** | Al encarar las pantallas de la Unidad IV, el front tenía solo login, panel y listado de usuarios: faltaban las de reservas, clases y acceso, y conectarlas con la API real. | Las estoy armando sobre la base existente, con una capa de servicio (`js/api.js`) y piezas comunes (`js/ui.js`). | A organizar un front sin framework para no repetir código en cada pantalla. |
 | 10 | Detalles del front contra la base real | El backend no tiene contraseñas; la base solo acepta canchas de fútbol y pádel; de noche no quedaban turnos para el día y la grilla aparecía vacía; el lector de QR por cámara necesita internet. | Sesión simulada en el navegador (documentada), alta de canchas solo con esos dos tipos, la grilla pasa sola al día siguiente si hoy no hay turnos, y en Recepción se puede pegar el código si no hay cámara. | Que probar con datos y horarios reales muestra cosas que en el papel no aparecen. |
-| 11 | Entender qué era "CQRS" y qué era "QR" | Cuando la cátedra dijo "no usar CQRS" y "se pueden usar dos QR" pensé que eran lo mismo. | Lo consulté: CQRS es separar lecturas de escrituras; QR es el código. Saqué CQRS y sumé los QR (ADR-010). | A preguntar antes de suponer. |
+| 11 | Entender qué era "CQRS" y qué era "QR" | Cuando la cátedra dijo "no usar CQRS" y "se pueden usar dos QR" pensé que eran lo mismo. | Lo consulté: CQRS es separar lecturas de escrituras; QR es el código. Saqué CQRS y sumé los QR (ADR-016). | A preguntar antes de suponer. |
 
 ---
 
@@ -55,7 +55,7 @@ Formato: `[fecha] (commit) Qué hice · Decisión · Complejidad y cómo la reso
 - **[13/10]** Arreglo de `AppError` (ver tabla, n.º 6).
 - **[13/10]** CQRS nivel 2 para el tablero del gerente. · Se quitó el 28/10 por indicación de la cátedra.
 - **[15/10]** ADR de patrones y bitácora. Los patrones se aplicaron en la semana 7, dentro de la ventana que fija la cátedra para el laboratorio de la Unidad III (semanas 6 y 7).
-- **[28/10]** Ajustes por las indicaciones de la cátedra: saqué CQRS y separé el ADR de patrones en uno por patrón (ADR-007 Strategy, ADR-008 Repository, ADR-009 Observer).
+- **[28/10]** Ajustes por las indicaciones de la cátedra: saqué CQRS y separé el ADR de patrones en uno por patrón (ADR-013 Strategy, ADR-014 Repository, ADR-015 Observer).
 
 ### Unidad IV — apoyo
 - **[02/10]** Pantallas base conectadas al backend real: login por DNI, registro, panel con membresía y aforo, y listado de usuarios. · **Complejidad:** el backend no maneja contraseñas → sesión simulada en el navegador, documentada en el código.
@@ -67,7 +67,7 @@ Formato: `[fecha] (commit) Qué hice · Decisión · Complejidad y cómo la reso
 - **[28/10]** Tests de los códigos QR: 36 unitarios y 9 de integración. → En total **99 tests** (72 unitarios y 27 de integración).
 - [ ] **Semana 10:** pipeline CI/CD con GitHub Actions, Dockerfile y docker-compose.
 
-### Códigos QR (indicación de la cátedra del 27/10) → ADR-010
+### Códigos QR (indicación de la cátedra del 27/10) → ADR-016
 - **[28/10]** Cuatro QR además del del socio: reserva de cancha (para que entre el cliente externo), acceso sin conexión (el molinete valida sin internet, firma Ed25519), asistencia a clase (estado `ASISTIO`) y verificación del comprobante PDF. · **Decisión:** clave pública para el QR sin conexión, porque con HMAC el molinete necesitaría el secreto. · **Complejidad:** al probar contra una base real aparecieron tres errores: el comprobante decía "Cliente: undefined" (O-12), el detalle del precio salía "undefined: $NaN" (un error que había quedado de la Unidad III) y el historial de pagos fallaba por el nombre de una columna (O-15). Los corregí los tres.
 
 ### Repositorio

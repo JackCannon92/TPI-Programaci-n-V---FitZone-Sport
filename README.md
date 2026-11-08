@@ -65,7 +65,7 @@ Cada carpeta tiene su propio `README.md` con el detalle.
 | III · Patrones de diseño | Hecha: Strategy, Repository y Observer, con un ADR por patrón |
 | IV · Aplicación Web | En curso |
 | V · Testing y CI/CD | Tests hechos (Jest y Supertest); CI/CD con GitHub Actions y Docker en curso |
-| VI · Móvil | No obligatoria: se descartó (ADR-006) |
+| VI · Móvil | No obligatoria: se descartó (ADR-012) |
 
 ## Uso de inteligencia artificial
 

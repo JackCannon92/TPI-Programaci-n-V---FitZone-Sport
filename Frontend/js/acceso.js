@@ -21,7 +21,7 @@
   }
   vistaSocio();
 
-  // ---------- Socio: QR dinámico (RF-04) y QR sin conexión (ADR-010) ----------
+  // ---------- Socio: QR dinámico (RF-04) y QR sin conexión (ADR-016) ----------
   function vistaSocio() {
     bajada.textContent = 'Mostrá este QR en el molinete de cualquier sede. Cambia cada minuto, así una captura de pantalla vieja no sirve.';
     contenido.innerHTML = `

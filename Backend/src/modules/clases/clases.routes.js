@@ -153,7 +153,7 @@ const { validar } = require('../../common/validar');
  * @swagger
  * /api/clases/reservas/{id}/qr:
  *   get:
- *     summary: QR de asistencia de una reserva de clase confirmada (QR 3 — ADR-010)
+ *     summary: QR de asistencia de una reserva de clase confirmada (QR 3 — ADR-016)
  *     description: Vale desde 30 minutos antes de la clase hasta 60 minutos después de que empezó.
  *     tags: [Clases]
  *     parameters:

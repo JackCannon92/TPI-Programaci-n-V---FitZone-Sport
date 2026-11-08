@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Tests de integración (Supertest) de los QR (ADR-010).
+ * Tests de integración (Supertest) de los QR (ADR-016).
  *
  * Se arman los routers reales de canchas, acceso, clases y pagos con sus
  * servicios reales; solo la persistencia va en memoria, así no hace falta

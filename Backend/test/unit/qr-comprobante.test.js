@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * QR 4 · QR de verificación del comprobante (ADR-010).
+ * QR 4 · QR de verificación del comprobante (ADR-016).
  */
 const { crearPagosService } = require('../../src/modules/pagos/pagos.service');
 const { crearPasarelaMock } = require('../../src/modules/pagos/pasarela-mock');

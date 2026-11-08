@@ -29,7 +29,7 @@ const { crearClasesService } = require('../modules/clases/clases.service');
 const { crearPagosService } = require('../modules/pagos/pagos.service');
 const { crearPasarelaMock } = require('../modules/pagos/pasarela-mock');
 
-// Unidad III · Patrones de diseño (un ADR por patrón: docs/adr/ADR-007, ADR-008 y ADR-009)
+// Unidad III · Patrones de diseño (un ADR por patrón: docs/adr/ADR-013, ADR-014 y ADR-015)
 // Strategy (RF-11): precio de canchas
 const { crearTarifador } = require('../modules/canchas/strategies/tarifador');
 const { crearPrecioEstandar } = require('../modules/canchas/strategies/standarPricing');
@@ -119,7 +119,7 @@ const setupCompositionRoot = () => {
         eventos
     });
     
-    // Acceso usa el servicio de canchas para el QR de reserva (ADR-010)
+    // Acceso usa el servicio de canchas para el QR de reserva (ADR-016)
     const accesoService = crearAccesoService({
         usuariosService,
         sedesService,

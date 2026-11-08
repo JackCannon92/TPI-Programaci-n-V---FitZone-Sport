@@ -1,6 +1,6 @@
 # FitZone Sports — Aplicación Web
 
-Frontend en HTML, CSS y JavaScript vanilla (sin frameworks, ver ADR-001 y ADR-006). Habla con la API del backend en `http://localhost:3000/api` (se cambia en `js/api.js`).
+Frontend en HTML, CSS y JavaScript vanilla (sin frameworks, ver ADR-006 y ADR-012). Habla con la API del backend en `http://localhost:3000/api` (se cambia en `js/api.js`).
 
 ## Cómo abrirla
 
@@ -17,8 +17,8 @@ Frontend en HTML, CSS y JavaScript vanilla (sin frameworks, ver ADR-001 y ADR-00
 | Reservar cancha | `reservar.html` | Grilla de turnos, precio dinámico con su detalle, pago y QR de ingreso | RF-10, RF-11, RF-13, RN-02 |
 | Clases | `clases.html` | Reservar lugar, lista de espera y QR de asistencia | RF-06 a RF-08, RN-03 |
 | Mis reservas | `mis-reservas.html` | Pagar lo pendiente, cancelar, QR, comprobante PDF e historial de pagos | RF-14 |
-| Mi acceso | `acceso.html` | QR del socio que cambia cada minuto y QR sin conexión; el externo ve el QR de sus reservas | RF-04, ADR-010 |
-| Recepción | `recepcion.html` | Escanea cualquier QR (cámara o código pegado), registra ingreso y salida, aforo en vivo | RF-04, RF-05, RN-01, ADR-010 |
+| Mi acceso | `acceso.html` | QR del socio que cambia cada minuto y QR sin conexión; el externo ve el QR de sus reservas | RF-04, ADR-016 |
+| Recepción | `recepcion.html` | Escanea cualquier QR (cámara o código pegado), registra ingreso y salida, aforo en vivo | RF-04, RF-05, RN-01, ADR-016 |
 | Gestión | `gestion.html` | Alta de sedes, canchas y clases; cancha en mantenimiento | RF-12 |
 | Usuarios | `usuarios.html` | Listado con búsqueda y estado de la membresía | RF-02 |
 

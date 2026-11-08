@@ -131,7 +131,7 @@ function reservasDeUsuario(usuarioId) {
     });
   }
   /**
-   * QR 3 · QR de asistencia a una clase (ADR-010).
+   * QR 3 · QR de asistencia a una clase (ADR-016).
    * Se emite para una reserva confirmada; el recepcionista o el instructor lo
    * escanea al empezar la clase y la reserva pasa a ASISTIO.
    */
