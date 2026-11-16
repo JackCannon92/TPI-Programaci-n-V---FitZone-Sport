@@ -24,7 +24,7 @@ Los lineamientos de entrega exigen que el sistema se levante con un solo comando
 
 ## Decisión
 
-**Contenerización.** La API tiene su `Dockerfile` (Node 20). Un `docker-compose.yml` levanta dos servicios: `api` y `db` (PostgreSQL 16). Al crear la base por primera vez se ejecutan el esquema (`docs/esquema-base.sql`) y la semilla con las 25 sedes y un usuario por rol. La configuración va por variables de entorno; los secretos nunca se incluyen en la imagen ni en el repositorio.
+**Contenerización.** La API tiene su `Dockerfile` (Node 20). Un `docker-compose.yml` en la raíz levanta tres servicios: `db` (PostgreSQL 16), `api` y `web` (la aplicación web servida con nginx). Al crear la base por primera vez se ejecutan los scripts de `Backend/db/`: el esquema (`01-esquema.sql`) y la semilla con las 25 sedes y un usuario por rol (`02-seed.sql`). La configuración va por variables de entorno; los secretos nunca se incluyen en la imagen ni en el repositorio.
 
 **Pipeline (GitHub Actions)**, en cada Pull Request y en cada push a `main`:
 

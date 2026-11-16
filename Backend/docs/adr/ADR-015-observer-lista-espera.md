@@ -54,7 +54,7 @@ Reglas adoptadas:
 - El flujo completo no se ve en el servicio. Se mitiga con la tabla de eventos de este ADR y con todas las suscripciones en `compositionRoot.js`.
 - El evento vive en memoria, así que si el proceso se cae entre el guardado y el aviso, el aviso se pierde. Si el aviso pasara a ser crítico, haría falta guardarlo como pendiente en la base (bandeja de salida); queda fuera del alcance del TI.
 - Todavía no hay un canal real de notificación (push o mail): el aviso queda registrado en la base (`notificado`) y en el log.
-- Para que la clase se llene y la lista de espera se use, la base necesita el trigger que descuenta los cupos (`docs/trigger-cupos-clases.sql`, olor O-9).
+- Para que la clase se llene y la lista de espera se use, la base necesita el trigger que descuenta los cupos (incluido en `db/01-esquema.sql`; para bases viejas, `docs/trigger-cupos-clases.sql`; olor O-9).
 
 ## Cómo se verifica
 

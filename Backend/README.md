@@ -66,7 +66,7 @@ docs/                       Bitácora, ADR y scripts SQL
 
 2. **Configurar las variables de entorno.** Copiar `.env.example` como `.env` y completar `DATABASE_URL` con la cadena de conexión de Supabase y `QR_SECRET` con un texto largo cualquiera. `URL_PUBLICA` (la dirección que va impresa en el QR del comprobante) ya viene con `http://localhost:3000`. El `.env` tiene la contraseña de la base: está en el `.gitignore` y no se sube nunca.
 
-3. **Crear las tablas (solo la primera vez).** En Supabase → **SQL Editor** → **New query**, pegar el contenido de [`docs/esquema-base.sql`](docs/esquema-base.sql) y ejecutarlo. Crea las 11 tablas, los índices y el trigger que descuenta los cupos de las clases.
+3. **Crear las tablas (solo la primera vez).** En Supabase → **SQL Editor** → **New query**, pegar el contenido de [`db/01-esquema.sql`](db/01-esquema.sql) y ejecutarlo. Crea las 11 tablas, los índices y el trigger que descuenta los cupos de las clases. Después, para tener datos de prueba (25 sedes, canchas, clases y un usuario por rol), correr [`db/02-seed.sql`](db/02-seed.sql). Con Docker no hace falta: el `docker-compose.yml` de la raíz corre los dos scripts solo.
    > Si la base ya existía y se había creado desde Sequelize, falta el trigger de cupos: correr solo [`docs/trigger-cupos-clases.sql`](docs/trigger-cupos-clases.sql). Sin ese trigger, las clases nunca se llenan y la lista de espera no se puede usar.
 
 4. **Levantar la API**
@@ -155,7 +155,8 @@ Los patrones que se evaluaron y no se aplicaron (Builder, State, Chain of Respon
 | [`docs/LOG.md`](docs/LOG.md) | Bitácora del equipo: decisiones conjuntas y anexos de la Unidad III |
 | [`docs/bitacoras/`](docs/bitacoras/) | Bitácora personal de cada integrante, con las complejidades que encontró y cómo las resolvió |
 | [`docs/adr/`](docs/adr/README.md) | Registro de decisiones de arquitectura (ADR-005 a ADR-016) |
-| [`docs/esquema-base.sql`](docs/esquema-base.sql) | Script para crear la base completa en Supabase |
+| [`db/01-esquema.sql`](db/01-esquema.sql) | Script para crear la base completa (Supabase o Docker) |
+| [`db/02-seed.sql`](db/02-seed.sql) | Datos de prueba: 25 sedes, canchas, clases y un usuario por rol |
 | [`docs/trigger-cupos-clases.sql`](docs/trigger-cupos-clases.sql) | Solo el trigger de cupos, para bases ya existentes |
 
 Todos los ADR del equipo (Unidades I, II y III) están en [`docs/adr/`](docs/adr/README.md), con su índice.
