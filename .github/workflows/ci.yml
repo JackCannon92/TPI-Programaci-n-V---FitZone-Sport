@@ -1,0 +1,80 @@
+# Pipeline de integración y entrega continuas (ADR-009).
+# Etapas: pruebas y cobertura → imagen de Docker → despliegue en el entorno de pruebas.
+# Corre en cada Pull Request y en cada push a main. Si una etapa falla, las siguientes no corren.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pruebas:
+    name: 1 · Pruebas y cobertura
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Backend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Pruebas unitarias y de integración, con umbral de cobertura (ADR-008)
+        run: npm run test:cov
+
+      - name: Guardar el reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-cobertura
+          path: Backend/coverage/
+
+      - name: El contrato swagger.json está al día con las rutas
+        run: |
+          npm run swagger:export
+          git diff --exit-code swagger.json
+
+  imagen:
+    name: 2 · Imagen de Docker
+    needs: pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir la imagen de la API, etiquetada con el commit
+        run: docker build -t fitzone-api:${{ github.sha }} Backend
+
+  entorno-de-pruebas:
+    name: 3 · Despliegue en el entorno de pruebas
+    needs: imagen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Levantar base, API y aplicación web
+        run: docker compose up -d --build --wait --wait-timeout 180
+
+      - name: Prueba de humo
+        run: |
+          curl -fsS http://localhost:3000/api/health
+          sedes=$(curl -fsS http://localhost:3000/api/v1/sedes | jq length)
+          echo "Sedes cargadas por el seed: $sedes"
+          test "$sedes" -ge 25
+          curl -fsS -o /dev/null http://localhost:8080/index.html
+
+      - name: Logs de los contenedores (si algo falló)
+        if: failure()
+        run: docker compose logs
+
+      - name: Bajar el entorno
+        if: always()
+        run: docker compose down -v

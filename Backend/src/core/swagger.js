@@ -30,3 +30,4 @@ const setupSwagger = (app) => {
 };
 
 module.exports = setupSwagger;
+module.exports.swaggerSpec = swaggerSpec; // lo usa scripts/exportar-swagger.js

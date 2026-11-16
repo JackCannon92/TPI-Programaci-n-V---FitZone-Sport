@@ -1,0 +1,1327 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API FitZone Sports",
+    "version": "1.0.0",
+    "description": "Documentación interactiva del Trabajo Integrador (Módulo 1)"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor Local"
+    }
+  ],
+  "paths": {
+    "/api/acceso/aforo/{sedeId}": {
+      "get": {
+        "summary": "Consulta la cantidad de personas adentro y los cupos disponibles (RF-05)",
+        "tags": [
+          "Acceso"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sedeId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cálculo de aforo en tiempo real obtenido"
+          }
+        }
+      }
+    },
+    "/api/acceso/clave-publica": {
+      "get": {
+        "summary": "Clave pública que se instala en los tornos para validar el QR sin conexión (QR 2)",
+        "tags": [
+          "Acceso"
+        ],
+        "responses": {
+          "200": {
+            "description": "Clave pública Ed25519 en formato PEM"
+          }
+        }
+      }
+    },
+    "/api/acceso/egreso": {
+      "post": {
+        "summary": "Registra la salida de un usuario liberando el aforo (RF-05)",
+        "tags": [
+          "Acceso"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "usuarioId",
+                  "sedeId"
+                ],
+                "properties": {
+                  "usuarioId": {
+                    "type": "string",
+                    "description": "UUID del usuario que sale"
+                  },
+                  "sedeId": {
+                    "type": "string",
+                    "description": "UUID de la sede"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Egreso registrado correctamente"
+          },
+          "404": {
+            "description": "El usuario no figura adentro de esta sede"
+          }
+        }
+      }
+    },
+    "/api/acceso/ingreso": {
+      "post": {
+        "summary": "Registra el ingreso validando token, membresía y aforo (RF-04, RF-05, RN-01)",
+        "tags": [
+          "Acceso"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Token extraído del endpoint generador de QR"
+                  },
+                  "sedeId": {
+                    "type": "string",
+                    "description": "UUID de la sede a la que intenta ingresar"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ingreso registrado exitosamente"
+          },
+          "401": {
+            "description": "QR inválido o vencido"
+          },
+          "403": {
+            "description": "Membresía vencida"
+          },
+          "409": {
+            "description": "Aforo completo o el usuario ya figura adentro de otra sede"
+          }
+        }
+      }
+    },
+    "/api/acceso/ingreso-reserva": {
+      "post": {
+        "summary": "Ingreso a la sede con el QR de una reserva de cancha (QR 1 — ADR-016)",
+        "description": "Para quien alquiló una cancha, sobre todo el cliente externo, que no tiene membresía. Valida la firma, el horario (desde 30 minutos antes del turno), la sede y que la reserva siga confirmada. Aplica RN-01 y el aforo.\n",
+        "tags": [
+          "Acceso"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Token que devuelve GET /api/canchas/reservas/{id}/qr"
+                  },
+                  "sedeId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ingreso registrado"
+          },
+          "401": {
+            "description": "QR inválido, todavía no vigente o vencido"
+          },
+          "403": {
+            "description": "La reserva es de otra sede"
+          },
+          "409": {
+            "description": "Reserva cancelada, RN-01 o aforo completo"
+          }
+        }
+      }
+    },
+    "/api/acceso/qr-offline/{usuarioId}": {
+      "get": {
+        "summary": "QR de acceso sin conexión para un socio activo (QR 2 — ADR-016)",
+        "description": "Firmado con Ed25519 y válido por 24 horas (o hasta que vence la membresía). El torno lo valida sin internet, solo con la clave pública.\n",
+        "tags": [
+          "Acceso"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuarioId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token, validez e imagen SVG"
+          },
+          "403": {
+            "description": "El usuario no es un socio con la membresía activa"
+          }
+        }
+      }
+    },
+    "/api/acceso/qr/{usuarioId}": {
+      "get": {
+        "summary": "Genera el token QR dinámico para un socio (RF-04)",
+        "tags": [
+          "Acceso"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuarioId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token generado exitosamente (vigente por 1 minuto)"
+          }
+        }
+      }
+    },
+    "/api/acceso/validar-offline": {
+      "post": {
+        "summary": "Valida un QR sin conexión como lo haría el torno, sin consultar la base (QR 2)",
+        "tags": [
+          "Acceso"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "{ valido: true, usuarioId, nombre, venceMembresia } o { valido: false, motivo }"
+          }
+        }
+      }
+    },
+    "/api/canchas": {
+      "post": {
+        "summary": "Alta de canchas por sede con costo y tipo (RF-09)",
+        "tags": [
+          "Canchas"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "sedeId",
+                  "nombre",
+                  "tipo",
+                  "precioHora"
+                ],
+                "properties": {
+                  "sedeId": {
+                    "type": "string"
+                  },
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": [
+                      "FUTBOL",
+                      "PADEL",
+                      "TENIS",
+                      "BASQUET"
+                    ]
+                  },
+                  "precioHora": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cancha creada exitosamente"
+          }
+        }
+      }
+    },
+    "/api/canchas/{id}/disponibilidad": {
+      "get": {
+        "summary": "Devuelve la grilla horaria de turnos disponibles y ocupados (RF-10)",
+        "tags": [
+          "Canchas"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "fecha",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2026-10-15"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de slots horarios con bandera indicando si están libres o son hora pico"
+          }
+        }
+      }
+    },
+    "/api/canchas/{id}/estado": {
+      "patch": {
+        "summary": "Inhabilita la cancha por mantenimiento bloqueando reservas futuras (RF-12)",
+        "tags": [
+          "Canchas"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "UUID de la cancha",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": {
+                    "type": "string",
+                    "enum": [
+                      "DISPONIBLE",
+                      "MANTENIMIENTO",
+                      "INACTIVA"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estado actualizado exitosamente"
+          }
+        }
+      }
+    },
+    "/api/canchas/{id}/precio": {
+      "get": {
+        "summary": "Cotiza el valor de una reserva (Precio base fijo por hora)",
+        "tags": [
+          "Canchas"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "usuarioId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "inicio",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-10-15T19:00:00Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Precio base de la cancha calculado exitosamente"
+          }
+        }
+      }
+    },
+    "/api/canchas/reservas": {
+      "post": {
+        "summary": "Reserva un turno resolviendo la concurrencia en BD (RN-02)",
+        "tags": [
+          "Canchas"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "canchaId",
+                  "usuarioId",
+                  "fechaHoraInicio"
+                ],
+                "properties": {
+                  "canchaId": {
+                    "type": "string"
+                  },
+                  "usuarioId": {
+                    "type": "string"
+                  },
+                  "fechaHoraInicio": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reserva creada con éxito"
+          },
+          "409": {
+            "description": "Conflicto - La cancha está en mantenimiento o el turno acaba de ser tomado por otro usuario"
+          }
+        }
+      }
+    },
+    "/api/canchas/reservas/{id}/qr": {
+      "get": {
+        "summary": "QR de ingreso de una reserva de cancha paga (QR 1 — ADR-016)",
+        "description": "Lo usa quien alquiló la cancha para entrar a la sede, sobre todo el cliente externo, que no tiene QR de socio. Vale desde 30 minutos antes del turno hasta que termina, y solo en la sede de esa cancha.\n",
+        "tags": [
+          "Canchas"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID de la reserva"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token del QR, ventana de validez e imagen SVG"
+          },
+          "409": {
+            "description": "La reserva todavía no está paga"
+          }
+        }
+      }
+    },
+    "/api/canchas/sede/{sedeId}": {
+      "get": {
+        "summary": "Lista todas las canchas de una sucursal específica",
+        "tags": [
+          "Canchas"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sedeId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Arreglo de canchas disponibles en la sede"
+          }
+        }
+      }
+    },
+    "/api/clases": {
+      "post": {
+        "summary": "Crea una nueva clase grupal con capacidad máxima (RF-06)",
+        "tags": [
+          "Clases"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "sedeId",
+                  "tipo",
+                  "instructor",
+                  "fechaHora",
+                  "capacidadMaxima"
+                ],
+                "properties": {
+                  "sedeId": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "example": "Spinning"
+                  },
+                  "instructor": {
+                    "type": "string"
+                  },
+                  "fechaHora": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "capacidadMaxima": {
+                    "type": "integer",
+                    "example": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Clase creada exitosamente"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lista las clases programadas (permite filtrar por sede)",
+        "tags": [
+          "Clases"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sedeId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Arreglo de clases disponibles"
+          }
+        }
+      }
+    },
+    "/api/clases/{id}": {
+      "get": {
+        "summary": "Obtiene los detalles de una clase específica",
+        "tags": [
+          "Clases"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos de la clase"
+          }
+        }
+      }
+    },
+    "/api/clases/{id}/lista-espera": {
+      "get": {
+        "summary": "Muestra los usuarios anotados en la lista de espera",
+        "tags": [
+          "Clases"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de espera actual"
+          }
+        }
+      }
+    },
+    "/api/clases/asistencia": {
+      "post": {
+        "summary": "Marca la asistencia escaneando el QR (la reserva pasa a ASISTIO) (QR 3)",
+        "tags": [
+          "Clases"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reserva con estado ASISTIO"
+          },
+          "401": {
+            "description": "QR inválido o fuera del horario de la clase"
+          },
+          "409": {
+            "description": "La asistencia ya estaba registrada o la reserva fue cancelada"
+          }
+        }
+      }
+    },
+    "/api/clases/lista-espera": {
+      "post": {
+        "summary": "Anota a un usuario en la lista de espera cuando la clase está llena (RF-08)",
+        "tags": [
+          "Clases"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "claseId",
+                  "usuarioId"
+                ],
+                "properties": {
+                  "claseId": {
+                    "type": "string"
+                  },
+                  "usuarioId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario agregado a la cola de espera"
+          }
+        }
+      }
+    },
+    "/api/clases/reservas": {
+      "post": {
+        "summary": "Reserva un cupo y lo decrementa de la clase (RF-07)",
+        "tags": [
+          "Clases"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "claseId",
+                  "usuarioId"
+                ],
+                "properties": {
+                  "claseId": {
+                    "type": "string"
+                  },
+                  "usuarioId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reserva confirmada"
+          },
+          "400": {
+            "description": "La clase no tiene cupos disponibles"
+          }
+        }
+      }
+    },
+    "/api/clases/reservas/{id}/cancelar": {
+      "patch": {
+        "summary": "Cancela una reserva y aplica penalidad si es con menos de 2hs de aviso (RF-07)",
+        "tags": [
+          "Clases"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reserva cancelada exitosamente y cupo liberado"
+          }
+        }
+      }
+    },
+    "/api/clases/reservas/{id}/qr": {
+      "get": {
+        "summary": "QR de asistencia de una reserva de clase confirmada (QR 3 — ADR-016)",
+        "description": "Vale desde 30 minutos antes de la clase hasta 60 minutos después de que empezó.",
+        "tags": [
+          "Clases"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID de la reserva de clase"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token, ventana de validez e imagen SVG"
+          },
+          "409": {
+            "description": "La reserva no está confirmada"
+          }
+        }
+      }
+    },
+    "/api/clases/reservas/usuario/{usuarioId}": {
+      "get": {
+        "summary": "Lista todas las reservas de clases realizadas por un usuario",
+        "tags": [
+          "Clases"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuarioId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Historial de clases del usuario"
+          }
+        }
+      }
+    },
+    "/api/membresias/{id_usuario}": {
+      "get": {
+        "summary": "Obtiene el estado actual de la membresía de un usuario (RF-02)",
+        "tags": [
+          "Membresías"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado de la membresía obtenido con éxito"
+          },
+          "404": {
+            "description": "Membresía no encontrada"
+          }
+        }
+      }
+    },
+    "/api/membresias/{id_usuario}/renovar": {
+      "put": {
+        "summary": "Renueva el plan de membresía de un socio (RF-02)",
+        "tags": [
+          "Membresías"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "UUID del usuario"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "plan"
+                ],
+                "properties": {
+                  "plan": {
+                    "type": "string",
+                    "enum": [
+                      "MENSUAL",
+                      "TRIMESTRAL",
+                      "ANUAL"
+                    ],
+                    "example": "ANUAL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Membresía renovada con éxito"
+          }
+        }
+      }
+    },
+    "/api/membresias/{id_usuario}/suspender": {
+      "patch": {
+        "summary": "Suspende la membresía de un socio (RF-02)",
+        "tags": [
+          "Membresías"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "UUID del usuario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Membresía suspendida exitosamente"
+          }
+        }
+      }
+    },
+    "/api/pagos": {
+      "post": {
+        "summary": "Paga una reserva a través de la pasarela mock (RF-13)",
+        "tags": [
+          "Pagos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reservaId",
+                  "usuarioId",
+                  "tarjeta"
+                ],
+                "properties": {
+                  "reservaId": {
+                    "type": "string"
+                  },
+                  "usuarioId": {
+                    "type": "string"
+                  },
+                  "tarjeta": {
+                    "type": "object",
+                    "required": [
+                      "numero",
+                      "titular",
+                      "vencimiento",
+                      "cvv"
+                    ],
+                    "properties": {
+                      "numero": {
+                        "type": "string",
+                        "example": "4500123456789012"
+                      },
+                      "titular": {
+                        "type": "string",
+                        "example": "Juan Perez"
+                      },
+                      "vencimiento": {
+                        "type": "string",
+                        "example": "12/28"
+                      },
+                      "cvv": {
+                        "type": "string",
+                        "example": "123"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pago procesado exitosamente"
+          },
+          "402": {
+            "description": "Pago rechazado (ej. tarjeta terminada en 0000)"
+          }
+        }
+      }
+    },
+    "/api/pagos/{id}": {
+      "get": {
+        "summary": "Obtiene el detalle de un cobro específico",
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos del pago y token almacenado (RNF-02)"
+          }
+        }
+      }
+    },
+    "/api/pagos/{id}/comprobante": {
+      "get": {
+        "summary": "Descarga el ticket de pago en formato PDF (RF-14)",
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Archivo PDF descargable",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pagos/usuario/{usuarioId}": {
+      "get": {
+        "summary": "Lista el historial de pagos de un usuario",
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuarioId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Arreglo con el historial de pagos"
+          }
+        }
+      }
+    },
+    "/api/pagos/verificar/{token}": {
+      "get": {
+        "summary": "Verifica un comprobante a partir de su QR (QR 4 — ADR-016)",
+        "description": "Es el link que lleva el QR impreso en el comprobante PDF. Confirma que el pago existe, está aprobado y que el monto coincide con el cobrado.\n",
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{ valido: true, comprobante } o { valido: false, motivo }"
+          }
+        }
+      }
+    },
+    "/api/sedes": {
+      "post": {
+        "summary": "Crea una nueva sede (RNF-04)",
+        "tags": [
+          "Sedes"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "example": "FitZone Sede Centro"
+                  },
+                  "direccion": {
+                    "type": "string",
+                    "example": "Av. Corrientes 1234"
+                  },
+                  "aforoMaximo": {
+                    "type": "integer",
+                    "example": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sede creada exitosamente"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lista todas las sedes activas",
+        "tags": [
+          "Sedes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de sedes obtenido"
+          }
+        }
+      }
+    },
+    "/api/usuarios": {
+      "post": {
+        "summary": "Registra un nuevo usuario en el sistema (RF-01)",
+        "tags": [
+          "Usuarios"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "usuario"
+                ],
+                "properties": {
+                  "usuario": {
+                    "type": "object",
+                    "required": [
+                      "dni",
+                      "nombre_completo",
+                      "email",
+                      "tipo"
+                    ],
+                    "properties": {
+                      "dni": {
+                        "type": "string",
+                        "example": "35123456"
+                      },
+                      "nombre_completo": {
+                        "type": "string",
+                        "example": "Juan Pérez"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan@email.com"
+                      },
+                      "telefono": {
+                        "type": "string",
+                        "example": "3454123456"
+                      },
+                      "foto_url": {
+                        "type": "string",
+                        "example": "https://ejemplo.com/foto.jpg"
+                      },
+                      "tipo": {
+                        "type": "string",
+                        "enum": [
+                          "SOCIO",
+                          "CLIENTE_EXTERNO"
+                        ],
+                        "example": "SOCIO"
+                      },
+                      "rol": {
+                        "type": "string",
+                        "enum": [
+                          "CLIENTE",
+                          "RECEPCIONISTA",
+                          "GERENTE"
+                        ],
+                        "example": "CLIENTE"
+                      }
+                    }
+                  },
+                  "membresia": {
+                    "type": "object",
+                    "properties": {
+                      "plan": {
+                        "type": "string",
+                        "example": "MENSUAL"
+                      },
+                      "fecha_inicio": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-09-27"
+                      },
+                      "fecha_vencimiento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-10-27"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado exitosamente"
+          },
+          "400": {
+            "description": "Datos inválidos o incongruencia entre usuario y membresía"
+          },
+          "409": {
+            "description": "Conflicto - El DNI o Email ya existe"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Obtiene la lista de todos los usuarios",
+        "tags": [
+          "Usuarios"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios obtenida exitosamente"
+          }
+        }
+      }
+    },
+    "/api/usuarios/{id}": {
+      "get": {
+        "summary": "Obtiene el perfil de un usuario específico y su membresía (RF-03)",
+        "tags": [
+          "Usuarios"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Perfil del usuario obtenido con éxito"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualiza los datos de un usuario",
+        "tags": [
+          "Usuarios"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID del usuario a actualizar"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "telefono": {
+                    "type": "string",
+                    "example": "1155556677"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario actualizado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": [
+    {
+      "name": "Pagos",
+      "description": "Pasarela simulada y generación de comprobantes (RF-13, RF-14, RNF-02)"
+    },
+    {
+      "name": "Clases",
+      "description": "Gestión de agenda, inscripciones y lista de espera (RF-06 a RF-08)"
+    },
+    {
+      "name": "Canchas",
+      "description": "Gestión de espacios deportivos, disponibilidad y turnos (RF-09 al RF-12)"
+    }
+  ]
+}

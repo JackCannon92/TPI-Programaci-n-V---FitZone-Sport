@@ -1,0 +1,61 @@
+# FitZone Sports: base de datos, API y aplicación web con un solo comando (ADR-009).
+#
+#   docker compose up --build
+#
+#   Aplicación web  http://localhost:8080
+#   API             http://localhost:3000/api/v1   (Swagger en http://localhost:3000/api-docs)
+#
+# La primera vez, PostgreSQL ejecuta en orden los scripts de Backend/db/:
+# 01-esquema.sql (tablas, índice de RN-02 y trigger de cupos) y 02-seed.sql (25 sedes,
+# canchas, clases y un usuario por rol). Para volver a cargar los datos desde cero:
+#   docker compose down -v && docker compose up --build
+#
+# Las claves se toman del archivo .env de esta carpeta (ver .env.example). Si no existe,
+# se usan valores de desarrollo: sirven para probar, nunca para producción.
+
+name: fitzone-sports
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fitzone
+      POSTGRES_USER: fitzone
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fitzone_local}
+      TZ: America/Argentina/Buenos_Aires
+    volumes:
+      - datos-db:/var/lib/postgresql/data
+      - ./Backend/db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fitzone -d fitzone"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./Backend
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://fitzone:${POSTGRES_PASSWORD:-fitzone_local}@db:5432/fitzone
+      DB_SSL: "false"
+      QR_SECRET: ${QR_SECRET:-solo-para-desarrollo-cambiar}
+      URL_PUBLICA: ${URL_PUBLICA:-http://localhost:3000}
+      TZ: America/Argentina/Buenos_Aires
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+
+  web:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./Frontend:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  datos-db:
