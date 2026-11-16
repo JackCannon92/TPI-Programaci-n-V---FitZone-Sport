@@ -20,14 +20,18 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'API de FitZone Sports funcionando 🚀' });
 });
 
-// 2. Conectamos las rutas a sus URLs correspondientes
-app.use('/api/usuarios', routers.usuariosRouter);
-app.use('/api/membresias', routers.membresiasRouter);
-app.use('/api/sedes', routers.sedesRouter);
-app.use('/api/acceso', routers.accesoRouter);
-app.use('/api/canchas', routers.canchasRouter);
-app.use('/api/clases', routers.clasesRouter);
-app.use('/api/pagos', routers.pagosRouter);
+// 2. Conectamos las rutas. ADR-011: la API se versiona por URL (/api/v1).
+//    /api queda como alias de la v1 mientras el frontend y la documentación migran.
+const v1 = express.Router();
+v1.use('/usuarios', routers.usuariosRouter);
+v1.use('/membresias', routers.membresiasRouter);
+v1.use('/sedes', routers.sedesRouter);
+v1.use('/acceso', routers.accesoRouter);
+v1.use('/canchas', routers.canchasRouter);
+v1.use('/clases', routers.clasesRouter);
+v1.use('/pagos', routers.pagosRouter);
+app.use('/api/v1', v1);
+app.use('/api', v1);
 
 // Middleware global para manejo de errores (core/errorHandler.js)
 app.use(manejarErrores());

@@ -38,6 +38,11 @@ describe('Aplicación completa', () => {
     expect(res.status).toBe(400);
   });
 
+  test('la API también responde en /api/v1 (ADR-011)', async () => {
+    const res = await request(app).post('/api/v1/canchas/reservas').send({});
+    expect(res.status).toBe(400);
+  });
+
   test('ya no existe el endpoint del tablero CQRS (se quitó por indicación de la cátedra)', async () => {
     const res = await request(app).get('/api/reportes/ocupacion');
     expect(res.status).toBe(404);

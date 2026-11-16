@@ -14,7 +14,7 @@ const startServer = async () => {
     try {
         // 1. Conecta a la base de datos
         await sequelize.authenticate();
-        console.log('✅ Conexión a PostgreSQL (Supabase) establecida con éxito.');
+        console.log('✅ Conexión a PostgreSQL establecida con éxito.');
         
         // // 2. Sincroniza las tablas
         // await sequelize.sync({ alter: true });
@@ -27,6 +27,7 @@ const startServer = async () => {
         });
     } catch (error) {
         console.error('❌ Error al arrancar el sistema:', error.message);
+        process.exitCode = 1; // en Docker, el contenedor termina y se reinicia
     }
 };
 process.on('uncaughtException', (err) => {
