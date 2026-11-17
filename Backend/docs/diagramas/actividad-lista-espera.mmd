@@ -1,0 +1,25 @@
+---
+title: "Actividad · Lista de espera · FitZone Sports · Autor: Villagra, Santiago · 16/11/2026 · v1.0"
+---
+%% Fuente: clases.service.js, common/bus-eventos.js y clases/observer/waitlistNotifier.js (RF-08, patrón Observer).
+%% Borrador generado con IA (Claude) y revisado por el autor.
+flowchart TB
+  inicio(["Socio cancela su reserva de clase"]) --> plazo{"¿Faltan menos<br/>de 2 horas?"}
+  plazo -- "Sí" --> pen["Reserva CANCELADA<br/>con penalidad"]
+  plazo -- "No" --> sinpen["Reserva CANCELADA<br/>sin penalidad"]
+  pen --> trigger
+  sinpen --> trigger
+  trigger["La base suma el cupo<br/>(trigger trg_actualizar_cupos_clase)"] --> publica["El servicio publica el evento<br/><b>CupoLiberado</b> { claseId, reservaId }"]
+  publica --> resp(["Se responde al socio<br/>sin esperar a los oyentes"])
+  publica --> bus["Bus de eventos entrega el evento<br/>a cada oyente suscripto<br/><i>si un oyente falla, el error se registra<br/>y no afecta la cancelación</i>"]
+
+  subgraph oyente["Oyente: aviso a la lista de espera"]
+    direction TB
+    busca["Buscar el primero de la lista de esa clase<br/>que no fue avisado<br/>(orden de llegada: created_at)"] --> hay{"¿Hay alguien<br/>esperando?"}
+    hay -- "No" --> nada(["Fin: no se avisa a nadie"])
+    hay -- "Sí" --> marca["Marcarlo notificado = true"]
+    marca --> avisa["Avisarle que se liberó un lugar<br/>(hoy queda en el log)"]
+    avisa --> fin(["Fin: el avisado tiene que entrar y reservar;<br/>avisar no es reservar"])
+  end
+
+  bus --> busca
