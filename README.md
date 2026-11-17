@@ -93,6 +93,8 @@ Cobertura al 08/11/2026: **80,8 % de líneas y 58,1 % de ramas**. El umbral mín
 | Decisiones de arquitectura (ADR) | [`Backend/docs/adr/`](Backend/docs/adr/) |
 | Bitácora del equipo y anexos de la Unidad III | [`Backend/docs/LOG.md`](Backend/docs/LOG.md) |
 | Bitácoras personales | [`Backend/docs/bitacoras/`](Backend/docs/bitacoras/) |
+| Diagramas (C4, DER, UML, despliegue y pipeline) | [`Backend/docs/diagramas/`](Backend/docs/diagramas/) |
+| Manuales (instalación y operación, usuario, técnico) | [`Backend/docs/manuales/`](Backend/docs/manuales/) |
 | Documentación de la API | Swagger, en `http://localhost:3000/api-docs`, y el contrato exportado en [`Backend/swagger.json`](Backend/swagger.json) (`npm run swagger:export`) |
 
 ## Estado
