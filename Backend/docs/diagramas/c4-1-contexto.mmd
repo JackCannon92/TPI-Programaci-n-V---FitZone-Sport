@@ -1,0 +1,24 @@
+---
+title: "C4-1 · Contexto · FitZone Sports · Autor: Ayala, Franco · 29/08/2026 · v1.0"
+---
+%% Notación C4 (nivel 1) dibujada como diagrama de flujo para que se lea bien.
+%% Borrador generado con IA (Claude) y revisado por el autor.
+flowchart TB
+  socio["<b>Socio activo</b><br/>[Persona]<br/>Tiene membresía. Entra con QR,<br/>reserva clases y canchas con descuento"]:::persona
+  externo["<b>Cliente externo</b><br/>[Persona]<br/>Sin membresía. Alquila canchas y<br/>entra con el QR de su reserva"]:::persona
+  staff["<b>Recepcionista o administrador de sede</b><br/>[Persona]<br/>Controla ingreso y aforo; gestiona<br/>canchas y clases de su sede"]:::persona
+  gerente["<b>Gerente central</b><br/>[Persona]<br/>Supervisa las 25 sedes<br/>y su configuración"]:::persona
+
+  fitzone["<b>FitZone Sports</b><br/>[Sistema de software]<br/>Socios y membresías · control de acceso con QR · clases con lista de espera ·<br/>alquiler de canchas con precio dinámico · pagos"]:::sistema
+
+  pasarela["<b>Pasarela de pagos</b><br/>[Sistema externo]<br/>MercadoPago o Modo: procesa la tarjeta<br/>y devuelve un token (hoy se simula)"]:::externo
+
+  socio -- "Reserva, paga y obtiene sus QR · HTTPS" --> fitzone
+  externo -- "Reserva y paga canchas · HTTPS" --> fitzone
+  staff -- "Valida QR, controla aforo, gestiona la sede · HTTPS" --> fitzone
+  gerente -- "Administra sedes y canchas · HTTPS" --> fitzone
+  fitzone -- "Cobra y recibe un token · HTTPS" --> pasarela
+
+  classDef persona fill:#08427b,stroke:#052e56,color:#fff
+  classDef sistema fill:#1168bd,stroke:#0b4884,color:#fff
+  classDef externo fill:#999999,stroke:#6b6b6b,color:#fff
