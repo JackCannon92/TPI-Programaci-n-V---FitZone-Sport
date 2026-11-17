@@ -1,0 +1,51 @@
+---
+title: "C4-2 · Contenedores · FitZone Sports · Autor: Ayala, Franco · 29/08/2026 · v1.0"
+config:
+  look: classic
+  theme: dark
+  flowchart:
+    nodeSpacing: 90
+    rankSpacing: 110
+    curve: basis
+    padding: 18
+---
+%% Notación C4 (nivel 2) dibujada como diagrama de flujo para que se lea bien.
+%% Borrador generado con IA (Claude) y revisado por el autor.
+flowchart TB
+  socio["`**Socio o cliente externo**
+  [Persona]`"]:::persona
+  staff["`**Recepcionista, admin. de sede o gerente**
+  [Persona]`"]:::persona
+
+  subgraph sistema["FitZone Sports [Sistema]"]
+    direction TB
+    web["`**Aplicación web**
+    [HTML, CSS y JS sin framework · nginx]
+    Portal del socio y consola de administración`"]:::contenedor
+    terminal["`**Terminal de sede**
+    [Navegador en recepción con lector QR]
+    Sin conexión valida el QR con clave pública`"]:::contenedor
+    api["`**API backend**
+    [Node.js 20 · Express 5 · Sequelize]
+    Monolito modular en /api/v1`"]:::contenedor
+    db[("`**Base de datos**
+    [PostgreSQL 16 · Supabase o Docker]
+    Índice único parcial (RN-02) y trigger de cupos`")]:::contenedor
+  end
+
+  pasarela["`**Pasarela de pagos**
+  [Sistema externo]
+  Hoy simulada dentro de la API`"]:::externo
+
+  socio -- "Usa · HTTPS" --> web
+  staff -- "Usa la consola · HTTPS" --> web
+  staff -- "Escanea QR" --> terminal
+  web -- "JSON/REST · HTTPS" --> api
+  terminal -- "Ingresos y clave pública<br/>JSON/REST · HTTPS" --> api
+  api -- "SQL · TCP 5432<br/>(SSL en Supabase)" --> db
+  api -- "Cobra y recibe un token · HTTPS" --> pasarela
+
+  classDef persona fill:#08427b,stroke:#052e56,stroke-width:2px,color:#ffffff
+  classDef contenedor fill:#1168bd,stroke:#0b4884,stroke-width:2px,color:#ffffff
+  classDef externo fill:#666666,stroke:#444444,stroke-width:2px,color:#ffffff
+  style sistema fill:#0d1520,stroke:#3b82f6,stroke-width:2px,stroke-dasharray:6 4,color:#ffffff

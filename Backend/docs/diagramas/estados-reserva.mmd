@@ -1,0 +1,28 @@
+---
+title: "Estados · Reservas · FitZone Sports · Autor: Villagra, Santiago · 16/11/2026 · v1.0"
+---
+%% Fuente: canchas.service.js, pagos.service.js y clases.service.js (RF-07, RF-10).
+%% Borrador generado con IA (Claude) y revisado por el autor.
+stateDiagram-v2
+  direction LR
+
+  state "Reserva de cancha" as Cancha {
+    [*] --> PENDIENTE_PAGO : reservar<br/>(el índice único impide el turno duplicado, RN-02)
+    PENDIENTE_PAGO --> PENDIENTE_PAGO : pago rechazado<br/>(402, se puede reintentar)
+    PENDIENTE_PAGO --> CONFIRMADA : pago aprobado<br/>(comprobante PDF y QR de ingreso)
+    PENDIENTE_PAGO --> CANCELADA : cancelar
+    CONFIRMADA --> CANCELADA : cancelar<br/>(sin penalidad)
+    CANCELADA --> [*]
+    CONFIRMADA --> [*] : pasa el turno<br/>(no hay estado CUMPLIDA: deuda)
+  }
+
+  state "Reserva de clase" as Clase {
+    [*] --> CONFIRMADA_C : reservar<br/>(socio activo, hasta 48 hs antes, con cupo)
+    state "CONFIRMADA" as CONFIRMADA_C
+    state "CANCELADA" as CANCELADA_C
+    CONFIRMADA_C --> CANCELADA_C : cancelar con más de 2 hs<br/>(sin penalidad)
+    CONFIRMADA_C --> CANCELADA_C : cancelar con menos de 2 hs<br/>(con_penalidad = true)
+    CONFIRMADA_C --> ASISTIO : se escanea el QR de asistencia<br/>(de 30 min antes a 60 min después)
+    CANCELADA_C --> [*] : libera el cupo y publica CupoLiberado
+    ASISTIO --> [*] : cumplida
+  }

@@ -1,0 +1,42 @@
+---
+title: "Despliegue · FitZone Sports · Autor: Ayala, Franco · 16/11/2026 · v1.0"
+config:
+  flowchart:
+    nodeSpacing: 75
+    rankSpacing: 110
+    curve: basis
+---
+%% Fuente: docker-compose.yml. Borrador generado con IA (Claude) y revisado por el autor.
+flowchart LR
+  subgraph clientes["Accesos y Sucursales"]
+    direction TB
+    subgraph sede["Sede (una de las 25)"]
+      direction TB
+      terminal["Terminal de recepción<br/>navegador + lector QR<br/>clave pública Ed25519"]
+      molinete["Molinete"]
+      caida(["Modo Offline (RNF-01 · ADR-003 / ADR-007)<br/>Valida firma Ed25519 sin red (24 hs)<br/>y encola ingresos para sincronizar"])
+      terminal --> molinete
+      terminal -.- caida
+    end
+    usuario["Socio · cliente externo<br/>navegador o celular"]
+  end
+
+  subgraph host["Servidor con Docker · docker compose up --build"]
+    direction TB
+    subgraph red["Red interna fitzone-sports_default"]
+      direction TB
+      api["api<br/>Node 20 (Dockerfile)<br/>puerto 3000<br/>/api/v1 · /api-docs"]
+      web["web<br/>nginx:1.27-alpine<br/>puerto 8080 → 80<br/>sirve Frontend/"]
+      db[("db<br/>postgres:16-alpine<br/>5432 solo en la red interna<br/>volumen datos-db")]
+    end
+    init["Backend/db/<br/>01-esquema.sql · 02-seed.sql<br/>(se ejecutan al crear la base)"]
+  end
+
+  supa[("Alternativa sin Docker:<br/>PostgreSQL en Supabase<br/>SSL obligatorio")]
+
+  terminal -- "HTTPS :3000<br/>(ingresos y clave pública)" --> api
+  usuario -- "HTTPS :3000" --> api
+  usuario -- "HTTPS :8080" --> web
+  api -- "TCP 5432" --> db
+  init -.-> db
+  api -. "DB_SSL=true" .-> supa
