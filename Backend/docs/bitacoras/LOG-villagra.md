@@ -59,10 +59,10 @@ Como el frontend corre con Live Server en un puerto distinto al de la API en Nod
 ## Sprint 6 — Documentación Arquitectónica — Semana del 2026-11-02
 ### 2026-11-08 · 6 h
 **Actividad**
-Inicio del liderazgo del Sprint 6 (semanas 11 y 12). Redacté y formalicé en Markdown los registros de decisión arquitectónica ADR-006 (frontend vanilla), ADR-007 (control de acceso offline en molinetes) y ADR-010 (tokenización de pagos) siguiendo la plantilla del Anexo B.
+Inicio del liderazgo del Sprint 6 (semanas 11 y 12). Redacté y formalicé en Markdown los registros de decisión arquitectónica ADR-006 (frontend vanilla), ADR-007 (sincronización del terminal de sede) y ADR-010 (tokenización de pagos) siguiendo la plantilla del Anexo B.
 **Decisión**
 Documentación de las alternativas descartadas, los criterios de decisión y la deuda técnica asumida por el equipo en cada ADR, ajustando la numeración del ADR de pagos a ADR-010 según lo acordado. Ver ADR-006, ADR-007 y ADR-010.
 **Problema o bloqueo**
 Los borradores iniciales omitían campos obligatorios del Anexo B (autor, sprint, tabla comparativa completa y deuda asumida) y tenían fechas desfasadas respecto a cuándo se tomaron realmente las decisiones. Revisé el historial del equipo para corregir las fechas y reestructuré los tres documentos antes de subirlos.
 **Commits**
-`fd81941` agrega ADR-006, ADR-007 y ADR-010 en docs/adr/
+`fd81941`, `848a154` agrega y actualiza ADR-006, ADR-007 y ADR-010 en docs/adr/
