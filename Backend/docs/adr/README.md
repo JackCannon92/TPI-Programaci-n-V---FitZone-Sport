@@ -13,11 +13,11 @@ Un ADR no se corrige: se supera. Si una decisión se revierte, el ADR original p
 | [ADR-003](ADR-003-acceso-offline.md) | Acceso sin conexión: QR firmado con clave pública | Aceptado | Ayala | RNF-01 |
 | [ADR-004](ADR-004-concurrencia-reservas.md) | Concurrencia en la reserva de canchas: índice único parcial | Aceptado | Ayala | RN-02 |
 | [ADR-005](ADR-005-framework-ioc-orm.md) | Framework, inversión de control y ORM: Express, composition root y Sequelize | Aceptado | Sirizzotti | Unidad II |
-| [ADR-006](ADR-006-frontend-estado-global.md) | Frontend, componentes y estado global | — | Villagra | Unidad IV |
-| [ADR-007](ADR-007-sincronizacion-terminal-sede.md) | Sincronización del terminal de sede | — | Villagra | RNF-01, RN-01 |
+| [ADR-006](ADR-006-arquitectura-frontend.md) | Arquitectura, diseño multipágina y estado del frontend | Aceptado | Villagra | Unidad IV |
+| [ADR-007](ADR-007-sincronizacion-terminal-sede.md) | Sincronización del terminal de sede | Aceptado | Villagra | RNF-01, RN-01 |
 | [ADR-008](ADR-008-Estrategia-de-pruebas.md) | Estrategia de pruebas y cobertura mínima | Aceptado | Sirizzotti | Unidad V |
 | [ADR-009](ADR-009-despliegue-y-reversion.md) | Despliegue, contenedores y reversión | Propuesto | Sirizzotti | Unidad V |
-| [ADR-010](ADR-010-medios-de-pago.md) | Medios de pago: tokenización | Aceptado | Ayala | RNF-02 |
+| [ADR-010](ADR-010-tokenizacion-medios-pago.md) | Medios de pago mediante tokenización | Aceptado | Villagra | RNF-02 |
 
 ## Decisiones propias del equipo
 
