@@ -34,7 +34,10 @@ function crearAccesoController(accesoService) {
   function clavePublica(req, res) {
     res.json(accesoService.clavePublicaOffline());
   }
-  return { qr, qrSvg, ingreso, egreso, aforo, presentes, ingresoReserva, qrOffline, validarOffline, clavePublica };
+  async function sincronizar(req, res, next) {
+    try { res.json(await accesoService.sincronizarIngresos(req.body)); } catch (e) { next(e); }
+  }
+  return { qr, qrSvg, ingreso, egreso, aforo, presentes, ingresoReserva, qrOffline, validarOffline, clavePublica, sincronizar };
 }
 
 module.exports = { crearAccesoController };

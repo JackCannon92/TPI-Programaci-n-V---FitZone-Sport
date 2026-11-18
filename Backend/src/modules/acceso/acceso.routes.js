@@ -1,7 +1,7 @@
 'use strict';
 
 const { Router } = require('express');
-const { ingresoValidators, tokenValidators, egresoValidators, usuarioIdParam, sedeIdParam } = require('./acceso.validators');
+const { ingresoValidators, tokenValidators, egresoValidators, usuarioIdParam, sedeIdParam, sincronizarValidators } = require('./acceso.validators');
 const { validar } = require('../../common/validar');
 /**
      * @swagger
@@ -164,6 +164,52 @@ const { validar } = require('../../common/validar');
  *     responses:
  *       200:
  *         description: Clave pública Ed25519 en formato PEM
+ *
+ * /api/acceso/sincronizar:
+ *   post:
+ *     summary: El terminal de sede manda los ingresos que registró sin conexión (ADR-007)
+ *     description: >
+ *       Cada ingreso trae el QR sin conexión que se leyó y la hora en que la persona pasó.
+ *       El servidor vuelve a verificar la firma con esa hora, descarta los reenvíos
+ *       (misma persona, sede y hora) y resuelve RN-01 a favor de lo que pasó físicamente:
+ *       si figuraba adentro sin egreso, ese registro se cierra a la hora del ingreso nuevo.
+ *       El aforo no frena la sincronización (esas personas ya entraron).
+ *     tags: [Acceso]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [sedeId, ingresos]
+ *             properties:
+ *               sedeId:
+ *                 type: string
+ *                 description: UUID de la sede del terminal
+ *               ingresos:
+ *                 type: array
+ *                 maxItems: 200
+ *                 items:
+ *                   type: object
+ *                   required: [id, token, fechaIngreso]
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: Identificador del evento que generó el terminal
+ *                     token:
+ *                       type: string
+ *                       description: QR sin conexión leído
+ *                     fechaIngreso:
+ *                       type: string
+ *                       format: date-time
+ *                       description: Hora en que la persona pasó (reloj del terminal)
+ *     responses:
+ *       200:
+ *         description: "{ resumen: { aceptados, duplicados, rechazados, conflictos }, aforo, resultados: [{ id, estado, motivo?, conflicto? }] }"
+ *       400:
+ *         description: Datos mal formados
+ *       404:
+ *         description: La sede no existe
  */
 function crearAccesoRouter(c) {
   const router = Router();
@@ -175,6 +221,7 @@ function crearAccesoRouter(c) {
   router.get('/qr-offline/:usuarioId', usuarioIdParam, validar, c.qrOffline);
   router.post('/validar-offline', tokenValidators, validar, c.validarOffline);
   router.get('/clave-publica', c.clavePublica);
+  router.post('/sincronizar', sincronizarValidators, validar, c.sincronizar);
   router.get('/aforo/:sedeId', sedeIdParam, validar, c.aforo);
   router.get('/presentes/:sedeId', sedeIdParam, validar, c.presentes);
   return router;

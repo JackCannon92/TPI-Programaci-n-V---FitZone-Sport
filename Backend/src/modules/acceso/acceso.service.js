@@ -19,8 +19,13 @@ const MENSAJES_QR_RESERVA = {
   [MotivosQr.VENCIDO]: 'El QR de la reserva ya venció: el turno terminó.',
 };
 
+/** Cómo quedó cada ingreso que manda el terminal al sincronizar (ADR-007). */
+const EstadoSincronizacion = Object.freeze({ ACEPTADO: 'ACEPTADO', DUPLICADO: 'DUPLICADO', RECHAZADO: 'RECHAZADO' });
+// Margen para la diferencia de reloj entre el terminal y el servidor.
+const TOLERANCIA_RELOJ_MS = 5 * 60 * 1000;
+
 // INYECCIÓN: recibe el RegistroAccesoModel y, para el QR de reserva, el servicio de canchas.
-function crearAccesoService({ usuariosService, sedesService, canchasService, RegistroAccesoModel }) {
+function crearAccesoService({ usuariosService, sedesService, canchasService, RegistroAccesoModel, logger = console }) {
 
   // RF-04 · QR dinámico del socio (cambia cada minuto)
   async function generarQr(usuarioId) {
@@ -117,6 +122,97 @@ function crearAccesoService({ usuariosService, sedesService, canchasService, Reg
     return { algoritmo: 'Ed25519', clavePublica: clavePublicaPem() };
   }
 
+  // ---------- ADR-007 · Sincronización del terminal de sede ----------
+  // Mientras no hay conexión, el terminal valida el QR sin conexión con la clave
+  // pública y guarda cada ingreso en una cola local. Al volver la conexión manda
+  // la cola acá. El servidor NO confía en el terminal: vuelve a verificar la firma
+  // de cada QR, y con la hora del ingreso, no con la de ahora.
+
+  const rechazo = (id, motivo) => ({ id, estado: EstadoSincronizacion.RECHAZADO, motivo });
+
+  async function sincronizarUno(sedeId, { id, token, fechaIngreso }) {
+    const cuando = new Date(fechaIngreso);
+    if (cuando.getTime() > Date.now() + TOLERANCIA_RELOJ_MS) return rechazo(id, 'FECHA_FUTURA');
+
+    // El QR tenía que ser válido en el momento en que la persona pasó.
+    const qr = validarFirmaOffline(token, { ahora: cuando });
+    if (!qr.valido) return rechazo(id, qr.motivo === MotivosQr.VENCIDO ? 'QR_VENCIDO_AL_INGRESAR' : 'FIRMA_INVALIDA');
+    if (cuando.getTime() < qr.emitido.getTime() - TOLERANCIA_RELOJ_MS) return rechazo(id, 'ANTERIOR_A_LA_EMISION');
+    const { usuarioId, nombre } = qr;
+
+    // Idempotencia: si la respuesta anterior se cortó y el terminal reenvía, no se duplica.
+    const yaEsta = await RegistroAccesoModel.findOne({ where: { usuarioId, sedeId, fechaIngreso: cuando } });
+    if (yaEsta) return { id, estado: EstadoSincronizacion.DUPLICADO, usuarioId, nombre, registroId: yaEsta.id };
+
+    let usuario;
+    try {
+      usuario = await usuariosService.obtenerUsuario(usuarioId);
+    } catch {
+      return rechazo(id, 'USUARIO_INEXISTENTE');
+    }
+
+    const observaciones = [];
+    // La persona ya pasó: si la membresía se suspendió durante el corte, el ingreso
+    // queda registrado igual (el QR estaba vigente) y se deja la observación.
+    if (!usuariosService.esSocioActivo(usuario)) {
+      observaciones.push('La membresía figura vencida o suspendida en el servidor; el ingreso se registró igual porque el QR estaba vigente.');
+    }
+
+    // RN-01: prevalece lo que pasó físicamente.
+    let fechaEgreso = null;
+    const abierto = await registroAbierto(usuarioId);
+    if (abierto) {
+      const donde = abierto.sedeId === sedeId ? 'esta sede' : 'otra sede';
+      if (new Date(abierto.fechaIngreso).getTime() < cuando.getTime()) {
+        // Tenía un ingreso anterior sin egreso: ese registro se cierra en el momento de este ingreso.
+        abierto.fechaEgreso = cuando;
+        await abierto.save();
+        observaciones.push(`RN-01: figuraba adentro de ${donde} sin egreso registrado; ese registro se cerró a la hora de este ingreso.`);
+      } else {
+        // Ya tenía un ingreso POSTERIOR: este se guarda como histórico, cerrado cuando entró al otro.
+        fechaEgreso = new Date(abierto.fechaIngreso);
+        observaciones.push(`RN-01: después de este ingreso volvió a entrar en ${donde}; este registro queda como histórico, cerrado a esa hora.`);
+      }
+    }
+
+    const registro = await RegistroAccesoModel.create({ usuarioId, sedeId, fechaIngreso: cuando, fechaEgreso });
+    const resultado = { id, estado: EstadoSincronizacion.ACEPTADO, usuarioId, nombre, registroId: registro.id };
+    if (observaciones.length) {
+      resultado.conflicto = observaciones.join(' ');
+      logger.log(`[ADR-007] Sincronización con observaciones (sede ${sedeId}, usuario ${usuarioId}): ${resultado.conflicto}`);
+    }
+    return resultado;
+  }
+
+  /**
+   * Recibe la cola de ingresos que el terminal guardó sin conexión.
+   * Los procesa en orden de hora; cada uno sale ACEPTADO, DUPLICADO o RECHAZADO.
+   * El aforo NO frena la sincronización: esas personas ya entraron (ADR-007).
+   */
+  async function sincronizarIngresos({ sedeId, ingresos }) {
+    await sedesService.obtenerSede(sedeId); // 404 si la sede no existe
+    const ordenados = [...ingresos].sort((a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso));
+
+    const resultados = [];
+    for (const ingreso of ordenados) {
+      resultados.push(await sincronizarUno(sedeId, ingreso));
+    }
+
+    const cuantos = (estado) => resultados.filter((r) => r.estado === estado).length;
+    const { actual, maximo } = await aforo(sedeId);
+    return {
+      sedeId,
+      resumen: {
+        aceptados: cuantos(EstadoSincronizacion.ACEPTADO),
+        duplicados: cuantos(EstadoSincronizacion.DUPLICADO),
+        rechazados: cuantos(EstadoSincronizacion.RECHAZADO),
+        conflictos: resultados.filter((r) => r.conflicto).length,
+      },
+      aforo: { actual, maximo, excedido: actual > maximo },
+      resultados,
+    };
+  }
+
   async function registrarEgreso({ usuarioId, sedeId }) {
     const abierto = await RegistroAccesoModel.findOne({ where: { usuarioId, sedeId, fechaEgreso: null } });
     // Código 404: No encontrado (El usuario no estaba adentro)
@@ -140,9 +236,9 @@ function crearAccesoService({ usuariosService, sedesService, canchasService, Reg
 
   return {
     generarQr, aforo, registrarIngreso, registrarIngresoConReserva,
-    generarQrOffline, validarQrOffline, clavePublicaOffline,
+    generarQrOffline, validarQrOffline, clavePublicaOffline, sincronizarIngresos,
     registrarEgreso, presentes,
   };
 }
 
-module.exports = { crearAccesoService };
+module.exports = { crearAccesoService, EstadoSincronizacion, TOLERANCIA_RELOJ_MS };

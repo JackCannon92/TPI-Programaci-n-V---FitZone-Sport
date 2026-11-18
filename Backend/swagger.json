@@ -223,6 +223,73 @@
         }
       }
     },
+    "/api/acceso/sincronizar": {
+      "post": {
+        "summary": "El terminal de sede manda los ingresos que registró sin conexión (ADR-007)",
+        "description": "Cada ingreso trae el QR sin conexión que se leyó y la hora en que la persona pasó. El servidor vuelve a verificar la firma con esa hora, descarta los reenvíos (misma persona, sede y hora) y resuelve RN-01 a favor de lo que pasó físicamente: si figuraba adentro sin egreso, ese registro se cierra a la hora del ingreso nuevo. El aforo no frena la sincronización (esas personas ya entraron).\n",
+        "tags": [
+          "Acceso"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "sedeId",
+                  "ingresos"
+                ],
+                "properties": {
+                  "sedeId": {
+                    "type": "string",
+                    "description": "UUID de la sede del terminal"
+                  },
+                  "ingresos": {
+                    "type": "array",
+                    "maxItems": 200,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "token",
+                        "fechaIngreso"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Identificador del evento que generó el terminal"
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "QR sin conexión leído"
+                        },
+                        "fechaIngreso": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Hora en que la persona pasó (reloj del terminal)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "{ resumen: { aceptados, duplicados, rechazados, conflictos }, aforo, resultados: [{ id, estado, motivo?, conflicto? }] }"
+          },
+          "400": {
+            "description": "Datos mal formados"
+          },
+          "404": {
+            "description": "La sede no existe"
+          }
+        }
+      }
+    },
     "/api/acceso/validar-offline": {
       "post": {
         "summary": "Valida un QR sin conexión como lo haría el torno, sin consultar la base (QR 2)",

@@ -111,6 +111,32 @@ describe('QR 2 · Acceso sin conexión', () => {
   });
 });
 
+describe('ADR-007 · Sincronización del terminal de sede', () => {
+  test('el terminal manda la cola de ingresos sin conexión y quedan registrados', async () => {
+    const qr = await request(app).get(`/api/acceso/qr-offline/${SOCIO.id}`);
+    const fechaIngreso = new Date(Date.now() - 60 * 1000).toISOString();
+    const cola = { sedeId: CANCHA.sedeId, ingresos: [{ id: 'ev-1', token: qr.body.token, fechaIngreso }] };
+
+    const res = await request(app).post('/api/acceso/sincronizar').send(cola);
+    expect(res.status).toBe(200);
+    expect(res.body.resumen).toMatchObject({ aceptados: 1, rechazados: 0 });
+
+    const presentes = await request(app).get(`/api/acceso/presentes/${CANCHA.sedeId}`);
+    expect(presentes.body).toEqual([expect.objectContaining({ usuarioId: SOCIO.id, fechaIngreso })]);
+
+    // El reenvío de la misma cola no duplica el ingreso.
+    const otraVez = await request(app).post('/api/acceso/sincronizar').send(cola);
+    expect(otraVez.body.resultados[0].estado).toBe('DUPLICADO');
+  });
+
+  test('una cola mal formada responde 400', async () => {
+    const res = await request(app).post('/api/acceso/sincronizar')
+      .send({ sedeId: CANCHA.sedeId, ingresos: [{ id: 'ev-1', token: 'x', fechaIngreso: 'ayer' }] });
+    expect(res.status).toBe(400);
+    expect((await request(app).post('/api/acceso/sincronizar').send({ sedeId: CANCHA.sedeId, ingresos: [] })).status).toBe(400);
+  });
+});
+
 describe('QR 4 · Comprobante', () => {
   test('el comprobante PDF se descarga con sus QR', async () => {
     const { pago } = await reservarYPagar(SOCIO);

@@ -62,7 +62,7 @@ function emitirQrOffline({ usuarioId, nombre, venceMembresia }, ahora = Date.now
 
 /**
  * Lo que hace el torno: valida SIN consultar la base, solo con la clave pública.
- * @returns {{ valido: boolean, motivo?: string, usuarioId?: string, nombre?: string, venceMembresia?: string, validoHasta?: Date }}
+ * @returns {{ valido: boolean, motivo?: string, usuarioId?: string, nombre?: string, venceMembresia?: string, emitido?: Date, validoHasta?: Date }}
  */
 function validarQrOffline(token, { clavePublica = CLAVE_PUBLICA, ahora = Date.now() } = {}) {
   const partes = typeof token === 'string' ? token.split('.') : [];
@@ -91,6 +91,7 @@ function validarQrOffline(token, { clavePublica = CLAVE_PUBLICA, ahora = Date.no
     usuarioId: datos.usuarioId,
     nombre: datos.nombre,
     venceMembresia: datos.venceMembresia,
+    emitido: new Date(datos.emitido),
     validoHasta: new Date(datos.exp),
   };
 }

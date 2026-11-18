@@ -71,13 +71,17 @@ function crearMembresiasDePrueba() {
   return { servicio: crearMembresiasService({ membresiasRepo }), membresiasRepo };
 }
 
+const loggerMudo = { log: () => {}, error: () => {} };
+
 /** Doble de RegistroAccesoModel: guarda los ingresos en memoria. */
 function registroAccesoFalso() {
   const filas = [];
-  const coincide = (f, where) => Object.entries(where).every(([k, v]) => f[k] === v);
+  const igual = (a, b) => (b instanceof Date ? a instanceof Date && a.getTime() === b.getTime() : a === b);
+  const coincide = (f, where) => Object.entries(where).every(([k, v]) => igual(f[k], v));
   return {
     filas,
     findOne: async ({ where }) => filas.find((f) => coincide(f, where)) ?? null,
+    findAll: async ({ where }) => filas.filter((f) => coincide(f, where)),
     count: async ({ where }) => filas.filter((f) => coincide(f, where)).length,
     create: async (datos) => {
       const fila = { id: `registro-${filas.length + 1}`, fechaIngreso: new Date(), fechaEgreso: null, ...datos, save: async () => {} };
@@ -88,13 +92,14 @@ function registroAccesoFalso() {
 }
 
 /** Servicio de acceso real con un registro de accesos en memoria. */
-function crearAccesoDePrueba({ canchasService, sede = SEDE } = {}) {
+function crearAccesoDePrueba({ canchasService, sede = SEDE, usuariosService = usuariosServiceFalso, logger = loggerMudo } = {}) {
   const RegistroAccesoModel = registroAccesoFalso();
   const servicio = crearAccesoService({
-    usuariosService: { ...usuariosServiceFalso, obtenerVarios: async () => [SOCIO, EXTERNO] },
+    usuariosService: { ...usuariosService, obtenerVarios: async () => [SOCIO, EXTERNO] },
     sedesService: { obtenerSede: async (id) => ({ ...sede, id }) },
     canchasService,
     RegistroAccesoModel,
+    logger,
   });
   return { servicio, RegistroAccesoModel };
 }
@@ -113,7 +118,6 @@ function pagoModelFalso() {
   };
 }
 
-const loggerMudo = { log: () => {}, error: () => {} };
 const haceDias = (dias) => new Date(Date.now() - dias * 864e5);
 
 module.exports = {
