@@ -29,6 +29,7 @@ Un ADR no se corrige: se supera. Si una decisión se revierte, el ADR original p
 | [ADR-014](ADR-014-repository-reservas-membresias.md) | Repository para reservas de cancha y membresías | Aceptado | Sirizzotti | RN-02, RF-02 |
 | [ADR-015](ADR-015-observer-lista-espera.md) | Observer para el aviso a la lista de espera | Aceptado | Sirizzotti | RF-07, RF-08 |
 | [ADR-016](ADR-016-codigos-qr.md) | Varios códigos QR, con firma HMAC y Ed25519 | Aceptado | Sirizzotti | RF-04, RF-14, RN-01 |
+| [ADR-017](ADR-017-prueba-concurrencia-postgresql.md) | Prueba de concurrencia de RN-02 contra PostgreSQL real | Aceptado | Sirizzotti | RN-02 |
 
 ## Numeración
 

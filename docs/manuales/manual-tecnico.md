@@ -178,7 +178,7 @@ Si dos pedidos intentan el mismo turno, PostgreSQL acepta uno y rechaza el otro 
 | Validación de la firma en el servidor sin consultar la base (respaldo si el navegador no tiene Ed25519) | `POST /api/v1/acceso/validar-offline` | Implementado |
 | Validación local en el navegador del terminal: guarda la clave pública (se renueva cada 24 hs) y verifica la firma con WebCrypto Ed25519, sin red | `frontend/src/services/terminal-offline.js` | Implementado |
 | Cola local de ingresos (`localStorage`) que se envía al volver la conexión (evento `online`, cada 15 s o «Sincronizar ahora») | `frontend/src/services/terminal-offline.js` · `recepcion.js` | Implementado |
-| `POST /api/v1/acceso/sincronizar`: vuelve a verificar cada firma con la hora del ingreso, descarta reenvíos (persona + sede + hora) y resuelve RN-01 cerrando el registro abierto a la hora del ingreso nuevo | `acceso.service.js` → `sincronizarIngresos()` (ADR-007) | Implementado, con 12 pruebas unitarias y 2 de integración |
+| `POST /api/v1/acceso/sincronizar`: vuelve a verificar cada firma con la hora del ingreso, descarta reenvíos (persona + sede + hora) y resuelve RN-01 cerrando el registro abierto a la hora del ingreso nuevo | `acceso.service.js` → `sincronizarIngresos()` (ADR-007) | Implementado, con 11 pruebas unitarias y 2 de integración |
 
 Por qué clave pública y no HMAC (ADR-003): para verificar un HMAC el terminal necesitaría el secreto, y quien lo extrajera podría fabricar QR. Con Ed25519, el terminal solo tiene la clave pública, que sirve para verificar pero no para firmar.
 
@@ -249,15 +249,17 @@ cd backend
 npm test                  # 113 pruebas
 npm test -- precios       # solo los archivos que contienen "precios"
 npm run test:cov          # con reporte de cobertura
+npm run test:concurrencia # RN-02 contra PostgreSQL real (necesita DATABASE_URL)
 ```
 
 | Carpeta | Qué prueba |
 |---|---|
 | `test/unit/` (83 pruebas) | Reglas de cada servicio y patrón: estrategias de precio, RN-02 con repositorio en memoria, membresías (incluidas pruebas de caracterización), Observer, los cinco tipos de QR. |
 | `test/integracion/` (30 pruebas) | La API por HTTP con Supertest: router, validadores, servicio y manejador de errores reales, con repositorio en memoria. Incluye una prueba de humo de la app completa y de `/api/v1`. |
+| `test/concurrencia/` (1 prueba) | RN-02 contra PostgreSQL real: seis pedidos simultáneos del mismo turno, uno reserva y el resto recibe 409. Se saltea si no hay `DATABASE_URL`; el pipeline la corre con una base de servicio. |
 | `test/dobles/fitzone.js` | Dobles compartidos: *fakes* (repositorios en memoria), *stubs* (servicio de usuarios con datos fijos) y *mocks* (`jest.fn()`). |
 
-Ninguna prueba usa la base de datos real (ADR-008).
+Las pruebas unitarias y de integración no usan la base de datos real (ADR-008); la de concurrencia sí, porque lo que verifica es el índice único de la base.
 
 **Cómo leer la cobertura.** `npm run test:cov` imprime una tabla por archivo y un resumen; el detalle navegable queda en `coverage/lcov-report/index.html`. Las columnas son:
 

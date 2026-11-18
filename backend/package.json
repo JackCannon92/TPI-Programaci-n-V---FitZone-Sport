@@ -21,6 +21,7 @@
     "dev": "nodemon src/server.js",
     "test": "jest",
     "test:cov": "jest --coverage",
+    "test:concurrencia": "jest --runInBand --testMatch \"<rootDir>/test/concurrencia/**/*.test.js\"",
     "swagger:export": "node scripts/exportar-swagger.js"
   },
   "devDependencies": {

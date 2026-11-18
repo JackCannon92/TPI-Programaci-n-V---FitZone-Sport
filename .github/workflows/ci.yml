@@ -16,6 +16,18 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    # Base PostgreSQL real para la prueba de concurrencia de RN-02.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: fitzone
+          POSTGRES_USER: fitzone
+          POSTGRES_PASSWORD: fitzone_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U fitzone -d fitzone"
+          --health-interval 5s --health-timeout 3s --health-retries 20
     steps:
       - uses: actions/checkout@v4
 
@@ -30,6 +42,18 @@ jobs:
 
       - name: Pruebas unitarias y de integración, con umbral de cobertura (ADR-008)
         run: npm run test:cov
+
+      - name: Concurrencia de reservas (RN-02) contra PostgreSQL real
+        env:
+          PGPASSWORD: fitzone_ci
+          DATABASE_URL: postgres://fitzone:fitzone_ci@localhost:5432/fitzone
+          DB_SSL: "false"
+          QR_SECRET: solo-para-ci
+          TZ: America/Argentina/Buenos_Aires
+        run: |
+          psql -h localhost -U fitzone -d fitzone -v ON_ERROR_STOP=1 -q -f db/01-esquema.sql
+          psql -h localhost -U fitzone -d fitzone -v ON_ERROR_STOP=1 -q -f db/02-seed.sql
+          npm run test:concurrencia
 
       - name: Guardar el reporte de cobertura
         if: always()
