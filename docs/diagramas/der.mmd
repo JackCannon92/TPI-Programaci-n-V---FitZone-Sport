@@ -1,0 +1,114 @@
+---
+title: "DER físico · FitZone Sports · Autor: Ayala, Franco · 16/09/2026 · v1.0"
+---
+%%{init: {'themeVariables': { 'fontSize': '14px', 'fontFamily': 'arial' }}}%%
+%% Fuente: backend/db/01-esquema.sql. Generado por el autor.
+%% PK = clave primaria, FK = clave foránea, UK = única.
+erDiagram
+  USUARIOS {
+    uuid id PK
+    varchar(15) dni UK
+    varchar nombre_completo
+    varchar email UK
+    varchar telefono
+    varchar tipo
+    varchar rol 
+    timestamptz deleted_at
+  }
+  MEMBRESIAS {
+    uuid id PK
+    uuid usuario_id FK,UK
+    varchar plan
+    varchar estado
+    date fecha_inicio
+    date fecha_vencimiento
+    boolean renovacion_automatica
+  }
+  SEDES {
+    uuid id PK
+    varchar nombre UK
+    varchar direccion
+    int aforo_maximo
+    boolean activa
+  }
+  REGISTROS_ACCESO {
+    uuid id PK
+    uuid usuario_id FK
+    uuid sede_id FK
+    timestamptz fecha_ingreso
+    timestamptz fecha_egreso
+  }
+  CANCHAS {
+    uuid id PK
+    uuid sede_id FK
+    varchar nombre
+    varchar tipo
+    decimal(10,2) precio_hora
+    varchar estado 
+  }
+  RESERVAS_CANCHA {
+    uuid id PK
+    uuid cancha_id FK 
+    uuid usuario_id FK 
+    timestamptz fecha_hora_inicio 
+    timestamptz fecha_hora_fin
+    decimal precio_final
+    jsonb detalle_precio 
+    varchar estado
+  }
+  CLASES {
+    uuid id PK
+    uuid sede_id FK 
+    varchar tipo
+    varchar instructor
+    timestamptz fecha_hora
+    int capacidad_maxima
+    int cupos_disponibles 
+  }
+  RESERVAS_CLASE {
+    uuid id PK
+    uuid clase_id FK 
+    uuid usuario_id FK 
+    varchar estado 
+    boolean con_penalidad
+  }
+  LISTA_ESPERA {
+    uuid id PK
+    uuid clase_id FK 
+    uuid usuario_id FK 
+    boolean notificado
+    timestamptz created_at
+  }
+  PAGOS {
+    uuid id PK
+    uuid usuario_id FK
+    uuid reserva_cancha_id FK 
+    uuid membresia_id FK 
+    decimal monto
+    varchar estado
+    varchar token_pasarela 
+    varchar motivo_rechazo
+  }
+  NOTIFICACIONES {
+    uuid id PK
+    uuid usuario_id FK
+    varchar tipo
+    varchar mensaje
+    boolean leida
+  }
+
+  USUARIOS ||--o| MEMBRESIAS : "tiene"
+  USUARIOS ||--o{ REGISTROS_ACCESO : "ingresa"
+  SEDES ||--o{ REGISTROS_ACCESO : "registra"
+  SEDES ||--o{ CANCHAS : "tiene"
+  CANCHAS ||--o{ RESERVAS_CANCHA : "se reserva"
+  USUARIOS ||--o{ RESERVAS_CANCHA : "reserva"
+  SEDES ||--o{ CLASES : "dicta"
+  CLASES ||--o{ RESERVAS_CLASE : "recibe"
+  USUARIOS ||--o{ RESERVAS_CLASE : "reserva"
+  CLASES ||--o{ LISTA_ESPERA : "tiene"
+  USUARIOS ||--o{ LISTA_ESPERA : "espera"
+  USUARIOS ||--o{ PAGOS : "paga"
+  RESERVAS_CANCHA |o--o{ PAGOS : "se paga con"
+  MEMBRESIAS |o--o{ PAGOS : "se paga con"
+  USUARIOS ||--o{ NOTIFICACIONES : "recibe"

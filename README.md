@@ -1,118 +1,98 @@
 # FitZone Sports
 
-Plataforma de gestión para una cadena de gimnasios con varias sedes: socios y membresías, control de acceso con QR, clases grupales con lista de espera, alquiler de canchas con precio dinámico y pagos.
+FitZone Sports es una plataforma web para una cadena de 25 gimnasios. Los socios gestionan su membresía, entran a cualquier sede mostrando un QR en el celular, se anotan en clases y alquilan canchas de pádel y fútbol pagando en línea. El personal usa una consola para controlar los ingresos, el aforo de cada sede, las canchas y las clases. Si se corta la conexión, la recepción sigue validando los QR y los ingresos se cargan solos cuando vuelve.
 
 **Trabajo Integrador Final · Programación V** · Licenciatura en Sistemas · FCAD-UNER · Prof. Lic. Juan José Aguirre · 2026
 
-| Integrante | Rol | Usuario de GitHub |
+## Equipo
+
+| Integrante | Rol | Usuario de Git |
 |---|---|---|
-| Franco Ayala | Arquitecto / Backend Lead | [@orangecraft2](https://github.com/orangecraft2) |
-| Martín Emiliano Sirizzotti | Backend Developer / QA-DevOps | [@JackCannon92](https://github.com/JackCannon92) |
-| Santiago Agustín Villagra | Frontend Developer | [@Santiago1102](https://github.com/SantiagoV1102) |
+| Franco Ayala | P1 · Arquitecto / Backend Lead | [@orangecraft2](https://github.com/orangecraft2) |
+| Martín Emiliano Sirizzotti | P2 · Backend Developer y P4 · QA / DevOps | [@JackCannon92](https://github.com/JackCannon92) |
+| Santiago Agustín Villagra | P3 · Frontend Developer | [@Santiago1102](https://github.com/SantiagoV1102) |
 
----
+## Puesta en marcha
 
-## Estructura del repositorio
+Requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y abierto.
 
-```
-docker-compose.yml   Levanta base de datos, API y aplicación web con un comando
-.github/workflows/   Pipeline de integración continua (pruebas, imagen y entorno de pruebas)
-Backend/             API REST: Node.js + Express 5, Sequelize y PostgreSQL
-  src/               Monolito modular: un módulo por dominio, armado en core/compositionRoot.js
-  test/              Pruebas con Jest y Supertest (unitarias e integración)
-  db/                Esquema de la base y datos de prueba (seed)
-  docs/              ADR, bitácora del equipo y bitácoras personales
-  swagger.json       Contrato OpenAPI exportado
-Frontend/            Aplicación web: HTML, CSS y JavaScript sin framework (en curso)
-```
+1. `git clone https://github.com/JackCannon92/TPI-Programaci-n-V---FitZone-Sport.git`
+2. `cd TPI-Programaci-n-V---FitZone-Sport`
+3. `docker compose up --build`
+4. Abrir http://localhost:8080 e ingresar con uno de los DNI de la tabla de abajo.
+5. La API y su documentación están en http://localhost:3000/api-docs.
 
-Cada carpeta tiene su propio `README.md` con el detalle.
-
-## Cómo levantarlo
-
-### Con Docker (recomendado)
-
-**Requisito:** Docker Desktop (o Docker Engine con Compose).
-
-```bash
-docker compose up --build
-```
-
-| Qué | Dónde |
-|---|---|
-| Aplicación web | http://localhost:8080 |
-| API | http://localhost:3000/api/v1 |
-| Swagger | http://localhost:3000/api-docs |
-
-La primera vez se crean las tablas y se cargan los datos de prueba (`Backend/db/`). Para empezar de cero: `docker compose down -v` y volver a levantar. Las claves se toman de un `.env` en la raíz (copiar `.env.example`); si no existe, se usan valores de desarrollo.
-
-### Sin Docker
-
-**Requisitos:** Node.js 20 o superior y un PostgreSQL (Supabase o propio) donde se hayan corrido `Backend/db/01-esquema.sql` y `Backend/db/02-seed.sql`.
-
-```bash
-cd Backend
-npm install
-cp .env.example .env      # completar DATABASE_URL y QR_SECRET
-npm start                 # http://localhost:3000 · Swagger en /api-docs
-```
-
-La aplicación web se abre con Live Server (o cualquier servidor estático) sobre `Frontend/`, con la API corriendo.
-
-> Los archivos `.env` tienen contraseñas: **nunca se suben** (están en `.gitignore`). Solo se suben los `.env.example`.
+La primera vez se crean las tablas y se cargan los datos de prueba. Para empezar de cero: `docker compose down -v` y volver al paso 3. Sin Docker, con Node.js y un PostgreSQL propio: ver el [manual de instalación](docs/manuales/manual-instalacion-operacion.md).
 
 ## Usuarios de prueba
 
-Los carga el seed, uno por cada rol del sistema más los casos de la demo. El sistema todavía no maneja contraseñas: se ingresa con el DNI.
+Los carga el seed (`backend/db/02-seed.sql`), uno por cada rol. El sistema no maneja contraseñas: se ingresa con el DNI.
 
 | Rol | Nombre | DNI | Para qué sirve |
 |---|---|---|---|
-| Socio (CLIENTE) | Lucía Fernández | 30111222 | Socia al día: descuento en canchas, clases, QR de acceso |
-| Socio en mora (CLIENTE) | Diego Romero | 30222333 | Membresía vencida: paga las canchas como externo y no puede entrar |
-| Cliente externo (CLIENTE) | Paula Gómez | 35444555 | Alquila canchas sin membresía y entra con el QR de su reserva |
-| Recepcionista | Carla Benítez | 28555666 | Recepción: lee los QR y controla el aforo |
-| Administrador de sede | Sergio Ledesma | 27666777 | Gestión de la sede: canchas y clases |
-| Gerente central | Graciela Ruiz | 25777888 | Gestión de toda la cadena |
+| Socio | Lucía Fernández | 30111222 | Socia al día: descuento en canchas, clases y QR de acceso |
+| Socio en mora | Diego Romero | 30222333 | Membresía vencida: paga las canchas como externo y no puede entrar |
+| Cliente externo | Paula Gómez | 35444555 | Alquila canchas sin membresía y entra con el QR de su reserva |
+| Recepcionista | Carla Benítez | 28555666 | Recepción: lee los QR, controla el aforo, funciona sin conexión |
+| Administrador de sede | Sergio Ledesma | 27666777 | Gestión de su sede: canchas y clases |
+| Gerente | Graciela Ruiz | 25777888 | Gestión de toda la cadena |
 
-Además hay 25 sedes, canchas de pádel y fútbol en cada una (una en mantenimiento), tres clases por sede para mañana, una clase de cupo reducido para probar la lista de espera, y 20 socios más.
-
-## Pruebas y cobertura
-
-```bash
-cd Backend
-npm test            # 113 pruebas: unitarias e integración, sin base de datos
-npm run test:cov    # además genera el reporte de cobertura en Backend/coverage/
-```
-
-Cobertura al 17/11/2026: **82,3 % de líneas y 61,5 % de ramas**. El umbral mínimo (ADR-008) es 70 % de líneas y 50 % de ramas: si un cambio lo baja, las pruebas fallan. El pipeline de GitHub Actions las corre en cada Pull Request.
+Además hay 25 sedes con canchas de pádel y fútbol (una en mantenimiento), tres clases por sede, una clase de cupo reducido para probar la lista de espera y 20 socios más.
 
 ## Documentación
 
 | Qué | Dónde |
 |---|---|
-| Decisiones de arquitectura (ADR) | [`Backend/docs/adr/`](Backend/docs/adr/) |
-| Bitácora del equipo y anexos de la Unidad III | [`Backend/docs/LOG.md`](Backend/docs/LOG.md) |
-| Bitácoras personales | [`Backend/docs/bitacoras/`](Backend/docs/bitacoras/) |
-| Diagramas (C4, DER, UML, despliegue y pipeline) | [`Backend/docs/diagramas/`](Backend/docs/diagramas/) |
-| Manuales (instalación y operación, usuario, técnico) | [`Backend/docs/manuales/`](Backend/docs/manuales/) |
-| Documentación de la API | Swagger, en `http://localhost:3000/api-docs`, y el contrato exportado en [`Backend/swagger.json`](Backend/swagger.json) (`npm run swagger:export`) |
+| Decisiones de arquitectura (ADR-001 a ADR-017) | [`docs/adr/`](docs/adr/) |
+| Diagramas: C4, DER, UML, despliegue y pipeline (fuente y PNG) | [`docs/diagramas/`](docs/diagramas/) |
+| Manuales de usuario, de instalación y operación, y técnico | [`docs/manuales/`](docs/manuales/) |
+| Bitácoras personales | [`docs/bitacoras/`](docs/bitacoras/) |
+| Planificación: plan, cronograma, carga, trazabilidad, seguimiento y riesgos | [`docs/planificacion/`](docs/planificacion/) |
+| Evidencia de los requisitos no funcionales | [`docs/rnf/`](docs/rnf/) |
+| Entregables por unidad, historial del equipo y dossier | [`docs/entregables/`](docs/entregables/) |
+| Contrato de la API | [`backend/swagger.json`](backend/swagger.json) y Swagger UI en http://localhost:3000/api-docs |
 
-## Estado
+## Pruebas y cobertura
 
-| Unidad | Estado |
-|---|---|
-| I · Arquitectura | Hecha |
-| II · Frameworks | Hecha |
-| III · Patrones de diseño | Hecha: Strategy, Repository y Observer, con un ADR por patrón |
-| IV · Aplicación Web | En curso |
-| V · Testing y CI/CD | Pruebas con Jest y Supertest, umbral de cobertura, Docker y pipeline en GitHub Actions |
-| VI · Móvil | No obligatoria: se descartó (ADR-012) |
+```bash
+cd backend
+npm install
+npm test                    # 113 pruebas unitarias y de integración, sin base de datos
+npm run test:cov            # además, el reporte de cobertura en backend/coverage/
+npm run test:concurrencia   # RN-02 contra PostgreSQL real (necesita DATABASE_URL)
+```
+
+Estado al 18/11/2026: **113 pruebas en verde, 82,3 % de líneas y 61,5 % de ramas cubiertas**. El umbral mínimo (ADR-008) es 70 % de líneas y 50 % de ramas: si un cambio lo baja, las pruebas fallan. El pipeline de GitHub Actions corre todo esto, más la prueba de concurrencia y un despliegue de prueba, en cada push a `main`.
+
+## Estructura del repositorio
+
+```
+README.md · LICENSE · docker-compose.yml · .env.example
+backend/                API REST monolítica modular: Node.js, Express 5, Sequelize y PostgreSQL
+  src/usuarios/         M1 · RF-01 a RF-03 (con membresias/ y sedes/)
+  src/acceso/           M2 · RF-04, RF-05, RNF-01
+  src/clases/           M3 · RF-06 a RF-08
+  src/canchas/          M4 · RF-09 a RF-12
+  src/pagos/            M5 · RF-13, RF-14
+  src/common/           errores, validación, eventos y QR firmados
+  src/core/             composition root, base de datos, Swagger
+  test/                 unitarias, integración y concurrencia
+  db/                   esquema y datos de prueba
+  swagger.json          contrato OpenAPI exportado
+frontend/src/           aplicación web, HTML, CSS y JavaScript sin framework (ADR-006)
+  portal/               portal responsive del socio
+  admin/                consola de administración: recepción, gestión y usuarios
+  components/           piezas de interfaz compartidas y estilos
+  services/             capa de servicio contra la API y terminal sin conexión
+  store/                estado global (sesión)
+docs/                   adr, diagramas, bitacoras, manuales, planificacion, rnf, entregables
+```
 
 ## Uso de inteligencia artificial
 
-Usamos herramientas de IA durante el trabajo y lo declaramos acá, como piden los lineamientos de la cátedra:
+Usamos herramientas de IA durante el trabajo y lo declaramos, como piden los lineamientos:
 
 - **Gemini**: revisión del material de la Unidad I. Cada observación se verificó contra los archivos antes de aplicarla y algunas se descartaron.
-- **Claude**: generación y corrección de código (patrones, tests, códigos QR y pantallas de la Aplicación Web), explicación de conceptos (mocks, CQRS, Swagger) y ayuda con la documentación.
+- **Claude**: generación y corrección de código (patrones, pruebas, códigos QR, pantallas, sincronización sin conexión), explicación de conceptos y ayuda con la documentación.
 
-Todo lo generado con IA se probó antes de subirlo (Swagger, `npm test` y la aplicación). El detalle de cómo la usó cada uno está en su bitácora personal.
+Todo lo generado con IA se probó antes de subirlo. El detalle de cómo la usó cada uno está en su bitácora personal.

@@ -1,0 +1,28 @@
+---
+title: "Arquitectura del pipeline CI/CD · Autor: Sirizzotti, Martín Emiliano · 16/11/2026 · v1.0"
+---
+%% Fuente: .github/workflows/ci.yml y docker-compose.yml (ADR-008 y ADR-009). Borrador generado con IA (Claude) y revisado por el autor.
+flowchart LR
+  dev(["Integrante<br/>commit + push<br/>o Pull Request"]) --> gh["GitHub<br/>repositorio"]
+  gh -- "dispara" --> e1
+
+  subgraph actions["GitHub Actions · ci.yml"]
+    direction LR
+    e1["<b>1 · Pruebas y cobertura</b><br/>npm ci<br/>npm run test:cov (Jest + Supertest)<br/>umbral: 70 % líneas · 50 % ramas<br/>swagger.json al día"] -- "verde" --> e2
+    e2["<b>2 · Imagen de Docker</b><br/>docker build backend<br/>etiqueta = hash del commit"] -- "verde" --> e3
+    e3["<b>3 · Entorno de pruebas</b><br/>docker compose up (db + api + web)<br/>prueba de humo: /api/health,<br/>25 sedes del seed, página web"]
+  end
+
+  e1 -- "rojo" --> stop(["Se detiene:<br/>el cambio no avanza"])
+  e2 -- "rojo" --> stop
+  e3 -- "rojo" --> stop
+  e1 -. "artefacto" .-> cov[("Reporte de<br/>cobertura")]
+  e3 -- "verde" --> ok(["Listo para integrar en main<br/>y etiquetar la versión (v1.0-entrega)"])
+
+  ok -. "si una versión sale mal" .-> rev["<b>Reversión</b><br/>git revert + volver a levantar<br/>la imagen de la versión anterior<br/>(cambios de base solo aditivos)"]
+
+  classDef etapa fill:#85bbf0,stroke:#5d82a8,color:#000
+  class e1,e2,e3 etapa
+  style stop fill:#f8d7d3,stroke:#c0392b
+  style ok fill:#d5f0dc,stroke:#2e8b57
+  style rev fill:#fff4c2,stroke:#b39b2d
