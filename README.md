@@ -6,9 +6,9 @@ Plataforma de gestión para una cadena de gimnasios con varias sedes: socios y m
 
 | Integrante | Rol | Usuario de GitHub |
 |---|---|---|
-| Franco Ayala | Arquitecto / Backend Lead | *(completar)* |
+| Franco Ayala | Arquitecto / Backend Lead | [@orangecraft2](https://github.com/orangecraft2) |
 | Martín Emiliano Sirizzotti | Backend Developer / QA-DevOps | [@JackCannon92](https://github.com/JackCannon92) |
-| Santiago Agustín Villagra | Frontend Developer | *(completar)* |
+| Santiago Agustín Villagra | Frontend Developer | [@Santiago1102](https://github.com/SantiagoV1102) |
 
 ---
 
