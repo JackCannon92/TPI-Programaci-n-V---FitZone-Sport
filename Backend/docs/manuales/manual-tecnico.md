@@ -175,9 +175,10 @@ Si dos pedidos intentan el mismo turno, PostgreSQL acepta uno y rechaza el otro 
 | QR rotativo del socio: `usuarioId.minuto.firma`, HMAC con `QR_SECRET`, se acepta el minuto anterior | `src/modules/acceso/qr-token.js` | Implementado |
 | QR sin conexión: payload firmado con **Ed25519**, vale 24 hs o hasta el vencimiento de la membresía; la clave privada se deriva de `QR_OFFLINE_SEMILLA` (o de `QR_SECRET`) para que no cambie al reiniciar | `src/modules/acceso/qr-offline.js` | Implementado |
 | Clave pública para los terminales | `GET /api/v1/acceso/clave-publica` | Implementado |
-| Validación de la firma sin consultar la base | `POST /api/v1/acceso/validar-offline` (lo mismo que haría el terminal) | Implementado en el backend |
-| Validación local en el navegador del terminal | `Frontend/js/recepcion.js` | **Pendiente**: hoy llama al endpoint anterior |
-| Cola local de ingresos y `POST /api/v1/acceso/sincronizar` al reconectar, con conflictos de RN-01 marcados | ADR-007 | **Pendiente** |
+| Validación de la firma en el servidor sin consultar la base (respaldo si el navegador no tiene Ed25519) | `POST /api/v1/acceso/validar-offline` | Implementado |
+| Validación local en el navegador del terminal: guarda la clave pública (se renueva cada 24 hs) y verifica la firma con WebCrypto Ed25519, sin red | `Frontend/js/terminal-offline.js` | Implementado |
+| Cola local de ingresos (`localStorage`) que se envía al volver la conexión (evento `online`, cada 15 s o «Sincronizar ahora») | `Frontend/js/terminal-offline.js` · `recepcion.js` | Implementado |
+| `POST /api/v1/acceso/sincronizar`: vuelve a verificar cada firma con la hora del ingreso, descarta reenvíos (persona + sede + hora) y resuelve RN-01 cerrando el registro abierto a la hora del ingreso nuevo | `acceso.service.js` → `sincronizarIngresos()` (ADR-007) | Implementado, con 12 pruebas unitarias y 2 de integración |
 
 Por qué clave pública y no HMAC (ADR-003): para verificar un HMAC el terminal necesitaría el secreto, y quien lo extrajera podría fabricar QR. Con Ed25519, el terminal solo tiene la clave pública, que sirve para verificar pero no para firmar.
 
@@ -245,15 +246,15 @@ No se tocan `tarifador.js`, `canchas.service.js`, las otras estrategias ni el fr
 
 ```bash
 cd Backend
-npm test                  # 100 pruebas
+npm test                  # 113 pruebas
 npm test -- precios       # solo los archivos que contienen "precios"
 npm run test:cov          # con reporte de cobertura
 ```
 
 | Carpeta | Qué prueba |
 |---|---|
-| `test/unit/` (72 pruebas) | Reglas de cada servicio y patrón: estrategias de precio, RN-02 con repositorio en memoria, membresías (incluidas pruebas de caracterización), Observer, los cinco tipos de QR. |
-| `test/integracion/` (28 pruebas) | La API por HTTP con Supertest: router, validadores, servicio y manejador de errores reales, con repositorio en memoria. Incluye una prueba de humo de la app completa y de `/api/v1`. |
+| `test/unit/` (83 pruebas) | Reglas de cada servicio y patrón: estrategias de precio, RN-02 con repositorio en memoria, membresías (incluidas pruebas de caracterización), Observer, los cinco tipos de QR. |
+| `test/integracion/` (30 pruebas) | La API por HTTP con Supertest: router, validadores, servicio y manejador de errores reales, con repositorio en memoria. Incluye una prueba de humo de la app completa y de `/api/v1`. |
 | `test/dobles/fitzone.js` | Dobles compartidos: *fakes* (repositorios en memoria), *stubs* (servicio de usuarios con datos fijos) y *mocks* (`jest.fn()`). |
 
 Ninguna prueba usa la base de datos real (ADR-008).
@@ -267,7 +268,7 @@ Ninguna prueba usa la base de datos real (ADR-008).
 | `% Funcs` | Funciones llamadas al menos una vez |
 | `% Lines` | Líneas ejecutadas |
 
-Al 18/11/2026: **80,8 % de líneas y 58,1 % de ramas**. El umbral (`coverageThreshold` en `package.json`) es **70 % de líneas y 50 % de ramas**: si un cambio lo baja, `npm run test:cov` falla y el pipeline también. Las líneas sin cubrir más grandes son las de acceso a la base que no pasan por repositorios (sedes, usuarios, pagos), cubiertas solo por la prueba manual de punta a punta.
+Al 17/11/2026: **82,3 % de líneas y 61,5 % de ramas**. El umbral (`coverageThreshold` en `package.json`) es **70 % de líneas y 50 % de ramas**: si un cambio lo baja, `npm run test:cov` falla y el pipeline también. Las líneas sin cubrir más grandes son las de acceso a la base que no pasan por repositorios (sedes, usuarios, pagos), cubiertas solo por la prueba manual de punta a punta.
 
 ---
 
@@ -303,4 +304,5 @@ La reversión (tag de versión, `git revert`, imagen anterior, cambios de base s
 | Secretos | Solo por variables de entorno; los `.env` nunca se suben. |
 
 **Ramas.** `main` es la rama protegida por el pipeline. Cada cambio se integra con un commit propio (o una rama y un Pull Request); los laboratorios usaron ramas aparte (por ejemplo `contrato-api`, Laboratorio 2). La versión entregada se marca con el tag anotado `v1.0-entrega`.
+
 
