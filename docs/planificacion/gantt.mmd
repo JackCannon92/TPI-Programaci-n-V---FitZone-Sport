@@ -1,0 +1,63 @@
+---
+title: "Gantt · Plan contra real por sprint · Autores: Ayala, Sirizzotti, Villagra · 17/11/2026 · v1.0"
+---
+%% Fuente: planilla de tareas v3 (02/11) y v4 (17/11), bitácoras e historial de Git.
+%% Barras "plan": fechas del plan. Barras "real": cuándo se hizo. Rombos: fecha de terminación sin fecha de inicio registrada.
+%% Borrador generado con IA (Claude) y revisado por el equipo.
+%%{init: {'gantt': {'fontSize': 15, 'sectionFontSize': 15, 'barHeight': 24, 'barGap': 6, 'leftPadding': 200, 'topPadding': 60}} }%%
+gantt
+  dateFormat YYYY-MM-DD
+  axisFormat %d/%m
+  tickInterval 1week
+  todayMarker 2026-11-17
+
+  section Sprints
+  S1 Arquitectura          :s1, 2026-08-27, 2026-09-10
+  S2 Módulo 1 y acceso     :s2, 2026-09-10, 2026-09-24
+  S3 Módulos 3-5 y front   :s3, 2026-09-24, 2026-10-08
+  S4 Patrones y pantallas  :s4, 2026-10-08, 2026-10-22
+  S5 Pruebas y CI/CD       :s5, 2026-10-22, 2026-11-05
+  S6 Integración y docs    :s6, 2026-11-05, 2026-11-19
+  S7 Entrega               :s7, 2026-11-19, 2026-11-23
+  S8 Defensa               :s8, 2026-11-23, 2026-11-30
+
+  section Arquitectura (E0)
+  plan                     :done, 2026-08-27, 2026-09-10
+  real                     :done, 2026-08-27, 2026-09-10
+
+  section Módulo 1 (E1)
+  plan                     :done, 2026-09-10, 2026-09-17
+  real                     :done, 2026-09-10, 2026-09-17
+
+  section Acceso y canchas (E2, E4)
+  plan                     :2026-09-17, 2026-09-24
+  real - atraso por exámenes :crit, 2026-09-26, 2026-10-14
+
+  section Clases y pagos (E3, E5)
+  plan                     :2026-09-24, 2026-10-01
+  real                     :crit, 2026-09-28, 2026-10-14
+
+  section Aplicación web (E6)
+  plan base                :2026-10-01, 2026-10-08
+  real base                :done, 2026-10-02, 2026-10-03
+  plan pantallas           :2026-10-08, 2026-10-22
+  real pantallas terminadas :milestone, crit, 2026-10-28, 0d
+
+  section Pruebas (E7)
+  plan                     :2026-10-22, 2026-10-29
+  real terminadas          :milestone, done, 2026-10-28, 0d
+
+  section Docker y pipeline (E7)
+  plan                     :2026-10-29, 2026-11-05
+  real                     :crit, 2026-11-16, 2026-11-17
+
+  section Agregadas fuera del plan
+  QR y quitar CQRS (27/10)  :active, 2026-10-27, 2026-10-29
+  ADR, diagramas y manuales (06/11) :active, 2026-11-06, 2026-11-18
+  Sincronización offline (ADR-007) :active, 2026-11-17, 2026-11-18
+
+  section Cierre (E8)
+  plan integración         :2026-11-05, 2026-11-19
+  real integración         :done, 2026-11-16, 2026-11-18
+  Entrega                  :milestone, 2026-11-19, 0d
+  Defensa                  :2026-11-23, 2026-11-30

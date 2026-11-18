@@ -1,6 +1,6 @@
 # Bitácora personal — Martín Emiliano Sirizzotti
 
-**Rol:** Backend Developer / QA-DevOps · **Unidades a cargo:** III (Patrones de diseño) y V (Testing y CI/CD) · **Líder:** Sprint 1 (semanas 1 y 2), Sprint 4 (semanas 7 y 8) y Sprint 7 (semana 13)
+**Rol:** Backend Developer / QA-DevOps · **Unidades a cargo:** III (Patrones de diseño) y V (Testing y CI/CD) · **Líder de check-in:** 03/09 (sprint 1) y 29/10 (sprint 5). La rotación quedó corrida un turno desde el sprint 2 (ver `docs/planificacion/03-cronograma.md`)
 
 Programación V · FCAD-UNER · Prof. Lic. Juan José Aguirre · Actualizada al 05/11/2026 (semana 10 de 13)
 
@@ -41,9 +41,9 @@ Formato: `[fecha] (commit) Qué hice · Decisión · Complejidad y cómo la reso
 > **Sobre los commits.** Los commits de septiembre (`edafca8`, `262497e`, `2160fb6`) están en el repositorio que usamos al principio. En este repositorio el código se subió de una sola vez el 15/10 (`ef6fd8a`), así que el trabajo de octubre no tiene commits propios. Desde el 05/11 subo cada cambio en un commit separado por tema y lo cito acá.
 
 ### Unidades I y II — apoyo
-- **[27/08 – 09/09]** Fui líder del Sprint 1 (semanas 1 y 2).
+- **[03/09]** Fui líder del check-in del Sprint 1.
 - **[10/09]** (commits `edafca8`, `262497e`, `2160fb6`) Conexión a Supabase como opción por defecto (`DATABASE_URL` con SSL), comando `db:check` para probar la conexión y modo local con SQLite para trabajar sin Supabase. · **Complejidad:** `db:check` daba error aunque la conexión anduviera, porque fallaba al leer información extra → separé lo crítico (la conexión) de lo opcional.
-- **[16/09]** Guía para el check-in del Sprint 2 (lo presentó Franco como líder). · **Decisión:** mostrar solo lo que corresponde a esas semanas según el plan.
+- **[16/09]** Guía para el check-in del Sprint 2, que le tocaba a Franco. No pudo asistir el 17/09 y, por la mesa de exámenes del 22 al 28/09, lo presentó el 01/10. · **Decisión:** mostrar solo lo que corresponde a esas semanas según el plan.
 
 ### Unidad III — Patrones de diseño
 - **[01/10]** Revisé el backend que armó Franco y creé las tablas en Supabase con el script SQL. · **Complejidad 1:** el modelo de `usuarios` usa borrado lógico y el script no tenía la columna `deleted_at` → la agregué. · **Complejidad 2:** el error de los ENUM con `sync({ alter: true })` (ver tabla, n.º 3).
@@ -74,7 +74,7 @@ Formato: `[fecha] (commit) Qué hice · Decisión · Complejidad y cómo la reso
 - **[05/11]** Ordené el repositorio de GitHub: agregué `.gitignore` (para que nunca se suba el `.env` con la contraseña de la base), borré archivos que sobraban (olores O-4 y O-13) y subí el trabajo de octubre en commits separados por tema. · **Complejidad:** el código se había subido de una sola vez desde la web de GitHub, sin historial → aprendí a usar GitHub Desktop y a separar los cambios en commits.
 
 ### Sincronización del terminal de sede → ADR-007
-- **[17/11]** Recepción valida el QR sin conexión en el navegador (WebCrypto Ed25519 con la clave pública guardada) y anota los ingresos en una cola local; al volver la conexión los manda a `POST /api/v1/acceso/sincronizar`. El servidor vuelve a verificar cada firma con la hora del ingreso, descarta los reenvíos y resuelve RN-01 cerrando el registro que quedó abierto. 14 tests nuevos → **113 tests** (83 unitarios y 30 de integración). · **Decisión:** deduplicar por persona + sede + hora en lugar de agregar una columna `evento_id`, para no cambiar el esquema de Supabase a días de la entrega. · **Complejidad:** que la pantalla siga andando si se recarga sin servidor (también hubo que guardar las sedes) y que el ingreso quede con la hora en que la persona pasó, no con la hora en que se sincroniza.
+- **[17/11]** Recepción valida el QR sin conexión en el navegador (WebCrypto Ed25519 con la clave pública guardada) y anota los ingresos en una cola local; al volver la conexión los manda a `POST /api/v1/acceso/sincronizar`. El servidor vuelve a verificar cada firma con la hora del ingreso, descarta los reenvíos y resuelve RN-01 cerrando el registro que quedó abierto. 13 tests nuevos → **113 tests** (83 unitarios y 30 de integración). · **Decisión:** deduplicar por persona + sede + hora en lugar de agregar una columna `evento_id`, para no cambiar el esquema de Supabase a días de la entrega. · **Complejidad:** que la pantalla siga andando si se recarga sin servidor (también hubo que guardar las sedes) y que el ingreso quede con la hora en que la persona pasó, no con la hora en que se sincroniza.
 
 ### Cierre
 - [ ] Pendiente (semanas 12 y 13).
