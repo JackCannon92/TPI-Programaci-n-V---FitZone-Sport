@@ -1,0 +1,51 @@
+---
+title: "Secuencia · Reserva de cancha con pago · Autor: Sirizzotti, Martín Emiliano · 16/11/2026 · v1.0"
+---
+%% Fuente: canchas.service.js, tarifador.js, pagos.service.js y comprobante-pdf.js. Borrador generado con IA (Claude) y revisado por el autor.
+sequenceDiagram
+  autonumber
+  actor S as Socio
+  participant W as Aplicación web
+  participant C as API · Canchas (servicio)
+  participant T as Tarifador (Strategy)
+  participant U as Usuarios
+  participant R as Repositorio de reservas
+  participant P as API · Pagos (servicio)
+  participant G as Pasarela (simulada)
+  participant DB as PostgreSQL
+
+  S->>W: Elige sede, cancha y día
+  W->>C: GET /api/v1/canchas/{id}/disponibilidad?fecha=
+  C->>R: turnosOcupados(cancha, día)
+  R->>DB: SELECT reservas activas
+  C-->>W: Turnos de 8 a 23 (disponible, pico)
+  S->>W: Elige el turno de las 19
+  W->>C: GET /api/v1/canchas/{id}/precio?usuarioId&inicio
+  C->>U: esSocioActivo(usuario)
+  U-->>C: true
+  C->>T: cotizar({ cancha, inicio, esSocioActivo })
+  Note over T: Precio base 8000<br/>− 15 % socio = 6800<br/>+ 20 % pico = 8160
+  T-->>C: precioFinal 8160 y detalle
+  C-->>W: Precio con el detalle de cada regla
+  S->>W: Confirma la reserva
+  W->>C: POST /api/v1/canchas/reservas
+  C->>T: cotizar (de nuevo, el precio no viene del cliente)
+  C->>R: registrar(reserva PENDIENTE_PAGO)
+  R->>DB: INSERT reservas_cancha
+  C-->>W: 201 · reserva PENDIENTE_PAGO
+  S->>W: Ingresa la tarjeta
+  W->>P: POST /api/v1/pagos { reservaId, tarjeta }
+  P->>G: cobrar(monto, tarjeta)
+  alt Tarjeta aprobada
+    G-->>P: aprobado, token, últimos 4
+    P->>DB: INSERT pago APROBADO (solo token y últimos 4)
+    P->>C: confirmarReserva(id)
+    C->>DB: UPDATE estado = CONFIRMADA
+    P-->>W: 201 · pago
+    W->>P: GET /api/v1/pagos/{id}/comprobante
+    P-->>W: PDF con QR de ingreso y QR de verificación
+  else Tarjeta rechazada (termina en 0000)
+    G-->>P: rechazado, motivo
+    P->>DB: INSERT pago RECHAZADO
+    P-->>W: 402 · Pago rechazado (la reserva sigue PENDIENTE_PAGO)
+  end

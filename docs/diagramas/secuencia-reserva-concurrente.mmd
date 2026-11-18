@@ -1,0 +1,33 @@
+---
+title: "Secuencia · Reserva concurrente del mismo turno (RN-02) · Autor: Sirizzotti, Martín Emiliano · 16/11/2026 · v1.0"
+---
+%% Fuente: canchas.service.js, reservas.sequelize.js, errorHandler.js y el índice uq_reserva_cancha_turno_activo. Borrador generado con IA (Claude) y revisado por el autor.
+sequenceDiagram
+  autonumber
+  actor A as Socio A
+  actor B as Socio B
+  participant C as API · Canchas (servicio)
+  participant R as Repositorio (Sequelize)
+  participant DB as PostgreSQL
+  participant E as Manejador de errores
+
+  par Los dos piden el mismo turno al mismo tiempo
+    A->>C: POST /reservas (Pádel 1, mañana 19:00)
+  and
+    B->>C: POST /reservas (Pádel 1, mañana 19:00)
+  end
+  Note over C: Los dos pasan las validaciones:<br/>ninguno ve todavía la reserva del otro
+  C->>R: registrar(reserva de A)
+  C->>R: registrar(reserva de B)
+  R->>DB: INSERT reserva de A
+  R->>DB: INSERT reserva de B
+  Note over DB: Índice único parcial<br/>uq_reserva_cancha_turno_activo<br/>(cancha_id, fecha_hora_inicio)<br/>solo para PENDIENTE_PAGO y CONFIRMADA
+  DB-->>R: OK · fila de A guardada
+  DB-->>R: ERROR · violación de unicidad (B)
+  R-->>C: reserva de A
+  C-->>A: 201 · reserva PENDIENTE_PAGO
+  R->>R: traduce el error de la base
+  R-->>C: TurnoYaReservadoError
+  C->>E: next(error)
+  E-->>B: 409 · Ese turno acaba de ser reservado por otro usuario (RN-02)
+  Note over B: El intento perdedor recibe un 409 claro<br/>y elige otro turno. No hay esperas ni bloqueos.

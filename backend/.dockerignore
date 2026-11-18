@@ -1,0 +1,12 @@
+# Lo que no entra en la imagen de la API
+node_modules
+coverage
+test
+docs
+db
+scripts
+.env
+.env.*
+*.md
+Dockerfile
+.dockerignore

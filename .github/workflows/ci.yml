@@ -1,0 +1,106 @@
+# Pipeline de integración y entrega continuas (ADR-009).
+# Etapas: pruebas y cobertura → imagen de Docker → despliegue en el entorno de pruebas.
+# Corre en cada Pull Request y en cada push a main. Si una etapa falla, las siguientes no corren.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pruebas:
+    name: 1 · Pruebas y cobertura
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    # Base PostgreSQL real para la prueba de concurrencia de RN-02.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: fitzone
+          POSTGRES_USER: fitzone
+          POSTGRES_PASSWORD: fitzone_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U fitzone -d fitzone"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Pruebas unitarias y de integración, con umbral de cobertura (ADR-008)
+        run: npm run test:cov
+
+      - name: Concurrencia de reservas (RN-02) contra PostgreSQL real
+        env:
+          PGPASSWORD: fitzone_ci
+          DATABASE_URL: postgres://fitzone:fitzone_ci@localhost:5432/fitzone
+          DB_SSL: "false"
+          QR_SECRET: solo-para-ci
+          TZ: America/Argentina/Buenos_Aires
+        run: |
+          psql -h localhost -U fitzone -d fitzone -v ON_ERROR_STOP=1 -q -f db/01-esquema.sql
+          psql -h localhost -U fitzone -d fitzone -v ON_ERROR_STOP=1 -q -f db/02-seed.sql
+          npm run test:concurrencia
+
+      - name: Guardar el reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-cobertura
+          path: backend/coverage/
+
+      - name: El contrato swagger.json está al día con las rutas
+        run: |
+          npm run swagger:export
+          git diff --exit-code swagger.json
+
+  imagen:
+    name: 2 · Imagen de Docker
+    needs: pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir la imagen de la API, etiquetada con el commit
+        run: docker build -t fitzone-api:${{ github.sha }} backend
+
+  entorno-de-pruebas:
+    name: 3 · Despliegue en el entorno de pruebas
+    needs: imagen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Levantar base, API y aplicación web
+        run: docker compose up -d --build --wait --wait-timeout 180
+
+      - name: Prueba de humo
+        run: |
+          curl -fsS http://localhost:3000/api/health
+          sedes=$(curl -fsS http://localhost:3000/api/v1/sedes | jq length)
+          echo "Sedes cargadas por el seed: $sedes"
+          test "$sedes" -ge 25
+          curl -fsS -o /dev/null http://localhost:8080/index.html
+          curl -fsS -o /dev/null http://localhost:8080/portal/index.html
+          curl -fsS -o /dev/null http://localhost:8080/admin/recepcion.html
+
+      - name: Logs de los contenedores (si algo falló)
+        if: failure()
+        run: docker compose logs
+
+      - name: Bajar el entorno
+        if: always()
+        run: docker compose down -v

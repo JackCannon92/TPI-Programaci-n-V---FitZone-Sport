@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitZone Sports · Inicio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../components/styles.css">
+</head>
+<body>
+  <header id="barra" class="barra"></header>
+  <main class="pagina">
+    <div id="mensaje"></div>
+    <div class="saludo">
+      <div>
+        <h1 id="saludo">Hola</h1>
+        <p class="texto-2" id="saludo-sub" style="margin:0"></p>
+      </div>
+      <div id="saludo-estado"></div>
+    </div>
+
+    <div class="atajos" id="atajos"></div>
+
+    <div class="columnas">
+      <section class="panel">
+        <h2>Próximas reservas</h2>
+        <div id="proximas" class="cargando">Cargando…</div>
+      </section>
+
+      <div class="pila">
+        <section class="panel oculto" id="panel-membresia">
+          <h2>Mi membresía</h2>
+          <dl class="datos">
+            <div><dt>Plan</dt><dd id="m-plan">-</dd></div>
+            <div><dt>Estado</dt><dd id="m-estado">-</dd></div>
+            <div><dt>Desde</dt><dd id="m-inicio">-</dd></div>
+            <div><dt>Vence</dt><dd id="m-vencimiento">-</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel">
+          <h2>¿Hay lugar en la sede?</h2>
+          <label for="select-sede">Sede</label>
+          <select id="select-sede"></select>
+          <div id="aforo" class="cargando">Elegí una sede.</div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="../services/api.js"></script>
+  <script src="../store/sesion.js"></script>
+  <script src="../components/ui.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
