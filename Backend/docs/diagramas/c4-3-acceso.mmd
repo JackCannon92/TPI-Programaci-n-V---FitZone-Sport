@@ -1,5 +1,5 @@
 ---
-title: "C4-3 · Componentes del módulo Acceso (M2) · Autor: Sirizzotti, Martín Emiliano · 16/11/2026 · v1.0"
+title: "C4-3 · Componentes del módulo Acceso (M2) · Autor: Sirizzotti, Martín Emiliano · 17/11/2026 · v1.1"
 ---
 %% Fuente: Backend/src/modules/acceso y core/compositionRoot.js. Borrador generado con IA (Claude) y revisado por el autor.
 flowchart TB
@@ -9,7 +9,7 @@ flowchart TB
   subgraph api["API backend · módulo Acceso (M2)"]
     rutas["<b>Rutas y validadores</b><br/>[acceso.routes.js · acceso.validators.js]<br/>/api/v1/acceso"]:::comp
     ctrl["<b>Controlador</b><br/>[acceso.controller.js]"]:::comp
-    svc["<b>Servicio de acceso</b><br/>[acceso.service.js]<br/>RN-01: no estar adentro de otra sede<br/>RF-05: aforo de la sede"]:::comp
+    svc["<b>Servicio de acceso</b><br/>[acceso.service.js]<br/>RN-01: no estar adentro de otra sede<br/>RF-05: aforo de la sede<br/>Sincronización de la cola (ADR-007)"]:::comp
     qrdin["<b>QR dinámico del socio</b><br/>[qr-token.js · HMAC]<br/>Cambia cada minuto (RF-04)"]:::comp
     qroff["<b>QR sin conexión</b><br/>[qr-offline.js · Ed25519]<br/>Firma con clave privada · vale 24 hs"]:::comp
     reg["<b>Registro de accesos</b><br/>[registro-acceso.model.js]<br/>Ingreso abierto = está adentro"]:::comp
@@ -32,8 +32,8 @@ flowchart TB
   svc --> reg --> db
 
   subgraph offline["Camino sin conexión (ADR-003 y ADR-007)"]
-    val["<b>Validación local en el terminal</b><br/>verifica la firma con la clave pública<br/>sin consultar la API ni la base"]:::local
-    cola["<b>Cola local de ingresos</b><br/>se envía al reconectar<br/>(planificado, ADR-007)"]:::planificado
+    val["<b>Validación local en el terminal</b><br/>[terminal-offline.js · WebCrypto Ed25519]<br/>verifica la firma con la clave pública<br/>sin consultar la API ni la base"]:::local
+    cola["<b>Cola local de ingresos</b><br/>[localStorage del terminal]<br/>se envía al reconectar"]:::local
   end
   terminal -. "sin conexión" .-> val
   val -. "anota el ingreso" .-> cola
@@ -43,6 +43,5 @@ flowchart TB
   classDef otro fill:#cfd8e3,stroke:#7a8899,color:#000
   classDef externo fill:#999999,stroke:#6b6b6b,color:#fff
   classDef local fill:#fff4c2,stroke:#b39b2d,color:#000
-  classDef planificado fill:#ffffff,stroke:#b39b2d,color:#000,stroke-dasharray:5 4
   style api fill:#ffffff,stroke:#444,stroke-dasharray:6 4
   style offline fill:#fffdf0,stroke:#b39b2d

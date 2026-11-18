@@ -73,5 +73,8 @@ Formato: `[fecha] (commit) Qué hice · Decisión · Complejidad y cómo la reso
 ### Repositorio
 - **[05/11]** Ordené el repositorio de GitHub: agregué `.gitignore` (para que nunca se suba el `.env` con la contraseña de la base), borré archivos que sobraban (olores O-4 y O-13) y subí el trabajo de octubre en commits separados por tema. · **Complejidad:** el código se había subido de una sola vez desde la web de GitHub, sin historial → aprendí a usar GitHub Desktop y a separar los cambios en commits.
 
+### Sincronización del terminal de sede → ADR-007
+- **[17/11]** Recepción valida el QR sin conexión en el navegador (WebCrypto Ed25519 con la clave pública guardada) y anota los ingresos en una cola local; al volver la conexión los manda a `POST /api/v1/acceso/sincronizar`. El servidor vuelve a verificar cada firma con la hora del ingreso, descarta los reenvíos y resuelve RN-01 cerrando el registro que quedó abierto. 14 tests nuevos → **113 tests** (83 unitarios y 30 de integración). · **Decisión:** deduplicar por persona + sede + hora en lugar de agregar una columna `evento_id`, para no cambiar el esquema de Supabase a días de la entrega. · **Complejidad:** que la pantalla siga andando si se recarga sin servidor (también hubo que guardar las sedes) y que el ingreso quede con la hora en que la persona pasó, no con la hora en que se sincroniza.
+
 ### Cierre
 - [ ] Pendiente (semanas 12 y 13).

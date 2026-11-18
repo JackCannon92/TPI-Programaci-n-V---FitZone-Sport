@@ -1,7 +1,7 @@
 # ADR-007 — Sincronización del terminal de sede: replicación local, frecuencia y resolución de conflictos
 
 - **Estado:** Aceptado
-- **Fecha:** 2026-10-28
+- **Fecha:** 2026-10-28 (implementado el 2026-11-17)
 - **Autor:** Villagra, Santiago Agustín; Ayala, Franco; Sirizzotti, Martín Emiliano
 - **Sprint:** 6
 
@@ -25,15 +25,17 @@ Se adoptó una arquitectura de **replicación mínima y cola local de eventos** 
 
 1. **Qué se replica localmente:**
    - **Clave pública Ed25519:** El terminal descarga y almacena en caché local únicamente la clave pública en formato PEM obtenida desde `GET /api/acceso/clave-publica`. No replica nóminas de socios ni credenciales.
-   - **Cola local de movimientos (*append-only*):** Mientras no hay conexión con la API, cada validación exitosa de `validarQrOffline` o lectura de egreso se persiste en una cola local del terminal con `{ eventoId, usuarioId, sedeId, tipoMovimiento, timestampLocal }`.
+   - **Cola local de ingresos (*append-only*):** Mientras no hay conexión con la API, cada QR sin conexión que el terminal valida con la clave pública se guarda en una cola local (`localStorage` del navegador de Recepción) con `{ id, token, sedeId, fechaIngreso }`. Se guarda el QR completo para que el servidor pueda volver a verificar la firma. También se guarda la lista de sedes, para poder usar la pantalla aunque se recargue sin conexión.
+   - **Egresos:** sin conexión no se registran salidas (el terminal no tiene la lista de presentes); se registran al volver, desde «Adentro ahora», y RN-01 se concilia al sincronizar (punto 3).
 
 2. **Frecuencia de sincronización:**
    - **Clave pública:** Se obtiene al iniciar el terminal y se refresca cada **24 horas** (en sintonía con `HORAS_DE_VALIDEZ = 24` configurado en `qr-offline.js`) o de inmediato si falla la verificación de firma por rotación de la semilla `QR_OFFLINE_SEMILLA`.
-   - **Cola de accesos pendientes:** Mientras hay conectividad, el terminal envía los registros en tiempo real (`POST /api/acceso/ingreso` y `POST /api/acceso/egreso`). Tras un corte, un proceso en segundo plano reintenta vaciar la cola en lotes cada **30 segundos** y dispara un envío inmediato al detectar el evento de reconexión de red (`online`).
+   - **Cola de ingresos pendientes:** Mientras hay conectividad, el ingreso con QR sin conexión se envía en el momento. Tras un corte, la pantalla reintenta vaciar la cola en lotes de hasta 200 ingresos cada **15 segundos** (el mismo ciclo que refresca el aforo), al detectar el evento `online` y con el botón «Sincronizar ahora». El servidor recibe la cola en `POST /api/v1/acceso/sincronizar`.
 
 3. **Resolución de conflictos al reconectar:**
-   - **Idempotencia ante reintentos de red:** El servidor central deduplica los eventos recibidos mediante su `eventoId` (o la terna `usuarioId`, `sedeId`, `timestampLocal`), evitando duplicar filas en `registros_acceso` si se corta la respuesta HTTP durante el envío.
-   - **Conflicto de sesión abierta (RN-01):** Si al sincronizar un ingreso *offline* el servidor detecta que el usuario aún tenía un registro abierto (`fechaEgreso: null`) en otra sede o en la misma (por un egreso no registrado antes del corte), prevalece la realidad física ya ocurrida: el servidor cierra automáticamente el registro anterior marcando una observación de auditoría e inserta el nuevo `RegistroAcceso` respetando el `timestampLocal` original.
+   - **El servidor no confía en el terminal:** vuelve a verificar la firma Ed25519 de cada QR con la hora del ingreso (no con la hora actual). Rechaza los QR alterados, los que ya estaban vencidos cuando la persona pasó, las fechas futuras o anteriores a la emisión del QR (con 5 minutos de tolerancia de reloj) y los usuarios inexistentes.
+   - **Idempotencia ante reintentos de red:** El servidor deduplica por la terna `usuarioId`, `sedeId`, `fechaIngreso`, así no duplica filas en `registros_acceso` si se corta la respuesta HTTP durante el envío. Se eligió la terna en lugar de una columna `evento_id` para no cambiar el esquema de la base a días de la entrega.
+   - **Conflicto de sesión abierta (RN-01):** Si al sincronizar un ingreso *offline* el servidor detecta que el usuario aún tenía un registro abierto (`fechaEgreso: null`) en otra sede o en la misma (por un egreso no registrado antes del corte), prevalece la realidad física ya ocurrida: el servidor cierra automáticamente el registro anterior a la hora del ingreso nuevo e inserta el nuevo `RegistroAcceso` con su `fechaIngreso` original. Si el registro abierto es *posterior* al ingreso sin conexión, este se guarda como histórico, cerrado a esa hora. En los dos casos la respuesta trae la observación y el servidor la deja en el log. Con conexión, la pantalla aplica RN-01 como con cualquier QR (no deja pasar a quien figura adentro de la sede).
    - **Superación de aforo máximo (RF-05):** Si los ingresos ocurridos sin conexión hacen que `actual > sede.aforoMaximo` al sincronizar, los registros históricos se aceptan igual para no perder trazabilidad; el servidor mantiene bloqueados nuevos ingresos *online* (HTTP 409) hasta que los egresos normalicen el cupo.
    - **Membresía suspendida durante el corte:** Si una membresía fue dada de baja en el servidor mientras el terminal estaba aislado pero el socio entró con un QR *offline* aún dentro de su ventana de 24 horas (`exp`), el ingreso queda registrado como histórico auditado y el servidor bloquea futuras renovaciones de QR (`403 Forbidden`).
 
@@ -43,7 +45,14 @@ El criterio determinante fue evitar la replicación pesada de tablas relacionale
 
 - **Positivas:** El terminal no almacena bases de datos de socios; los movimientos ocurridos sin conexión no se pierden ni se duplican; las reglas RN-01 y RF-05 se reconcilian automáticamente sin bloquear a posteriori un paso físico ya efectuado.
 - **Negativas:** Durante la caída de internet, el aforo consultado en `GET /api/acceso/aforo/:sedeId` refleja solo los registros previos al corte, pudiendo producirse un leve sobrepaso temporal de capacidad si la sede estaba al límite.
-- **Deuda asumida:** En el código actual (`acceso.routes.js` y `registro-acceso.model.js`) ya está implementada la emisión/validación Ed25519 sin base de datos (`qr-offline.js`), pero falta desarrollar: (1) el *worker* de cola persistente en el cliente del torno y (2) el *endpoint* `POST /api/acceso/sincronizar` con columnas de trazabilidad (`evento_id`, `origen: 'ONLINE' | 'OFFLINE'`) en `registros_acceso` para aceptar marcas de tiempo históricas en lugar de `DataTypes.NOW`.
+- **Deuda asumida:** (1) las observaciones de conflicto quedan en la respuesta y en el log, no en una columna de auditoría (`origen`, `observacion`) de `registros_acceso`; (2) sin conexión no se registran egresos; (3) la cola vive en el `localStorage` del navegador, que se pierde si alguien borra los datos del sitio; (4) la validación local necesita un navegador con Ed25519 en WebCrypto (Chrome/Edge 137, Firefox 129, Safari 17) y la página abierta desde `localhost` o `https`.
+
+## Implementación
+
+- Terminal: `Frontend/js/terminal-offline.js` (clave pública, validación local, cola, sincronización) y `Frontend/js/recepcion.js` (panel «Terminal»).
+- Servidor: `sincronizarIngresos()` en `Backend/src/modules/acceso/acceso.service.js` y la ruta `POST /api/v1/acceso/sincronizar`.
+- Pruebas: `Backend/test/unit/sincronizacion-terminal.test.js` (12 casos) y `Backend/test/integracion/qr.api.test.js`.
+- Diagramas: `secuencia-acceso-offline` y `c4-3-acceso` (v1.1).
 
 ## Requisitos relacionados
 

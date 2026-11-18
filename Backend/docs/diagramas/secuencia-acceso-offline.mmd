@@ -1,7 +1,7 @@
 ---
-title: "Secuencia · Acceso offline y sincronización diferida · Autor: Sirizzotti, Martín Emiliano · 16/11/2026 · v1.0"
+title: "Secuencia · Acceso offline y sincronización diferida · Autor: Sirizzotti, Martín Emiliano · 17/11/2026 · v1.1"
 ---
-%% Fuente: acceso.service.js, qr-token.js, qr-offline.js; sincronización según ADR-007 (pendiente de implementar).
+%% Fuente: acceso.service.js, qr-token.js, qr-offline.js; terminal-offline.js y recepcion.js (terminal); sincronización según ADR-007.
 %% Borrador generado con IA (Claude) y revisado por el autor.
 sequenceDiagram
   autonumber
@@ -14,7 +14,7 @@ sequenceDiagram
   rect rgb(235, 245, 255)
   Note over S,DB: Con conexión
   T->>A: GET /api/v1/acceso/clave-publica
-  A-->>T: Clave pública Ed25519 (se guarda en el terminal)
+  A-->>T: Clave pública Ed25519 (se guarda en el terminal, se renueva cada 24 hs)
   S->>W: Abre "Mi acceso"
   W->>A: GET /api/v1/acceso/qr/{usuarioId}
   A-->>W: QR rotativo (HMAC, cambia cada minuto)
@@ -27,24 +27,31 @@ sequenceDiagram
   Note over S,DB: Se cae la conexión entre la sede y el servidor central
   S->>T: Muestra el QR sin conexión
   T-xA: (el servidor no responde)
-  T->>T: Verifica la firma con la clave pública<br/>y que no esté vencido
+  T->>T: Verifica la firma con la clave pública guardada<br/>(WebCrypto Ed25519) y que no esté vencido
   alt Firma válida y vigente
     T-->>S: Pasa (abre el molinete)
-    T->>T: Anota el ingreso en la cola local
+    T->>T: Anota el ingreso en la cola local<br/>{ id, token, fechaIngreso }
   else Firma inválida o vencida
     T-->>S: No pasa
   end
   end
 
   rect rgb(235, 250, 235)
-  Note over S,DB: Vuelve la conexión (ADR-007 · pendiente de implementar)
-  T->>A: POST /api/v1/acceso/sincronizar [cola de ingresos]
-  loop Por cada ingreso de la cola, en orden
-    A->>DB: INSERT registro de acceso con la hora original
-    opt Choca con RN-01 (figura adentro de otra sede)
-      A->>DB: Se registra igual y se marca como conflicto
+  Note over S,DB: Vuelve la conexión (evento online o cada 15 s · ADR-007)
+  T->>A: POST /api/v1/acceso/sincronizar { sedeId, ingresos }
+  loop Por cada ingreso, en orden de hora
+    A->>A: Vuelve a verificar la firma con la hora del ingreso
+    alt Firma inválida o QR vencido a esa hora
+      A->>A: RECHAZADO
+    else Ya estaba (misma persona, sede y hora)
+      A->>A: DUPLICADO (reenvío)
+    else Válido
+      opt Figuraba adentro sin egreso (RN-01)
+        A->>DB: Cierra ese registro a la hora de este ingreso
+      end
+      A->>DB: INSERT registro de acceso con la hora original
     end
   end
-  A-->>T: Aceptados y conflictos
-  T->>T: Vacía la cola
+  A-->>T: Resumen y observaciones (aceptados, repetidos, rechazados, conflictos)
+  T->>T: Saca de la cola lo procesado
   end

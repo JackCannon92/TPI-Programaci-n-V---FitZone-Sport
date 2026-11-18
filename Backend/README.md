@@ -83,7 +83,7 @@ docs/                       Bitácora, ADR y scripts SQL
 npm test
 ```
 
-Son 99 tests (72 unitarios y 27 de integración) que corren en un par de segundos y **no necesitan base de datos**: los servicios reales se prueban con repositorios en memoria. Para correr uno solo: `npm test -- precios`.
+Son 113 tests (83 unitarios y 30 de integración) que corren en un par de segundos y **no necesitan base de datos**: los servicios reales se prueban con repositorios en memoria. Para correr uno solo: `npm test -- precios`.
 
 | Archivo | Tipo | Qué prueba |
 |---|---|---|
@@ -96,9 +96,10 @@ Son 99 tests (72 unitarios y 27 de integración) que corren en un par de segundo
 | `test/unit/qr-offline.test.js` | Unitario | QR de acceso sin conexión: el torno valida con la clave pública, sin base |
 | `test/unit/qr-asistencia.test.js` | Unitario | QR de asistencia a clase: marca `ASISTIO` una sola vez |
 | `test/unit/qr-comprobante.test.js` | Unitario | QR de verificación del comprobante: detecta un monto cambiado |
+| `test/unit/sincronizacion-terminal.test.js` | Unitario | Sincronización del terminal (ADR-007): firma revisada con la hora del ingreso, reenvíos, RN-01 y aforo |
 | `test/integracion/canchas.api.test.js` | Integración | La API de canchas por HTTP: precio, reservas, 409 de RN-02, validaciones y 404 |
 | `test/integracion/membresias.api.test.js` | Integración | La API de membresías por HTTP: consulta, renovación y suspensión |
-| `test/integracion/qr.api.test.js` | Integración | Los cuatro QR por HTTP |
+| `test/integracion/qr.api.test.js` | Integración | Los cuatro QR por HTTP y `POST /acceso/sincronizar` |
 | `test/integracion/app.test.js` | Integración | La aplicación completa arma todos los módulos y responde (health, Swagger) |
 
 ## API
@@ -111,7 +112,7 @@ Todas las rutas empiezan con `/api`. El detalle de cada una (parámetros, cuerpo
 | Usuarios | `POST /usuarios` · `GET /usuarios` · `GET /usuarios/{id}` · `PUT /usuarios/{id}` |
 | Membresías | `GET /membresias/{id_usuario}` · `PUT /membresias/{id_usuario}/renovar` · `PATCH /membresias/{id_usuario}/suspender` |
 | Sedes | `POST /sedes` · `GET /sedes` · `GET /sedes/{id}` · `PATCH /sedes/{id}` |
-| Acceso | `GET /acceso/qr/{usuarioId}` · `POST /acceso/ingreso` · `POST /acceso/egreso` · `GET /acceso/aforo/{sedeId}` · `GET /acceso/presentes/{sedeId}` · `POST /acceso/ingreso-reserva` · `GET /acceso/qr-offline/{usuarioId}` · `POST /acceso/validar-offline` · `GET /acceso/clave-publica` |
+| Acceso | `GET /acceso/qr/{usuarioId}` · `POST /acceso/ingreso` · `POST /acceso/egreso` · `GET /acceso/aforo/{sedeId}` · `GET /acceso/presentes/{sedeId}` · `POST /acceso/ingreso-reserva` · `GET /acceso/qr-offline/{usuarioId}` · `POST /acceso/validar-offline` · `GET /acceso/clave-publica` · `POST /acceso/sincronizar` |
 | Canchas | `POST /canchas` · `GET /canchas/sede/{sedeId}` · `GET /canchas/{id}` · `GET /canchas/{id}/disponibilidad?fecha=` · `GET /canchas/{id}/precio?usuarioId=&inicio=` · `PATCH /canchas/{id}/estado` |
 | Reservas de cancha | `POST /canchas/reservas` · `GET /canchas/reservas/{id}` · `GET /canchas/reservas/usuario/{usuarioId}` · `PATCH /canchas/reservas/{id}/cancelar` · `GET /canchas/reservas/{id}/qr` |
 | Clases | `POST /clases` · `GET /clases` · `GET /clases/{id}` · `POST /clases/reservas` · `GET /clases/reservas/usuario/{usuarioId}` · `PATCH /clases/reservas/{id}/cancelar` · `GET /clases/reservas/{id}/qr` · `POST /clases/asistencia` · `POST /clases/lista-espera` · `GET /clases/{id}/lista-espera` |
@@ -132,7 +133,7 @@ Además del QR del socio hay cuatro, cada uno para una sola cosa ([ADR-016](docs
 | QR | Para qué | Cómo se obtiene → dónde se usa | Vigencia |
 |---|---|---|---|
 | Reserva de cancha | Que quien alquiló una cancha (sobre todo el cliente externo) entre a la sede | `GET /canchas/reservas/{id}/qr` o el comprobante PDF → `POST /acceso/ingreso-reserva` | De 30 min antes del turno hasta que termina, solo en esa sede y solo si está paga |
-| Acceso sin conexión | Que el torno valide al socio sin internet (firma Ed25519) | `GET /acceso/qr-offline/{usuarioId}` → el torno, con `GET /acceso/clave-publica` (se simula con `POST /acceso/validar-offline`) | 24 h, o hasta que vence la membresía |
+| Acceso sin conexión | Que el torno valide al socio sin internet (firma Ed25519) | `GET /acceso/qr-offline/{usuarioId}` → Recepción lo valida en el navegador con `GET /acceso/clave-publica` guardada y, al volver la red, manda los ingresos a `POST /acceso/sincronizar` (ADR-007) | 24 h, o hasta que vence la membresía |
 | Asistencia a clase | Registrar que el socio vino (`ASISTIO`) | `GET /clases/reservas/{id}/qr` → `POST /clases/asistencia` | De 30 min antes a 60 min después del inicio, una sola vez |
 | Verificación del comprobante | Comprobar que un ticket es auténtico y que no le cambiaron el monto | Impreso en el comprobante PDF → `GET /pagos/verificar/{token}` | Sin vencimiento |
 

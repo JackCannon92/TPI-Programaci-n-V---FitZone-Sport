@@ -112,7 +112,7 @@ docker compose down -v           # bajar todo y BORRAR la base (se recarga el se
 
 ```bash
 cd Backend
-npm test            # 100 pruebas (unitarias e integración), no necesitan base de datos
+npm test            # 113 pruebas (unitarias e integración), no necesitan base de datos
 npm run test:cov    # además, reporte de cobertura en Backend/coverage/ (umbral: 70 % de líneas, 50 % de ramas)
 ```
 
@@ -282,12 +282,19 @@ Supabase hace copias diarias en su panel (**Database → Backups**; la cantidad 
 | Situación | Qué pasa | Estado |
 |---|---|---|
 | Cae la conexión entre una sede y el servidor central | El socio activo tiene en «Mi acceso → Sin conexión» un QR firmado con Ed25519 que vale 24 horas (o hasta que vence su membresía). Ese QR se valida con la clave pública, sin consultar la base (ADR-003). | Firma y validación implementadas en el backend (`qr-offline.js`, `GET /api/v1/acceso/clave-publica`, `POST /api/v1/acceso/validar-offline`) |
-| Validación en el terminal sin red | El terminal de recepción tiene que verificar la firma localmente con la clave pública guardada. | **Pendiente:** hoy la pantalla de Recepción valida el QR sin conexión llamando a `POST /acceso/validar-offline`, o sea, necesita llegar a la API |
-| Vuelve la conexión | El terminal envía los ingresos anotados durante el corte a `POST /api/v1/acceso/sincronizar`; los conflictos con RN-01 se registran igual y se marcan para revisión (ADR-007). | **Pendiente de implementar** (ADR-007) |
+| Validación en el terminal sin red | La pantalla de Recepción guarda en el navegador la clave pública (se renueva cada 24 horas), la lista de sedes y una cola de ingresos. Sin servidor, verifica la firma Ed25519 del QR sin conexión ahí mismo (WebCrypto), lo deja pasar y anota el ingreso con su hora. El panel **Terminal** muestra «Sin conexión» y cuántos ingresos faltan sincronizar. | Implementado (`Frontend/js/terminal-offline.js`, ADR-007) |
+| Vuelve la conexión | Al volver la red (y cada 15 segundos), el terminal envía la cola a `POST /api/v1/acceso/sincronizar`. El servidor vuelve a verificar cada firma con la hora del ingreso, descarta los reenvíos (misma persona, sede y hora) y resuelve RN-01 a favor de lo que pasó: si la persona figuraba adentro sin egreso, ese registro se cierra a la hora del ingreso nuevo. El aforo no frena la sincronización. Las observaciones quedan en el log de la API y en el panel Terminal. | Implementado (ADR-007) |
 | Se cae la API o la base | La aplicación web muestra el error de conexión. Con Docker, el contenedor `api` se reinicia solo (`restart: on-failure`); el contenedor `db` tiene control de estado (`pg_isready`). | Implementado |
 | Supabase pausa el proyecto (plan gratuito, una semana sin uso) | La API no arranca: «tenant/user not found». | Se reactiva el proyecto desde el panel de Supabase, o se usa la base del compose |
 
-Para verificar que un QR sin conexión es válido mientras la API responde: en Recepción, pegar o escanear el código; la pantalla indica «Válido sin conexión» y hasta cuándo vale.
+**Cómo probarlo (demo obligatoria):**
+
+1. Con todo andando, entrar como Lucía (DNI 30111222) → **Mi acceso → Sin conexión** y copiar el código del QR. En otra pestaña, entrar como Carla (DNI 28555666) → **Recepción**: el panel Terminal dice «En línea» y que tiene la clave pública guardada.
+2. Bajar la API: `docker compose stop api` (o cortar `npm start` con Ctrl+C). La aplicación web sigue servida por `web`.
+3. Pegar el código en Recepción: «Puede pasar», validado en el terminal sin consultar el servidor; el panel Terminal pasa a «Sin conexión · 1 ingreso sin sincronizar». Un código alterado da «La firma no es válida». Recargar la página no pierde la cola.
+4. Levantar la API: `docker compose start api`. En menos de 15 segundos el terminal sincroniza solo (o con «Sincronizar ahora»): Lucía aparece en «Adentro ahora» con la hora en que pasó.
+
+Requisitos del terminal: navegador actualizado (Chrome 137, Edge 137, Firefox 129 o Safari 17 en adelante, por Ed25519 en WebCrypto) y la página abierta desde `localhost` o `https` (WebCrypto no anda en `http` con otra dirección). Sin conexión no se pueden registrar salidas: se registran al volver, desde «Adentro ahora».
 
 Si se cambia `QR_SECRET` o `QR_OFFLINE_SEMILLA`, cambia la clave pública: los QR sin conexión emitidos antes dejan de valer y hay que volver a descargar la clave en los terminales.
 

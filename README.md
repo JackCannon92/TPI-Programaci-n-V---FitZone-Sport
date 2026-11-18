@@ -80,11 +80,11 @@ Además hay 25 sedes, canchas de pádel y fútbol en cada una (una en mantenimie
 
 ```bash
 cd Backend
-npm test            # 100 pruebas: unitarias e integración, sin base de datos
+npm test            # 113 pruebas: unitarias e integración, sin base de datos
 npm run test:cov    # además genera el reporte de cobertura en Backend/coverage/
 ```
 
-Cobertura al 08/11/2026: **80,8 % de líneas y 58,1 % de ramas**. El umbral mínimo (ADR-008) es 70 % de líneas y 50 % de ramas: si un cambio lo baja, las pruebas fallan. El pipeline de GitHub Actions las corre en cada Pull Request.
+Cobertura al 17/11/2026: **82,3 % de líneas y 61,5 % de ramas**. El umbral mínimo (ADR-008) es 70 % de líneas y 50 % de ramas: si un cambio lo baja, las pruebas fallan. El pipeline de GitHub Actions las corre en cada Pull Request.
 
 ## Documentación
 
