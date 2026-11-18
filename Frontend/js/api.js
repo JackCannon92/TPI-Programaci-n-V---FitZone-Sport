@@ -92,6 +92,8 @@ const api = {
   ingresoConReserva: (token, sedeId) => post('/acceso/ingreso-reserva', { token, sedeId }),
   egreso: (usuarioId, sedeId) => post('/acceso/egreso', { usuarioId, sedeId }),
   validarOffline: (token) => post('/acceso/validar-offline', { token }),
+  clavePublica: () => apiFetch('/acceso/clave-publica'),
+  sincronizarIngresos: (sedeId, ingresos) => post('/acceso/sincronizar', { sedeId, ingresos }), // ADR-007
   aforoSede: (sedeId) => apiFetch(`/acceso/aforo/${sedeId}`),
   presentes: (sedeId) => apiFetch(`/acceso/presentes/${sedeId}`),
 
