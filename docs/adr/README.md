@@ -16,7 +16,7 @@ Un ADR no se corrige: se supera. Si una decisión se revierte, el ADR original p
 | [ADR-006](ADR-006-arquitectura-frontend.md) | Arquitectura, diseño multipágina y estado del frontend | Aceptado | Villagra | Unidad IV |
 | [ADR-007](ADR-007-sincronizacion-terminal-sede.md) | Sincronización del terminal de sede | Aceptado | Villagra | RNF-01, RN-01 |
 | [ADR-008](ADR-008-Estrategia-de-pruebas.md) | Estrategia de pruebas y cobertura mínima | Aceptado | Sirizzotti | Unidad V |
-| [ADR-009](ADR-009-despliegue-y-reversion.md) | Despliegue, contenedores y reversión | Propuesto | Sirizzotti | Unidad V |
+| [ADR-009](ADR-009-despliegue-y-reversion.md) | Despliegue, contenedores y reversión | Aceptado | Sirizzotti | Unidad V |
 | [ADR-010](ADR-010-tokenizacion-medios-pago.md) | Medios de pago mediante tokenización | Aceptado | Villagra | RNF-02 |
 
 ## Decisiones propias del equipo

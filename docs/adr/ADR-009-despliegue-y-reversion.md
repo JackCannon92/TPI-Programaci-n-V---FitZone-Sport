@@ -1,6 +1,6 @@
 # ADR-009 — Despliegue: contenedores Docker, pipeline en GitHub Actions y reversión por versión etiquetada
 
-- **Estado:** Propuesto
+- **Estado:** Aceptado (18/11/2026: primera corrida completa del pipeline en verde, con la imagen Docker, el despliegue de prueba y la prueba de concurrencia contra PostgreSQL)
 - **Fecha:** 2026-11-07
 - **Autor:** Sirizzotti, Martín Emiliano
 - **Sprint:** 6
