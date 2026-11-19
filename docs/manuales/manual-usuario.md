@@ -240,8 +240,23 @@ Las reservas ya hechas para esa cancha no se cancelan solas: avisá a los client
 | «La sede está llena» | Se llegó al aforo. Esperá a que salga alguien o registrá las salidas pendientes. |
 | «El código venció» | La persona mostró una captura vieja. Que abra **Mi acceso** otra vez. |
 | La cámara no lee | Revisá que el navegador tenga permiso para la cámara, o pedile a la persona que copie el código y pegalo en el recuadro. |
-| Se cortó internet en la sede | Pedí el **QR sin conexión** (pestaña **Sin conexión** en Mi acceso). *Limitación de esta versión:* la pantalla de Recepción todavía valida ese QR consultando al servidor; la validación totalmente local y el envío de los ingresos al volver la conexión están definidos en el ADR-007 y pendientes de implementar. |
+| Se cortó internet en la sede | Pedí el **QR sin conexión** (pestaña **Sin conexión** en Mi acceso). La pantalla lo valida sola, sin el servidor; ver 4.5. Los otros QR necesitan conexión. |
 | Un cliente externo no tiene QR | Su QR aparece en **Mi acceso** o en el comprobante solo si la reserva está **paga**, y sirve desde 30 minutos antes del turno. |
+
+### 4.5 Si se corta la conexión con el servidor
+
+El panel **Terminal**, arriba a la derecha, dice si la pantalla está **En línea** o **Sin conexión** y cuántos ingresos faltan sincronizar.
+
+1. Sin conexión, pedile a la persona el **QR sin conexión** (en **Mi acceso → Sin conexión**, el QR coral).
+2. Escanealo o pegalo como siempre. Si dice **Puede pasar**, la pantalla verificó la firma del QR ella sola y anotó el ingreso con la hora.
+3. Si dice **La firma no es válida** o **venció**, no puede pasar.
+4. Cuando vuelve la conexión, los ingresos anotados se envían solos en menos de 15 segundos (o tocá **Sincronizar ahora**) y la persona aparece en **Adentro ahora** con la hora en que entró.
+
+![Recepción sin conexión](img/25-recepcion-sin-conexion.png)
+
+![Ingresos sincronizados al volver la conexión](img/26-recepcion-sincronizado.png)
+
+Mientras no hay conexión no se ven el aforo ni la lista de presentes, y no se pueden registrar salidas: registralas cuando vuelva la conexión. Si al sincronizar aparece una observación (por ejemplo, alguien que figuraba adentro de otra sede), queda anotada en el panel Terminal.
 
 ---
 
