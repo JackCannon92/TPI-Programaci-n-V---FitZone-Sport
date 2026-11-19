@@ -44,8 +44,8 @@
     document.getElementById('panel-membresia').classList.remove('oculto');
     document.getElementById('m-plan').textContent = m.plan.charAt(0) + m.plan.slice(1).toLowerCase();
     document.getElementById('m-estado').innerHTML = ui.estado(m.estado);
-    document.getElementById('m-inicio').textContent = ui.fecha(`${m.fecha_inicio}T12:00:00`);
-    document.getElementById('m-vencimiento').textContent = ui.fecha(`${m.fecha_vencimiento}T12:00:00`);
+    document.getElementById('m-inicio').textContent = `${ui.fecha(`${m.fecha_inicio}T12:00:00`)} ${String(m.fecha_inicio).slice(0, 4)}`;
+    document.getElementById('m-vencimiento').textContent = `${ui.fecha(`${m.fecha_vencimiento}T12:00:00`)} ${String(m.fecha_vencimiento).slice(0, 4)}`;
     document.getElementById('btn-renovar').addEventListener('click', () => abrirRenovacion(m.plan));
   }
 
