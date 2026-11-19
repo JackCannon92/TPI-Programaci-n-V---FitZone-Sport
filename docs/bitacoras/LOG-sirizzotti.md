@@ -282,7 +282,21 @@ La mudanza cambiaba casi todos los archivos de lugar: la armé de una sola vez, 
 
 ## Sprint 7 — Cierre — Semana del 2026-11-19
 
-*Pendiente: entrega del 19/11.*
+### 2026-11-19 · s/r
+
+**Actividad**
+Revisé las bitácoras corregidas de Franco y Santi y concilié sus horas en la planificación (versión 5). Corregí en el historial, los ADR y las bitácoras la fecha de las indicaciones de la cátedra (check-in del 15/10) y referencias desactualizadas (ADR-012, ADR-016 y manual técnico). Con lo que encontró Franco al probar el sistema, agregué la separación de pantallas por rol, con el personal usando también el portal, y el pago de la membresía por la pasarela, con lo que RF-02 pasa a cobertura completa. Armé el dossier final, la guía de prueba y demo y las guías de estudio para la defensa.
+
+**Decisión**
+Cada rol ve solo sus pantallas en el frontend; la API todavía no verifica el rol porque no hay autenticación (ADR-006). Para no cambiar el esquema el día de la entrega, el pago de la membresía no se guarda en la tabla de pagos, que está atada a las reservas: queda como deuda el comprobante de la membresía.
+
+**Problema o bloqueo**
+La primera versión de la separación por rol dejaba al personal sin acceso al portal: lo detectó Franco y lo corregí antes del tag. El script del tag falló al subirlo desde la consola por falta de credenciales, y Franco lo puso desde la web de GitHub sobre el commit `796f413`.
+
+**Commits**
+`e80e820` planificación v5 · `e148f90` fechas y referencias · `f15aaa3` dossier y entregables · `7d028be` pantallas por rol · `0968fb7` ADR-016 · `937d8a9` personal en el portal · `df2790f` pago de la membresía · `796f413` año de la membresía
+
+---
 
 ## Sprint 8 — Defensa — Semana del 2026-11-23
 
