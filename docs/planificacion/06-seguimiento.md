@@ -29,17 +29,17 @@ Velocidad media de los sprints 1 a 6: 12,3 horas del plan por sprint (74 / 6).
 
 | Sprint | Ayala | Villagra | Sirizzotti | Total registrado |
 |---|---|---|---|---|
-| 1 | 13 | 4 | s/r | 17 |
-| 2 | 5 | 0 | s/r | 5 |
-| 3 | 3 | 1 (4) | s/r | 4 |
-| 4 | 2 | 8 (1) (4) | s/r | 10 |
-| 5 | 2 | 6 (1) | s/r | 8 |
-| 6 | 6 (2) | 11 (5) | 22 (3) | 39 |
+| 1 | 13 | 4 | 2 (e) | 19 |
+| 2 | 5 | 0 | 3 (e) | 8 |
+| 3 | 3 | 1 (4) | 4 (e) | 8 |
+| 4 | 2 | 8 (1) (4) | 13 (e) | 23 |
+| 5 | 2 | 6 (1) | 13 (e) | 21 |
+| 6 | 6 (2) | 11 (5) | 22 (e) (3) | 39 |
 
-- **s/r:** sin registro de horas en la bitácora.
+- **(e)** Sirizzotti no anotó las horas en el momento: son una estimación suya hecha al cierre (19/11), entrada por entrada en su bitácora. Las revisiones con Villagra del 12/10 y el 27/10 llevan las mismas horas que en la bitácora de Villagra (7 y 6). En el sprint 7 suma 8 horas más (19/11).
 - (1) Revisión de las pantallas del frontend junto con Sirizzotti, por Discord (12/10 y 27/10): Sirizzotti le pasaba las pantallas y Villagra las corregía contra lo que había que entregar. El código lo terminó Sirizzotti (ver 4.3).
 - (2) Ayala, 17/11: ADR, esquema SQL con datos de prueba y README (2 h; `bd48c52`, `ace9ac7`, `3273b98`), y diagramas C4, DER y despliegue con el manual técnico (4 h; `2a4bbd5`, `05c0596`, `bc15e18`).
-- (3) Estimación del propio integrante para el período del 05 al 17/11 (Docker y pipeline, ADR, diagramas, manuales y sincronización offline). Hasta el 05/11 no anotó horas.
+- (3) Del 05 al 18/11: Docker y pipeline, ADR, diagramas, manuales, sincronización sin conexión y reorganización del repositorio.
 - (4) Check-ins: participación en el del 01/10 (1 h) y el del 15/10, que lideró (1 h).
 - (5) ADR-006, 007 y 010 (08/11, 6 h) y los tres diagramas de actividad y de estados con el manual de usuario (17/11, 5 h).
 

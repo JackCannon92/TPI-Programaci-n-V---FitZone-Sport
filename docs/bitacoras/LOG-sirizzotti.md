@@ -2,11 +2,11 @@
 
 **Rol:** P2 · Backend Developer y P4 · QA / DevOps · **Unidades a cargo:** III (Patrones de diseño) y V (Testing y CI/CD) · **Usuario de Git:** JackCannon92 · **Líder de check-in:** 03/09 y 29/10 (la rotación quedó corrida un turno desde el sprint 2; ver `docs/planificacion/03-cronograma.md`)
 
-Programación V · FCAD-UNER · Prof. Lic. Juan José Aguirre · Actualizada al 18/11/2026
+Programación V · FCAD-UNER · Prof. Lic. Juan José Aguirre · Actualizada al 19/11/2026
 
 **Sobre los commits.** En septiembre trabajé en otro repositorio (`edafca8`, `262497e`, `2160fb6`). En este, el código se subió de una sola vez el 15/10 (`ef6fd8a`), así que el trabajo de septiembre y octubre está dentro de ese commit. Desde el 05/11 cada cambio tiene su commit propio, y lo cito en la entrada que corresponde.
 
-**Sobre las horas.** Hasta el 05/11 no anoté las horas de cada sesión, así que esas entradas dicen *s/r* (sin registro). Del 05 al 17/11 estimo unas 22 horas en total. Es una de las lecciones del análisis de desvíos (`docs/planificacion/08-analisis-de-desvios.md`).
+**Sobre las horas.** No anoté las horas en el momento: las de cada entrada son una estimación mía hecha al cierre, el 19/11, y por eso dicen *estimadas*. Las sesiones de revisión con Santi (12/10 y 27/10) llevan las mismas horas que en su bitácora. Del 05 al 18/11 son unas 22 horas, como figura en la planificación. Por sprint: 2, 3, 4, 13, 13, 22 y 8 (65 en total). No registrar las horas desde el sprint 1 es una de las lecciones del análisis de desvíos (`docs/planificacion/08-analisis-de-desvios.md`).
 
 ---
 
@@ -34,7 +34,7 @@ Usé IA para resolver muchos de estos problemas. Con **Claude** generé y correg
 
 ## Sprint 1 — Unidad I — Semana del 2026-08-27
 
-### 2026-09-03 · s/r
+### 2026-09-03 · 2 h (estimadas)
 
 **Actividad**
 Fui líder del check-in del sprint 1, con el primer plan de tareas del equipo.
@@ -52,7 +52,7 @@ Sin commits: fue el check-in.
 
 ## Sprint 2 — Unidad II — Semana del 2026-09-10
 
-### 2026-09-10 · s/r
+### 2026-09-10 · 2 h (estimadas)
 
 **Actividad**
 Conexión a Supabase como opción por defecto (`DATABASE_URL` con SSL), comando `db:check` para probar la conexión y modo local con SQLite para trabajar sin Supabase.
@@ -66,7 +66,7 @@ Supabase por defecto y SQLite como modo local, para poder trabajar sin Supabase.
 **Commits**
 `ef6fd8a` subida del 15/10 que lo contiene · en el repositorio anterior: `edafca8`, `262497e`, `2160fb6`
 
-### 2026-09-16 · s/r
+### 2026-09-16 · 1 h (estimadas)
 
 **Actividad**
 Preparé la guía para el check-in del sprint 2, que le tocaba presentar a Franco.
@@ -84,7 +84,7 @@ Sin commits: fue preparación del check-in.
 
 ## Sprint 3 — Unidades II, III y IV — Semana del 2026-09-24
 
-### 2026-10-01 · s/r
+### 2026-10-01 · 1 h (estimadas)
 
 **Actividad**
 Revisé el backend que armó Franco y creé las tablas en Supabase con el script SQL.
@@ -98,7 +98,7 @@ El modelo de `usuarios` usa borrado lógico y el script no tenía `deleted_at`: 
 **Commits**
 `ef6fd8a` subida del 15/10 que lo contiene
 
-### 2026-10-02 · s/r
+### 2026-10-02 · 3 h (estimadas)
 
 **Actividad**
 Levanté el backend en local, probé los endpoints de Acceso y Canchas por Swagger y armé las pantallas base del frontend conectadas al backend real: login por DNI, registro, panel con membresía y aforo, y listado de usuarios.
@@ -116,7 +116,7 @@ El backend no maneja contraseñas, así que la sesión se simula en el navegador
 
 ## Sprint 4 — Unidad III — Semana del 2026-10-08
 
-### 2026-10-12 · s/r
+### 2026-10-12 · 7 h (estimadas)
 
 **Actividad**
 Por Discord le fui pasando a Santi las pantallas de reservas en las que estaba trabajando, y él las revisó y corrigió contra lo que teníamos que entregar.
@@ -130,7 +130,7 @@ Por Discord le fui pasando a Santi las pantallas de reservas en las que estaba t
 **Commits**
 `ef6fd8a` subida del 15/10 que contiene esas pantallas
 
-### 2026-10-13 · s/r
+### 2026-10-13 · 4 h (estimadas)
 
 **Actividad**
 Relevé 14 olores del código con archivo, línea, evidencia y decisión. Apliqué los tres patrones: **Strategy** para el precio de canchas (RF-11: base, −15 % socio, +20 % de 19 a 21 hs, con un `Tarifador` que aplica las reglas en orden); **Repository** para reservas de cancha y membresías, con un adaptador para Sequelize y otro en memoria; **Observer** para la lista de espera (RF-08), con el evento `CupoLiberado`. Corregí `AppError` (O-8) y armé un tablero CQRS para el gerente.
@@ -144,7 +144,7 @@ No había un `if/else` que refactorizar: el precio era un mock (complejidad 7). 
 **Commits**
 `ef6fd8a` subida del 15/10 que lo contiene
 
-### 2026-10-15 · s/r
+### 2026-10-15 · 2 h (estimadas)
 
 **Actividad**
 Escribí el ADR de patrones y mi bitácora, y subí todo el código al repositorio nuevo. Con Franco conectamos con la API las pantallas que estaba armando (ingreso, panel, usuarios y los avances de reservas, pagos y validación de QR), siguiendo el contrato de Swagger.
@@ -162,7 +162,7 @@ Lo subí desde la web de GitHub en un solo commit, así que el historial de sept
 
 ## Sprint 5 — Unidades III, IV y V — Semana del 2026-10-22
 
-### 2026-10-27 · s/r
+### 2026-10-27 · 6 h (estimadas)
 
 **Actividad**
 Segunda revisión de las pantallas con Santi por Discord, antes de terminarlas: yo se las pasaba y él las corregía contra lo que había que entregar.
@@ -176,7 +176,7 @@ Segunda revisión de las pantallas con Santi por Discord, antes de terminarlas: 
 **Commits**
 `e8b8d74` pantallas (subidas el 05/11)
 
-### 2026-10-28 · s/r
+### 2026-10-28 · 6 h (estimadas)
 
 **Actividad**
 Ajustes por las indicaciones que la cátedra le dio a Santi en el check-in del 15/10 y que le pedí que me pasara el 27/10 para prepararlo todo: saqué CQRS, separé el ADR de patrones en uno por patrón y agregué cuatro códigos QR (reserva de cancha, acceso sin conexión con Ed25519, asistencia a clase y verificación del comprobante). Pasé los tests a Jest, sumé tests de integración con Supertest y tests de los QR: 99 en total. Terminé las pantallas de reservas, clases, mis reservas, mi acceso, recepción y gestión.
@@ -190,7 +190,7 @@ Supabase dejó de responder (complejidad 5). Al probar contra la base real apare
 **Commits**
 Subidos el 05/11 (ver la entrada siguiente): `d6170be`, `21e1539`, `b7a6848`, `674c08f`, `e8b8d74`
 
-### 2026-10-29 · s/r
+### 2026-10-29 · 1 h (estimadas)
 
 **Actividad**
 Fui líder del check-in del sprint 5.
@@ -208,7 +208,7 @@ Sin commits: fue el check-in.
 
 ## Sprint 6 — Integración y documentación — Semana del 2026-11-05
 
-### 2026-11-05 · s/r
+### 2026-11-05 · 2 h (estimadas)
 
 **Actividad**
 Ordené el repositorio: `.gitignore` para que nunca se suba el `.env`, borré archivos que sobraban (O-4 y O-13) y subí el trabajo de octubre en commits separados por tema.
@@ -222,7 +222,7 @@ No sabía usar Git más allá de la web de GitHub: aprendí a usar GitHub Deskto
 **Commits**
 `3e12d52` gitignore y limpieza · `d6170be` sin CQRS · `21e1539` un ADR por patrón · `b7a6848` códigos QR · `674c08f` tests con Jest y Supertest · `e8b8d74` pantallas · `e846505` README y bitácoras
 
-### 2026-11-07 · s/r
+### 2026-11-07 · 4 h (estimadas)
 
 **Actividad**
 Con los lineamientos nuevos del 06/11 (10 ADR obligatorios), reescribí ADR-008 (estrategia de pruebas) con la plantilla del Anexo B, y después ADR-005, ADR-009 y los de patrones y QR renumerados.
@@ -236,7 +236,7 @@ Al renumerar quedaron ADR duplicados en el repositorio, y uno se pisó con otro 
 **Commits**
 `ae1bfd2` ADR-008 · `86faafc` ADR nuevos y actualización · `fc21ae9` borrar los duplicados
 
-### 2026-11-16 · s/r
+### 2026-11-16 · 5 h (estimadas)
 
 **Actividad**
 Docker (imagen de la API), `docker-compose` con base, API y web, y el pipeline de GitHub Actions en tres etapas. Corregí lo que apareció al levantar todo junto: la API pasó a `/api/v1`, se agregó el rol de administrador de sede y la base local sin SSL.
@@ -250,7 +250,7 @@ La conexión exigía SSL siempre, y la base de Docker no lo tiene: agregué `DB_
 **Commits**
 `5ff08ac6` API en /api/v1, rol y base sin SSL · `63892b2` Docker, compose y pipeline · `0b7e59b` README
 
-### 2026-11-17 · s/r
+### 2026-11-17 · 6 h (estimadas)
 
 **Actividad**
 Diagramas C4 de componentes, clases, secuencias y pipeline; corrección de nombres de ADR y del lugar de la bitácora de Franco; manual de instalación. Implementé ADR-007: Recepción valida el QR sin conexión en el navegador (WebCrypto Ed25519) y anota los ingresos en una cola local; al volver la conexión los manda a `POST /api/v1/acceso/sincronizar`. Quedan 113 tests.
@@ -264,7 +264,7 @@ Que la pantalla siga andando si se recarga sin servidor (también hubo que guard
 **Commits**
 `303d221` nombres de ADR · `c96f322` diagramas · `bd16e21` manual y README · `9b14f0b` sincronización en el servidor · `69c1292` Recepción sin conexión · `3941987` documentación de ADR-007
 
-### 2026-11-18 · s/r
+### 2026-11-18 · 5 h (estimadas)
 
 **Actividad**
 Reorganicé el repositorio según el punto 4 de los lineamientos (`backend/`, `frontend/src/portal` y `admin`, `docs/` en la raíz). Agregué la prueba de concurrencia de RN-02 contra PostgreSQL real y la evidencia de los cuatro RNF en `docs/rnf/`. Subí la planificación revisada con el equipo.
@@ -282,7 +282,7 @@ La mudanza cambiaba casi todos los archivos de lugar: la armé de una sola vez, 
 
 ## Sprint 7 — Cierre — Semana del 2026-11-19
 
-### 2026-11-19 · s/r
+### 2026-11-19 · 8 h (estimadas)
 
 **Actividad**
 Revisé las bitácoras corregidas de Franco y Santi y concilié sus horas en la planificación (versión 5). Corregí en el historial, los ADR y las bitácoras la fecha de las indicaciones de la cátedra (check-in del 15/10) y referencias desactualizadas (ADR-012, ADR-016 y manual técnico). Con lo que encontró Franco al probar el sistema, agregué la separación de pantallas por rol, con el personal usando también el portal, y el pago de la membresía por la pasarela, con lo que RF-02 pasa a cobertura completa. Armé el dossier final, la guía de prueba y demo y las guías de estudio para la defensa.
