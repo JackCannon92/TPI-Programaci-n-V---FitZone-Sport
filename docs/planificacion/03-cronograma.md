@@ -9,7 +9,7 @@ La cursada empezó el 27/08 y termina el 20/11: 13 semanas en lugar de las 16 de
 | 3 | 24/09 – 07/10 | Clases y pagos; base de la aplicación web | 8 | Los cinco módulos armados en el backend; ingreso, panel y usuarios en la web | Villagra | 01/10 · Ayala (check-in del sprint 2 corrido por la mesa de exámenes del 22 al 28/09) |
 | 4 | 08/10 – 21/10 | Patrones de diseño (Unidad III) y pantallas de reserva | 10 | Strategy, Observer y Repository aplicados; pantallas de reservas | Sirizzotti | 15/10 · Villagra |
 | 5 | 22/10 – 04/11 | Pruebas automáticas e integración continua | 12 | 99 pruebas con Jest y Supertest; pipeline y Docker | Ayala | 29/10 · Sirizzotti |
-| 6 | 05/11 – 18/11 | Recuperar el atraso, reforzar RNF e integrar | 16 | Sistema integrado, ADR, diagramas y manuales según los lineamientos del 06/11 | Villagra | — |
+| 6 | 05/11 – 18/11 | Recuperar el atraso, reforzar RNF e integrar | 16 | Sistema integrado, ADR, diagramas y manuales según los lineamientos del 06/11 | Villagra | Sin check-in: el cierre del sprint confluye en la entrega del 19/11 |
 | 7 | 19/11 – 22/11 | Entrega | 1 | Tag `v1.0-entrega`, dossier, planificación y registro subidos al campus | Sirizzotti | 19/11 · Ayala (entrega) |
 | 8 | 23/11 – 29/11 | Defensa | 1 | Demo de cinco minutos y revisión técnica | — | — |
 | | | | **76** | | | |

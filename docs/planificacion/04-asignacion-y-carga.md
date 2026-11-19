@@ -30,15 +30,15 @@ Las tareas agregadas por la cátedra no tenían horas en el plan, así que no en
 
 | Integrante | Tareas agregadas que hizo | Evidencia |
 |---|---|---|
-| Ayala | ADR-001 a 004, 011 y 012; C4 de contexto y contenedores, DER y despliegue; esquema SQL con datos de prueba de 25 sedes y 4 roles; manual técnico | `bd48c52`, `2a4bbd5`, `ace9ac7`, `05c0596` |
+| Ayala | ADR-001 a 004, 011 y 012; C4 de contexto y contenedores, DER y despliegue; esquema SQL con datos de prueba de 25 sedes y 4 roles; manual técnico | `bd48c52`, `2a4bbd5`, `ace9ac7`, `05c0596`, `5f08a17` (bitácora), `3273b98` (README), `bc15e18` (manual técnico) |
 | Sirizzotti | Quitar CQRS y un ADR por patrón; los cuatro QR nuevos; ADR-005, 008, 009 y 013 a 016; C4 de componentes, clases, secuencias y pipeline; manual de instalación; sincronización del terminal (ADR-007) | `d6170be`, `21e1539`, `b7a6848`, `c96f322`, `bd16e21`, `9b14f0b` |
-| Villagra | Revisión de las pantallas del frontend con Sirizzotti por Discord (12/10 y 27/10); ADR-006, 007 y 010; tres diagramas (actividad de la lista de espera, estados de la membresía y estados de la reserva); manual de usuario; transmitir al equipo las indicaciones del check-in del 27/10 | `fd81941`, `848a154`, `6973c4b` |
+| Villagra | Revisión de las pantallas del frontend con Sirizzotti por Discord (12/10 y 27/10); ADR-006, 007 y 010; tres diagramas (actividad de la lista de espera, estados de la membresía y estados de la reserva); manual de usuario; pasarle al equipo, el 27/10, las indicaciones de la cátedra del check-in del 15/10 | `fd81941`, `848a154`, `6973c4b` |
 
 ## 4.3 Desbalances
 
 Se muestran tal como ocurrieron, como piden los lineamientos.
 
-1. **El frontend se corrió de Villagra a Sirizzotti.** Las 14 horas de la Unidad IV eran de Villagra. Las pantallas de los sprints 3 y 4 no estaban listas a tiempo, y Sirizzotti las terminó el 02/10 (base) y el 28/10 (reservas, servicio e integración), dos semanas después de lo previsto; Villagra las revisó con él por Discord el 12/10 y el 27/10, corrigiéndolas contra lo que había que entregar. Desde el sprint 6, Villagra tomó documentación de arquitectura: tres ADR, tres diagramas y el manual de usuario.
+1. **El frontend se corrió de Villagra a Sirizzotti.** Las 14 horas de la Unidad IV eran de Villagra. Las pantallas de los sprints 3 y 4 no estaban listas a tiempo, y Sirizzotti las terminó el 02/10 (base) y el 28/10 (reservas, servicio e integración), dos semanas después de lo previsto, con Ayala en la primera conexión con la API (15/10); Villagra las revisó con él por Discord el 12/10 y el 27/10, corrigiéndolas contra lo que había que entregar. Desde el sprint 6, Villagra tomó documentación de arquitectura: tres ADR, tres diagramas y el manual de usuario.
 2. **Sirizzotti completó casi el doble de lo comprometido** (46 contra 24 horas del plan): el frontend corrido, el refuerzo de RNF y la integración del sprint 6, además de casi todas las tareas agregadas. Es el desbalance más grande del proyecto (riesgo R9).
 3. **Ayala hizo el Módulo Acceso**, que era de Sirizzotti en el sprint 2, y armó la base de clases, canchas y pagos sobre la que después se aplicaron los patrones.
 4. **El tramo de integración** (16 horas del equipo) lo hizo en su mayor parte Sirizzotti: correcciones del 16/11, sincronización offline y pruebas de punta a punta del 17/11. La parte compartida fue la documentación.

@@ -32,13 +32,13 @@ Velocidad media de los sprints 1 a 6: 12,3 horas del plan por sprint (74 / 6).
 | 1 | 13 | 4 | s/r | 17 |
 | 2 | 5 | 0 | s/r | 5 |
 | 3 | 3 | 1 (4) | s/r | 4 |
-| 4 | — | 8 (1) (4) | s/r | 8 |
+| 4 | 2 | 8 (1) (4) | s/r | 10 |
 | 5 | 2 | 6 (1) | s/r | 8 |
-| 6 | s/r (2) | 11 (5) | 22 (3) | 33 |
+| 6 | 6 (2) | 11 (5) | 22 (3) | 39 |
 
 - **s/r:** sin registro de horas en la bitácora.
 - (1) Revisión de las pantallas del frontend junto con Sirizzotti, por Discord (12/10 y 27/10): Sirizzotti le pasaba las pantallas y Villagra las corregía contra lo que había que entregar. El código lo terminó Sirizzotti (ver 4.3).
-- (2) Ayala subió el 17/11 ADR, diagramas, esquema SQL y manual técnico (`bd48c52`, `2a4bbd5`, `ace9ac7`, `05c0596`) sin entrada de horas en su bitácora.
+- (2) Ayala, 17/11: ADR, esquema SQL con datos de prueba y README (2 h; `bd48c52`, `ace9ac7`, `3273b98`), y diagramas C4, DER y despliegue con el manual técnico (4 h; `2a4bbd5`, `05c0596`, `bc15e18`).
 - (3) Estimación del propio integrante para el período del 05 al 17/11 (Docker y pipeline, ADR, diagramas, manuales y sincronización offline). Hasta el 05/11 no anotó horas.
 - (4) Check-ins: participación en el del 01/10 (1 h) y el del 15/10, que lideró (1 h).
 - (5) ADR-006, 007 y 010 (08/11, 6 h) y los tres diagramas de actividad y de estados con el manual de usuario (17/11, 5 h).
@@ -53,6 +53,6 @@ Con horas registradas tan incompletas, el trabajado no permite una comparación 
 | 2 | Módulo 1 y esquema SQL a tiempo (16/09). El check-in del 17/09 no se hizo: Ayala no pudo asistir y la semana siguiente fue de mesa de exámenes. Acceso y canchas no empezaron. | Esquema SQL versionado con índice único para RN-02. |
 | 3 | Ayala armó Acceso, Clases, Canchas y Pagos (26/09 al 01/10). Sirizzotti hizo la base del frontend (02/10), que era de Villagra. Check-in del sprint 2 el 01/10. | — |
 | 4 | Se aplicaron los tres patrones (13/10), atrasados un sprint. Las pantallas de reservas no avanzaron. | — |
-| 5 | Se recuperó el frontend (28/10, por Sirizzotti) y se escribieron 99 pruebas. La cátedra pidió quitar CQRS, un ADR por patrón y permitió más de un QR (27/10): se hicieron en dos días. Docker y el pipeline no llegaron. | Quitar CQRS, ADR por patrón, cuatro QR, bitácoras personales. |
+| 5 | Se recuperó el frontend (28/10, por Sirizzotti) y se escribieron 99 pruebas. La cátedra pidió quitar CQRS, un ADR por patrón y permitió más de un QR (check-in del 15/10; el equipo lo supo el 27/10): se hicieron en dos días. Docker y el pipeline no llegaron. | Quitar CQRS, ADR por patrón, cuatro QR, bitácoras personales. |
 | 6 | Los lineamientos nuevos (06/11) sumaron 10 ADR, 14 diagramas, 3 manuales y esta planificación. Se usó el colchón de la semana 11. Docker y pipeline el 16/11, sincronización offline y pruebas de punta a punta el 17/11. Desvío acumulado en cero. El 18/11 se reorganizó el repositorio según el punto 4 de los lineamientos y se agregaron la evidencia de los RNF y la prueba de concurrencia. | 10 ADR, 14 diagramas, 3 manuales, planificación, ADR-007, reorganización del repositorio, evidencia de RNF. |
 | 7 y 8 | Pendientes: entrega el 19/11 y defensa del 23 al 29/11. | — |

@@ -10,13 +10,13 @@ Con los números de [06-seguimiento.md](06-seguimiento.md) y [04-asignacion-y-ca
 
 **No se vieron las dependencias entre tareas.** El plan ponía el frontend (sprints 3 y 4) después del backend, pero sin margen: cuando Acceso y los patrones se atrasaron (01/10 y 13/10), el frontend no tenía contra qué integrar. El desvío acumulado llegó a −10 horas en el sprint 4 por esa cadena, no por una tarea aislada.
 
-**Docker y el pipeline** estaban en el sprint 5 y se hicieron el 16/11. No fue un error de tamaño (llevaron lo previsto): quedaron detrás de las tareas agregadas el 27/10, que tenían fecha de check-in.
+**Docker y el pipeline** estaban en el sprint 5 y se hicieron el 16/11. No fue un error de tamaño (llevaron lo previsto): quedaron detrás de las tareas que pidió la cátedra el 15/10 y que el equipo encaró desde el 27/10, que tenían fecha de check-in.
 
 ## 2. ¿Qué riesgo se materializó y cómo se absorbió?
 
 Se materializaron ocho de los doce riesgos del registro, y uno más en parte. Los que más pesaron:
 
-- **R2, cambios de la cátedra** (27/10, 30/10 y 06/11). Se absorbió con el colchón de 10 horas de la semana 11 y con trabajo concentrado del 08 al 17/11. El desvío acumulado pasó de −6 a 0 en el sprint 6, pero con trabajo que no estaba en el plan: 10 ADR, 14 diagramas, 3 manuales y esta planificación.
+- **R2, cambios de la cátedra** (15/10, 30/10 y 06/11). Se absorbió con el colchón de 10 horas de la semana 11 y con trabajo concentrado del 08 al 17/11. El desvío acumulado pasó de −6 a 0 en el sprint 6, pero con trabajo que no estaba en el plan: 10 ADR, 14 diagramas, 3 manuales y esta planificación.
 - **R3, indisponibilidad por exámenes.** El check-in del 17/09 se corrió al 01/10 y Acceso y canchas se atrasaron un sprint. Se absorbió porque Ayala armó los módulos 2 a 5 juntos entre el 26/09 y el 01/10.
 - **R4 y R9, frontend atrasado y carga concentrada.** Se absorbieron reasignando: Sirizzotti terminó el frontend y Villagra tomó documentación de arquitectura (tres ADR, tres diagramas y el manual de usuario). Funcionó para llegar a la fecha, pero dejó la carga muy despareja (46 horas completadas contra 24 comprometidas).
 

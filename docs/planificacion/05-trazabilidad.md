@@ -7,7 +7,7 @@ Estado al 18/11: 113 pruebas (83 unitarias y 30 de integración) más una de con
 | Req. | Historia | Implementación | Prueba automática | Verificación manual o demo | Cobertura |
 |---|---|---|---|---|---|
 | RF-01 | H1.1 | `usuarios/` | — | Alta desde la aplicación web (manual de usuario, 3.1) | **Hueco** |
-| RF-02 | H1.2 | `membresias/` (Repository) | `unit/membresias.test.js` (8 casos: plan, vencimiento, renovación, suspensión); `integracion/membresias.api.test.js` | — | Completa. La renovación por la pasarela desde la web no está implementada |
+| RF-02 | H1.2 | `membresias/` (Repository) | `unit/membresias.test.js` (8 casos: plan, vencimiento, renovación, suspensión); `integracion/membresias.api.test.js` | — | Parcial: completa en la API y en las pruebas; la renovación con pago por la pasarela desde la web no está implementada |
 | RF-03 | H2.1 | `acceso.service.js` (el ingreso no depende de la sede de alta) | — | Demo: el mismo socio entra en dos sedes en días distintos | **Hueco** |
 | RF-04 | H2.1 | `acceso/qr-token.js` (HMAC, cambia cada minuto) | — | Demo: un QR de más de un minuto se rechaza en Recepción | **Hueco** |
 | RF-05 | H2.2 | `acceso.service.js` → `aforo()`; pantalla de Recepción | `unit/sincronizacion-terminal.test.js` (cuenta del aforo excedido) | Demo: sede llena rechaza el ingreso | Parcial |
@@ -26,14 +26,14 @@ Estado al 18/11: 113 pruebas (83 unitarias y 30 de integración) más una de con
 | RNF-01 | H2.3 | `acceso/qr-offline.js`, `frontend/src/services/terminal-offline.js`, `POST /acceso/sincronizar` (ADR-003, ADR-007) | `unit/qr-offline.test.js` (8); `unit/sincronizacion-terminal.test.js` (11); `integracion/qr.api.test.js` (6 casos de acceso sin conexión y sincronización) | Demo obligatoria con la API caída (manual de instalación, 8) | Completa |
 | RNF-02 | H5.1 | `pagos.model.js` guarda solo `token_pasarela` y `ultimos4` (ADR-010) | — | Medición en `docs/rnf/RNF-02-seguridad.md`: el número y el titular no aparecen en ningún dato de la base | Parcial: sin prueba automática |
 | RNF-03 | H4.2 | Índices en `db/01-esquema.sql` (turno de cancha, accesos por sede y fecha, reservas por usuario) | — | Medición en `docs/rnf/RNF-03-rendimiento.md`: con 349.377 reservas, 0,12 ms en la base y 3,4 ms promedio por la API | Parcial: sin prueba automática |
-| RNF-04 | — | Sedes como datos (`sedes`), alta desde Gestión sin reiniciar; datos de prueba con 25 sedes | `integracion/app.test.js` (la aplicación arma todos los módulos) | Medición en `docs/rnf/RNF-04-escalabilidad.md`: alta de sede y cancha con la API corriendo, sin reiniciar | Parcial |
+| RNF-04 | H4.1 | Sedes como datos (`sedes`), alta desde Gestión sin reiniciar; datos de prueba con 25 sedes | `integracion/app.test.js` (la aplicación arma todos los módulos) | Medición en `docs/rnf/RNF-04-escalabilidad.md`: alta de sede y cancha con la API corriendo, sin reiniciar | Parcial |
 
 ## Resumen
 
 | Cobertura | Requisitos |
 |---|---|
-| Completa | RF-02, RF-08, RF-10, RF-11, RF-14, RN-01, RN-02, RN-03, RNF-01 (9) |
-| Parcial | RF-05, RF-07, RF-12, RF-13, RNF-02, RNF-03, RNF-04 (7) |
+| Completa | RF-08, RF-10, RF-11, RF-14, RN-01, RN-02, RN-03, RNF-01 (8) |
+| Parcial | RF-02, RF-05, RF-07, RF-12, RF-13, RNF-02, RNF-03, RNF-04 (8) |
 | Hueco (solo verificación manual) | RF-01, RF-03, RF-04, RF-06, RF-09 (5) |
 
 Todos los requisitos tienen una historia y una implementación. Los huecos son de prueba automática: las reglas de negocio obligatorias (RN-01 a RN-03) y el RNF de disponibilidad están cubiertos. Los huecos están en las altas simples (usuarios, clases, canchas) y en el QR dinámico: cuando se escribieron las pruebas, en el sprint 5, se priorizaron las reglas de negocio y no se volvió sobre el resto.

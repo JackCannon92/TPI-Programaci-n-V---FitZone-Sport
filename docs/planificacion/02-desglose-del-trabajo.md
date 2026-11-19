@@ -120,7 +120,7 @@ Criterios: (1) ingreso por DNI; (2) panel, reservas, clases, acceso, recepción 
 | Pantalla de reserva de canchas | 2 | Villagra | Sirizzotti, 28/10 | Hecha con atraso |
 | Pantalla de reserva de clases | 2 | Villagra | Sirizzotti, 28/10 | Hecha con atraso |
 | Capa de servicio (`services/api.js`) | 2 | Villagra | Sirizzotti, 28/10 | Hecha con atraso |
-| Integración con el backend | 2 | Villagra | Sirizzotti, 28/10 | Hecha con atraso |
+| Integración con el backend | 2 | Villagra | Sirizzotti con Ayala (15/10) y Sirizzotti (28/10) | Hecha con atraso |
 | Pantallas de acceso, recepción y gestión (agregada) | s/e | — | Sirizzotti, 28/10 (`e8b8d74`) | Hecha |
 | Panel «Terminal» de Recepción sin conexión (agregada) | s/e | — | Sirizzotti, 17/11 (`69c1292`) | Hecha |
 
@@ -152,9 +152,9 @@ Criterios: (1) manual de usuario, de instalación y técnico (anexos D, E y F); 
 | Pulido de la aplicación web | 3 | Equipo | Sirizzotti, 16 y 17/11 | Hecha |
 | Integración final de punta a punta | 3 | Equipo | Sirizzotti (prueba con navegador contra la pila completa), 17/11 | Hecha |
 | Corrección de errores entre back y front | 3 | Equipo | Sirizzotti (`/api/v1`, base sin SSL, rol de admin. de sede), 16/11 | Hecha |
-| Bitácoras personales (agregada, 30/10) | s/e | — | Cada integrante la suya | En curso |
-| Manuales de usuario, instalación y técnico (agregada, 06/11) | s/e | — | Villagra, Sirizzotti y Ayala | Instalación y técnico subidos; usuario por subir |
-| Planificación y planilla de registro (agregada, 06/11) | s/e | — | Equipo, 17/11 | Esta versión |
+| Bitácoras personales (agregada, 30/10) | s/e | — | Cada integrante la suya | Hecha (sprints 1 a 6; el 7 y el 8 se completan después de la entrega y de la defensa) |
+| Manuales de usuario, instalación y técnico (agregada, 06/11) | s/e | — | Villagra, Sirizzotti y Ayala | Hecha |
+| Planificación y planilla de registro (agregada, 06/11) | s/e | — | Equipo, 17/11 y 19/11 | Hecha (versión 5) |
 | Reorganizar el repositorio según el punto 4 de los lineamientos (agregada, 18/11) | s/e | — | Sirizzotti, 18/11 | Hecha |
 | Evidencia de los RNF (`docs/rnf/`) y prueba de concurrencia de RN-02 contra PostgreSQL (agregada, 18/11) | s/e | — | Sirizzotti, 18/11 | Hecha |
 | Ensayo de la defensa | 1 | Equipo | — | Pendiente (sprint 7) |
