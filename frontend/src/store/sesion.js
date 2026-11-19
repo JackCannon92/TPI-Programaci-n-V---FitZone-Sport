@@ -17,6 +17,7 @@ const sesion = {
   },
   cerrar() {
     sessionStorage.removeItem(SESION_KEY);
+    sessionStorage.removeItem('fitzone_rol');
   },
   requerirONavegar() {
     const id = sesion.obtenerId();

@@ -23,6 +23,17 @@ const ui = (() => {
     { id: 'usuarios', href: '../admin/usuarios.html', texto: 'Usuarios' },
   ];
 
+  // Qué pantallas ve cada rol. El cliente (socio o externo) usa el portal;
+  // el personal usa la consola de administración. La primera es su inicio.
+  const PANTALLAS_POR_ROL = {
+    CLIENTE: ['inicio', 'reservar', 'clases', 'mis-reservas', 'acceso'],
+    RECEPCIONISTA: ['recepcion'],
+    ADMIN_SEDE: ['recepcion', 'gestion'],
+    GERENTE: ['gestion', 'recepcion', 'usuarios'],
+  };
+  const pantallasDe = (rol) => PANTALLAS_POR_ROL[rol] || PANTALLAS_POR_ROL.CLIENTE;
+  const inicioDe = (rol) => NAV.find((n) => n.id === pantallasDe(rol)[0]).href;
+
   const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 
@@ -121,16 +132,16 @@ const ui = (() => {
   }
 
   // ---------- Barra y arranque de cada pantalla ----------
-  function montarBarra(actual) {
+  function montarBarra(actual, rol) {
     const header = document.getElementById('barra');
     if (!header) return;
-    const links = NAV.map((n) => (n.separador
-      ? '<span class="separador" aria-hidden="true"></span>'
-      : `<a href="${n.href}"${n.id === actual ? ' aria-current="page"' : ''}>${n.texto}</a>`)).join('');
+    const permitidas = pantallasDe(rol);
+    const links = NAV.filter((n) => !n.separador && permitidas.includes(n.id))
+      .map((n) => `<a href="${n.href}"${n.id === actual ? ' aria-current="page"' : ''}>${n.texto}</a>`).join('');
     header.className = 'barra';
     header.innerHTML = `
       <div class="barra-in">
-        <a class="marca" href="../portal/dashboard.html">${LOGO} FitZone Sports</a>
+        <a class="marca" href="${inicioDe(rol)}">${LOGO} FitZone Sports</a>
         <nav class="nav" aria-label="Secciones">${links}</nav>
         <div class="usuario-barra"><span class="nombre" id="barra-nombre"></span><button type="button" id="barra-salir">Salir</button></div>
       </div>`;
@@ -140,13 +151,21 @@ const ui = (() => {
     });
   }
 
-  /** Exige sesión, arma la barra y trae al usuario logueado. */
+  /**
+   * Exige sesión, trae al usuario logueado y arma la barra con las pantallas
+   * de su rol. Si entra a una pantalla que no es de su rol, lo lleva a su inicio.
+   */
   async function iniciarPagina(actual) {
     const usuarioId = sesion.requerirONavegar();
     if (!usuarioId) return new Promise(() => {});
-    montarBarra(actual);
     try {
       const usuario = await api.obtenerUsuario(usuarioId);
+      if (!pantallasDe(usuario.rol).includes(actual)) {
+        window.location.replace(inicioDe(usuario.rol));
+        return new Promise(() => {});
+      }
+      try { sessionStorage.setItem('fitzone_rol', usuario.rol); } catch (_) { /* sin almacenamiento */ }
+      montarBarra(actual, usuario.rol);
       const nombre = document.getElementById('barra-nombre');
       if (nombre) nombre.textContent = usuario.nombre_completo;
       return { usuarioId, usuario };
@@ -155,6 +174,12 @@ const ui = (() => {
         sesion.cerrar();
         window.location.href = '../portal/index.html';
         return new Promise(() => {});
+      }
+      // Sin conexión (ADR-007): la barra se arma con el último rol conocido.
+      if (error.status === 0) {
+        let rol = null;
+        try { rol = sessionStorage.getItem('fitzone_rol'); } catch (_) { /* sin almacenamiento */ }
+        montarBarra(actual, rol || 'RECEPCIONISTA');
       }
       throw error;
     }
