@@ -25,8 +25,9 @@ necesitan igualmente ver su QR dinámico (RF-04) y reservar canchas y clases des
 
 Se elimina el contenedor "App Móvil" del diseño C4. **Todos los roles** (Socio, Cliente Externo,
 Recepcionista, Gerente Central) usan la **misma Aplicación Web**, con vistas según el rol
-(`frontend/js/router.js` + `views/`). El QR dinámico del socio (RF-04) es una página web pensada
-para el celular (`views/qr.js`), que se renueva sola cada minuto.
+(`frontend/src/portal/` para socios y clientes, `frontend/src/admin/` para el personal; la barra de
+navegación muestra lo que corresponde a cada rol). El QR dinámico del socio (RF-04) es una página
+web pensada para el celular (`frontend/src/portal/acceso.html`), que se renueva sola cada minuto.
 
 ## Consecuencias
 
@@ -35,12 +36,13 @@ una sola vez; el diagrama de contenedores queda más simple.
 
 **Negativas / riesgos** — La experiencia en el celular depende de tener conexión: no hay un modo
 verdaderamente offline salvo que más adelante se sume un Service Worker, fuera del alcance de este
-TP. RNF-01 (control de acceso operativo aunque falle internet) queda del lado del torno/recepción y
-se documenta como limitación.
+TP. RNF-01 (control de acceso operativo aunque falle internet) se resuelve del lado de la recepción:
+QR sin conexión firmado con Ed25519 (ADR-003) y cola local de ingresos que se sincroniza al volver la
+red (ADR-007).
 
 ## Cómo se verifica
 
-`frontend/index.html` (una sola app), `frontend/js/views/qr.js`, diagrama de contenedores en `docs/TP_FitZone_Unidad_I_ADR.pdf`.
+`frontend/src/index.html` (una sola app), `frontend/src/portal/acceso.html` y `acceso.js`, diagrama de contenedores en `docs/diagramas/c4-2-contenedores.png`.
 
 ## Requisitos relacionados
 

@@ -9,7 +9,7 @@
 
 El ingreso a las sedes es la operación más visible del sistema: si el molinete no responde, el socio no entra y la sede se llena de gente esperando. El requisito RNF-01 exige que el control de acceso siga funcionando aunque se caiga la conexión entre la sede y el servidor central.
 
-El QR dinámico del socio (RF-04) se valida consultando al servidor: cambia cada minuto y el servidor revisa la firma y el estado de la membresía. Sin conexión, el terminal de la sede no puede hacer esa consulta. La cátedra indicó el 27/10 que se puede usar más de un QR.
+El QR dinámico del socio (RF-04) se valida consultando al servidor: cambia cada minuto y el servidor revisa la firma y el estado de la membresía. Sin conexión, el terminal de la sede no puede hacer esa consulta. La cátedra indicó en el check-in del 15/10 que se puede usar más de un QR.
 
 ## Alternativas consideradas
 

@@ -10,7 +10,7 @@ FitZone Sports es una plataforma web para una cadena de 25 gimnasios. Los socios
 |---|---|---|
 | Franco Ayala | P1 · Arquitecto / Backend Lead | [@orangecraft2](https://github.com/orangecraft2) |
 | Martín Emiliano Sirizzotti | P2 · Backend Developer y P4 · QA / DevOps | [@JackCannon92](https://github.com/JackCannon92) |
-| Santiago Agustín Villagra | P3 · Frontend Developer | [@Santiago1102](https://github.com/SantiagoV1102) |
+| Santiago Agustín Villagra | P3 · Frontend Developer | [@SantiagoV1102](https://github.com/SantiagoV1102) |
 
 ## Puesta en marcha
 
@@ -62,7 +62,7 @@ npm run test:cov            # además, el reporte de cobertura en backend/covera
 npm run test:concurrencia   # RN-02 contra PostgreSQL real (necesita DATABASE_URL)
 ```
 
-Estado al 18/11/2026: **113 pruebas en verde, 82,3 % de líneas y 61,5 % de ramas cubiertas**. El umbral mínimo (ADR-008) es 70 % de líneas y 50 % de ramas: si un cambio lo baja, las pruebas fallan. El pipeline de GitHub Actions corre todo esto, más la prueba de concurrencia y un despliegue de prueba, en cada push a `main`.
+Estado al 19/11/2026: **113 pruebas en verde, 82,3 % de líneas y 61,5 % de ramas cubiertas**. El umbral mínimo (ADR-008) es 70 % de líneas y 50 % de ramas: si un cambio lo baja, las pruebas fallan. El pipeline de GitHub Actions corre todo esto, más la prueba de concurrencia y un despliegue de prueba, en cada push a `main`.
 
 ## Estructura del repositorio
 

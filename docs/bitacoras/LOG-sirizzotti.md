@@ -147,13 +147,13 @@ No había un `if/else` que refactorizar: el precio era un mock (complejidad 7). 
 ### 2026-10-15 · s/r
 
 **Actividad**
-Escribí el ADR de patrones y mi bitácora, y subí todo el código al repositorio nuevo.
+Escribí el ADR de patrones y mi bitácora, y subí todo el código al repositorio nuevo. Con Franco conectamos con la API las pantallas que estaba armando (ingreso, panel, usuarios y los avances de reservas, pagos y validación de QR), siguiendo el contrato de Swagger.
 
 **Decisión**
-—
+Que todas las pantallas llamen a la API desde un único módulo y que el backend devuelva siempre los mismos códigos de error (400, 404 y 409 por RN-02), para que la interfaz no repita reglas del dominio.
 
 **Problema o bloqueo**
-Lo subí desde la web de GitHub en un solo commit, así que el historial de septiembre y octubre quedó en el repositorio anterior.
+Lo subí desde la web de GitHub en un solo commit, así que el historial de septiembre y octubre quedó en el repositorio anterior. Al conectar las pantallas aparecieron bloqueos de CORS en el navegador y diferencias en los datos que mandaba el frontend; habilitamos el middleware CORS en la API y alineamos los campos con las validaciones.
 
 **Commits**
 `ef6fd8a` Add files via upload
@@ -179,7 +179,7 @@ Segunda revisión de las pantallas con Santi por Discord, antes de terminarlas: 
 ### 2026-10-28 · s/r
 
 **Actividad**
-Ajustes por las indicaciones de la cátedra del 27/10: saqué CQRS, separé el ADR de patrones en uno por patrón y agregué cuatro códigos QR (reserva de cancha, acceso sin conexión con Ed25519, asistencia a clase y verificación del comprobante). Pasé los tests a Jest, sumé tests de integración con Supertest y tests de los QR: 99 en total. Terminé las pantallas de reservas, clases, mis reservas, mi acceso, recepción y gestión.
+Ajustes por las indicaciones que la cátedra le dio a Santi en el check-in del 15/10 y que le pedí que me pasara el 27/10 para prepararlo todo: saqué CQRS, separé el ADR de patrones en uno por patrón y agregué cuatro códigos QR (reserva de cancha, acceso sin conexión con Ed25519, asistencia a clase y verificación del comprobante). Pasé los tests a Jest, sumé tests de integración con Supertest y tests de los QR: 99 en total. Terminé las pantallas de reservas, clases, mis reservas, mi acceso, recepción y gestión.
 
 **Decisión**
 Clave pública para el QR sin conexión, porque con HMAC el molinete necesitaría el secreto (ADR-016). Sacar el manejador de errores de `app.js` para usarlo igual en la API y en los tests.
@@ -199,7 +199,7 @@ Fui líder del check-in del sprint 5.
 —
 
 **Problema o bloqueo**
-Docker y el pipeline, que eran de esas semanas, quedaron sin hacer por las tareas agregadas el 27/10.
+Docker y el pipeline, que eran de esas semanas, quedaron sin hacer por las tareas que pidió la cátedra (15/10) y que encaramos desde el 27/10.
 
 **Commits**
 Sin commits: fue el check-in.

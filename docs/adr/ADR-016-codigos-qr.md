@@ -4,7 +4,7 @@
 - **Fecha:** 2026-10-28
 - **Autor:** Sirizzotti, Martín Emiliano
 - **Sprint:** 5
-- **Relacionado:** RF-04, RF-05, RF-07, RF-14, RN-01, RNF de disponibilidad (tornos sin conexión), ADR-013 (detalle del precio en el comprobante). Indicación de la cátedra del 27/10: "se puede usar más de un QR".
+- **Relacionado:** RF-04, RF-05, RF-07, RF-14, RN-01, RNF de disponibilidad (tornos sin conexión), ADR-013 (detalle del precio en el comprobante). Indicación de la cátedra en el check-in del 15/10: "se puede usar más de un QR".
 
 ## Contexto
 

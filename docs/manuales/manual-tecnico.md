@@ -162,7 +162,7 @@ Si dos pedidos intentan el mismo turno, PostgreSQL acepta uno y rechaza el otro 
 
 **Clases.** Para el último cupo de una clase sí se usa **bloqueo pesimista**: `clases.service.js` reserva dentro de una transacción con `lock: UPDATE` sobre la fila de la clase, porque ahí hay una fila (el contador de cupos) que todos modifican. El trigger de la base descuenta el cupo.
 
-**Cómo se prueba.** `test/unit/reservas-cancha.test.js` y `test/integracion/canchas.api.test.js` verifican el 409 con el repositorio en memoria, que imita el índice. La prueba de concurrencia contra un PostgreSQL real está como deuda en el ADR-008.
+**Cómo se prueba.** `test/unit/reservas-cancha.test.js` y `test/integracion/canchas.api.test.js` verifican el 409 con el repositorio en memoria, que imita el índice. `test/concurrencia/reserva-cancha.concurrencia.test.js` lo verifica contra un PostgreSQL real: seis pedidos simultáneos del mismo turno, uno reserva y el resto recibe 409 (ADR-017; el pipeline la corre en cada push).
 
 ---
 
@@ -238,7 +238,7 @@ Ejemplo: recargo del 10 % los sábados y domingos.
 3. En `test/dobles/fitzone.js`: la misma regla en `tarifadorFitZone`, para que las pruebas usen la misma cadena que producción.
 4. Prueba nueva `test/unit/precio-fin-de-semana.test.js`: la regla aplica sábado y domingo y no un miércoles; un externo el sábado paga 1100 sobre 1000; un socio, 1000 → 850 → 935.
 
-No se tocan `tarifador.js`, `canchas.service.js`, las otras estrategias ni el frontend (el detalle del precio se dibuja con lo que devuelve el Tarifador). Este cambio se probó: las 100 pruebas siguen pasando y se suman 3.
+No se tocan `tarifador.js`, `canchas.service.js`, las otras estrategias ni el frontend (el detalle del precio se dibuja con lo que devuelve el Tarifador). Este cambio se probó: las pruebas existentes siguen pasando y se suman 3.
 
 ---
 
