@@ -30,16 +30,18 @@ Velocidad media de los sprints 1 a 6: 12,3 horas del plan por sprint (74 / 6).
 | Sprint | Ayala | Villagra | Sirizzotti | Total registrado |
 |---|---|---|---|---|
 | 1 | 13 | 4 | s/r | 17 |
-| 2 | 5 | — | s/r | 5 |
-| 3 | 3 | a conciliar (1) | s/r | 3 |
-| 4 | — | a conciliar (1) | s/r | 0 |
-| 5 | 2 | a conciliar (1) | s/r | 2 |
-| 6 | s/r (2) | 6 | 22 (3) | 28 |
+| 2 | 5 | 0 | s/r | 5 |
+| 3 | 3 | 1 (4) | s/r | 4 |
+| 4 | — | 8 (1) (4) | s/r | 8 |
+| 5 | 2 | 6 (1) | s/r | 8 |
+| 6 | s/r (2) | 11 (5) | 22 (3) | 33 |
 
 - **s/r:** sin registro de horas en la bitácora.
-- (1) La bitácora de Villagra registra 8, 7 y 6 horas en tareas del frontend que la planilla registra como terminadas por Sirizzotti. Se suman cuando se concilien las dos fuentes.
+- (1) Revisión de las pantallas del frontend junto con Sirizzotti, por Discord (12/10 y 27/10): Sirizzotti le pasaba las pantallas y Villagra las corregía contra lo que había que entregar. El código lo terminó Sirizzotti (ver 4.3).
 - (2) Ayala subió el 17/11 ADR, diagramas, esquema SQL y manual técnico (`bd48c52`, `2a4bbd5`, `ace9ac7`, `05c0596`) sin entrada de horas en su bitácora.
 - (3) Estimación del propio integrante para el período del 05 al 17/11 (Docker y pipeline, ADR, diagramas, manuales y sincronización offline). Hasta el 05/11 no anotó horas.
+- (4) Check-ins: participación en el del 01/10 (1 h) y el del 15/10, que lideró (1 h).
+- (5) ADR-006, 007 y 010 (08/11, 6 h) y los tres diagramas de actividad y de estados con el manual de usuario (17/11, 5 h).
 
 Con horas registradas tan incompletas, el trabajado no permite una comparación seria contra lo estimado: la falta de registro es en sí misma un hallazgo del seguimiento (ver [08-analisis-de-desvios.md](08-analisis-de-desvios.md)). Por eso la velocidad se mide en horas del plan completadas, que sí se pueden verificar contra la planilla y el repositorio.
 

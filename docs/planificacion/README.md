@@ -2,7 +2,7 @@
 
 - **Equipo:** Ayala, Franco (P1) · Sirizzotti, Martín Emiliano (P2 y P4) · Villagra, Santiago Agustín (P3)
 - **Versión:** 4 · **Fecha:** 17/11/2026 (cierre del sprint 6)
-- **Herramienta:** planilla de registro de actividades (Excel / Google Sheets), una de las tres opciones del punto 5.6.2 de los lineamientos. Se entrega como `PROGV-2026-TIF-EquipoNN-Registro.xlsx`.
+- **Herramienta:** planilla de registro de actividades (Excel / Google Sheets), una de las tres opciones del punto 5.6.2 de los lineamientos. Se entrega como `PROGV-2026-TIF-Equipo11-Registro.xlsx`.
 
 > Redactado con ayuda de IA (Claude) a partir del plan de tareas, las bitácoras y el historial de Git; revisado por el equipo. Cada número sale de una de esas tres fuentes y se indica cuál.
 

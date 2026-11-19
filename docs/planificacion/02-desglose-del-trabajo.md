@@ -38,7 +38,7 @@ Criterios: (1) no recibe el descuento de socio; (2) no puede reservar clases.
 | Modelos Sequelize de usuarios y membresías | 4 | Ayala | Ayala, 16/09 | Hecha |
 | API REST del Módulo 1 | 4 | Ayala | Ayala, 16/09 | Hecha |
 | Repository de membresías (memoria y Sequelize) | (en E4) | Sirizzotti | Sirizzotti, 13/10 | Hecha |
-| Rol de administrador de sede (agregada) | s/e | — | Sirizzotti, 16/11 (`5ff08ac`) | Hecha |
+| Rol de administrador de sede (agregada) | s/e | — | Sirizzotti, 16/11 (`5ff08ac6`) | Hecha |
 
 ## E2 · Módulo 2: control de acceso (RF-04, RF-05, RN-01, RNF-01)
 

@@ -2,8 +2,8 @@
 
 | Entregable | Archivo | Estado |
 |---|---|---|
-| Dossier del trabajo integrador (PDF del campus) | `PROGV-2026-TIF-EquipoNN-Dossier.pdf` | Se agrega al cerrar la entrega |
-| Planificación (PDF) y planilla de registro | `PROGV-2026-TIF-EquipoNN-Planificacion.pdf` · `PROGV-2026-TIF-EquipoNN-Registro.xlsx` | Se agregan al cerrar la entrega; la fuente está en [`../planificacion/`](../planificacion/) |
+| Dossier del trabajo integrador (PDF del campus) | `PROGV-2026-TIF-Equipo11-Dossier.pdf` | Se agrega al cerrar la entrega |
+| Planificación (PDF) y planilla de registro | `PROGV-2026-TIF-Equipo11-Planificacion.pdf` · `PROGV-2026-TIF-Equipo11-Registro.xlsx` | Se agregan al cerrar la entrega; la fuente está en [`../planificacion/`](../planificacion/) |
 | Historial del equipo y anexos de la Unidad III (olores de código, patrones evaluados y descartados) | [`historial-del-equipo.md`](historial-del-equipo.md) | Registro de decisiones conjuntas del 27/08 al 05/11. No reemplaza a las bitácoras personales de [`../bitacoras/`](../bitacoras/) |
 | Trigger de cupos de clases (olor O-9), para bases ya creadas | [`trigger-cupos-clases.sql`](trigger-cupos-clases.sql) | Incluido en `backend/db/01-esquema.sql` para bases nuevas |
 
