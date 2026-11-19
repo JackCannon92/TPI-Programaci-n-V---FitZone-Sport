@@ -56,7 +56,7 @@ Al contrastar las pantallas contra los requisitos funcionales, detectamos incons
 
 ### 2026-10-15 · 1 h
 **Actividad**
-Liderazgo del check-in del 15/10 con la cátedra (correspondiente a mi turno en la rotación corrida del equipo), presentando el estado de la aplicación web y la aplicación de los patrones de diseño en el backend.
+Liderazgo del check-in del 15/10 con la cátedra (correspondiente a mi turno en la rotación corrida del equipo), presentando el estado de la aplicación web y la aplicación de los patrones de diseño en el backend. La cátedra nos indicó llevar el plan en una hoja de Google y mandarlo por mail, quitar CQRS, escribir un ADR por cada patrón y que se puede usar más de un código QR.
 **Decisión**
 Priorizar la conexión completa de todas las vistas contra la API real antes de sumar mejoras visuales secundarias.
 **Problema o bloqueo**
@@ -69,9 +69,9 @@ Faltaban completar las pantallas de recepción, control de acceso y gestión por
 ## Sprint 5 — Unidad IV (Servicios e Integración Web) — Semana del 2026-10-22
 ### 2026-10-27 · 6 h
 **Actividad**
-Revisión conjunta por Discord con Martín de la capa de servicio del frontend (`frontend/src/services/api.js`) y de las nuevas pantallas de control de acceso, recepción y gestión por rol, verificando que todas las operaciones consumieran correctamente los endpoints del backend. Además, participé en el check-in con la cátedra del 27/10 y transmití al equipo las indicaciones recibidas (enviar el plan en Google Sheets por mail, quitar CQRS, redactar un ADR por patrón y contemplar los códigos QR adicionales).
+Revisión conjunta por Discord con Martín de la capa de servicio del frontend (`frontend/src/services/api.js`) y de las nuevas pantallas de control de acceso, recepción y gestión por rol, verificando que todas las operaciones consumieran correctamente los endpoints del backend. Además, a pedido de Martín, le pasé al equipo las indicaciones que la cátedra me había dado en el check-in del 15/10 (enviar el plan en Google Sheets por mail, quitar CQRS, redactar un ADR por patrón y contemplar los códigos QR adicionales), para preparar el check-in siguiente.
 **Decisión**
-Verificar que todas las llamadas `fetch` quedaran centralizadas en `frontend/src/services/api.js` evitando URLs sueltas en cada vista, y ajustar las pantallas para contemplar los nuevos flujos de códigos QR solicitados en el check-in.
+Verificar que todas las llamadas `fetch` quedaran centralizadas en `frontend/src/services/api.js` evitando URLs sueltas en cada vista, y ajustar las pantallas para contemplar los nuevos flujos de códigos QR solicitados por la cátedra.
 **Problema o bloqueo**
 Al revisar las vistas nuevas contra los endpoints del backend, detectamos diferencias en los parámetros enviados y en el manejo de errores HTTP al validar accesos y reservas; ajustamos las funciones en `frontend/src/services/api.js` para unificar las respuestas y mensajes mostrados al usuario.
 **Commits**
