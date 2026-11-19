@@ -23,13 +23,15 @@ const ui = (() => {
     { id: 'usuarios', href: '../admin/usuarios.html', texto: 'Usuarios' },
   ];
 
-  // Qué pantallas ve cada rol. El cliente (socio o externo) usa el portal;
-  // el personal usa la consola de administración. La primera es su inicio.
+  // Qué pantallas ve cada rol. El cliente (socio o externo) usa solo el portal.
+  // El personal usa su parte de la consola y, además, el portal: también puede
+  // reservar canchas, anotarse en clases y entrar como cliente. La primera es su inicio.
+  const PORTAL = ['inicio', 'reservar', 'clases', 'mis-reservas', 'acceso'];
   const PANTALLAS_POR_ROL = {
-    CLIENTE: ['inicio', 'reservar', 'clases', 'mis-reservas', 'acceso'],
-    RECEPCIONISTA: ['recepcion'],
-    ADMIN_SEDE: ['recepcion', 'gestion'],
-    GERENTE: ['gestion', 'recepcion', 'usuarios'],
+    CLIENTE: PORTAL,
+    RECEPCIONISTA: ['recepcion', ...PORTAL],
+    ADMIN_SEDE: ['recepcion', 'gestion', ...PORTAL],
+    GERENTE: ['gestion', 'recepcion', 'usuarios', ...PORTAL],
   };
   const pantallasDe = (rol) => PANTALLAS_POR_ROL[rol] || PANTALLAS_POR_ROL.CLIENTE;
   const inicioDe = (rol) => NAV.find((n) => n.id === pantallasDe(rol)[0]).href;
@@ -136,8 +138,12 @@ const ui = (() => {
     const header = document.getElementById('barra');
     if (!header) return;
     const permitidas = pantallasDe(rol);
-    const links = NAV.filter((n) => !n.separador && permitidas.includes(n.id))
-      .map((n) => `<a href="${n.href}"${n.id === actual ? ' aria-current="page"' : ''}>${n.texto}</a>`).join('');
+    const enlace = (n) => `<a href="${n.href}"${n.id === actual ? ' aria-current="page"' : ''}>${n.texto}</a>`;
+    const corte = NAV.findIndex((n) => n.separador);
+    const portal = NAV.slice(0, corte).filter((n) => permitidas.includes(n.id)).map(enlace);
+    const consola = NAV.slice(corte + 1).filter((n) => permitidas.includes(n.id)).map(enlace);
+    const links = [portal.join(''), consola.join('')].filter(Boolean)
+      .join('<span class="separador" aria-hidden="true"></span>');
     header.className = 'barra';
     header.innerHTML = `
       <div class="barra-in">
@@ -189,6 +195,6 @@ const ui = (() => {
 
   return {
     LOGO, esc, hora, fecha, fechaHora, mes, diaNum, dinero, isoDia, diasHasta,
-    estado, toast, modal, aviso, pase, iniciarPagina, esSocioActivo,
+    estado, toast, modal, aviso, pase, iniciarPagina, esSocioActivo, inicioDe,
   };
 })();

@@ -33,7 +33,8 @@
         return;
       }
       sesion.guardar(encontrado.id);
-      window.location.href = 'dashboard.html';
+      // El personal arranca en su pantalla de la consola; el cliente, en el portal.
+      window.location.href = ui.inicioDe(encontrado.rol);
     } catch (error) {
       ui.aviso(mensaje, error.message);
     } finally {
