@@ -56,7 +56,7 @@ Reglas adoptadas:
 - Un comprobante editado a mano se detecta escaneando su QR.
 
 **Negativas / riesgos**
-- **Sin conexión hay un margen de riesgo.** Si a un socio se le suspende la membresía, su QR sin conexión sigue sirviendo hasta que vence (como mucho 24 horas). Es el precio de no depender de la red, y por eso la vigencia es corta. Los ingresos que el torno registre sin red se tendrían que sincronizar cuando vuelve la conexión; esa sincronización queda fuera del alcance del TI.
+- **Sin conexión hay un margen de riesgo.** Si a un socio se le suspende la membresía, su QR sin conexión sigue sirviendo hasta que vence (como mucho 24 horas). Es el precio de no depender de la red, y por eso la vigencia es corta. Los ingresos que el torno registra sin red se sincronizan cuando vuelve la conexión (ADR-007).
 - **Si se filtra `QR_SECRET`,** se podrían fabricar QRs de reserva, de asistencia y de comprobante. Se mitiga con el secreto fuera del repositorio (`.env`, que está en el `.gitignore`).
 - **Dos mecanismos de firma** (HMAC y Ed25519), cada uno usado donde corresponde.
 
