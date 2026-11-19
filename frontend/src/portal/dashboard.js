@@ -19,7 +19,7 @@
     const dias = ui.diasHasta(usuario.membresia.fecha_vencimiento);
     sub.textContent = dias >= 0
       ? `Tu membresía ${usuario.membresia.plan.toLowerCase()} vence en ${dias} ${dias === 1 ? 'día' : 'días'}.`
-      : 'Tu membresía está vencida: renovala en recepción para volver a reservar clases.';
+      : 'Tu membresía está vencida: renovala desde "Renovar y pagar" para volver a reservar clases.';
     document.getElementById('saludo-estado').innerHTML = ui.estado(usuario.membresia.estado);
   } else {
     sub.textContent = 'Como cliente externo alquilás canchas y entrás a la sede con el QR de tu reserva.';
@@ -46,6 +46,55 @@
     document.getElementById('m-estado').innerHTML = ui.estado(m.estado);
     document.getElementById('m-inicio').textContent = ui.fecha(`${m.fecha_inicio}T12:00:00`);
     document.getElementById('m-vencimiento').textContent = ui.fecha(`${m.fecha_vencimiento}T12:00:00`);
+    document.getElementById('btn-renovar').addEventListener('click', () => abrirRenovacion(m.plan));
+  }
+
+  // ---------- Renovar la membresía pagando por la pasarela (RF-02 y RF-13) ----------
+  async function abrirRenovacion(planActual) {
+    let precios;
+    try { precios = await api.preciosMembresia(); } catch (error) { ui.toast(error.message, 'error'); return; }
+    const opciones = ['MENSUAL', 'TRIMESTRAL', 'ANUAL'].map((p) => `<option value="${p}"${p === planActual ? ' selected' : ''}>${p.charAt(0) + p.slice(1).toLowerCase()} · ${ui.dinero(precios[p])}</option>`).join('');
+    const md = ui.modal('Renovar la membresía', `
+      <div id="ren-msg"></div>
+      <form id="form-renovar" novalidate>
+        <div class="campo"><label for="r-plan">Plan</label><select id="r-plan">${opciones}</select></div>
+        <div class="campo"><label for="r-numero">Número de tarjeta</label>
+          <input id="r-numero" inputmode="numeric" autocomplete="cc-number" value="4111 1111 1111 1111">
+          <div class="ayuda">Es una pasarela de prueba: una tarjeta terminada en 0000 se rechaza.</div></div>
+        <div class="campo"><label for="r-titular">Titular</label><input id="r-titular" autocomplete="cc-name" value="${ui.esc(usuario.nombre_completo)}"></div>
+        <div class="fila-campos">
+          <div class="campo"><label for="r-venc">Vencimiento</label><input id="r-venc" placeholder="MM/AA" autocomplete="cc-exp" value="12/30"></div>
+          <div class="campo"><label for="r-cvv">CVV</label><input id="r-cvv" inputmode="numeric" autocomplete="cc-csc" value="123"></div>
+        </div>
+        <button class="boton ancho" type="submit">Pagar</button>
+      </form>`);
+    const $ = (id) => md.cuerpo.querySelector(`#${id}`);
+    const boton = md.cuerpo.querySelector('button[type=submit]');
+    const textoBoton = () => { boton.textContent = `Pagar ${ui.dinero(precios[$('r-plan').value])}`; };
+    $('r-plan').addEventListener('change', textoBoton);
+    textoBoton();
+    $('form-renovar').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      ui.aviso($('ren-msg'), '');
+      const tarjeta = {
+        numero: $('r-numero').value.replace(/\s+/g, ''),
+        titular: $('r-titular').value.trim() || 'Titular',
+        vencimiento: $('r-venc').value.trim(),
+        cvv: $('r-cvv').value.trim(),
+      };
+      boton.disabled = true;
+      boton.textContent = 'Procesando…';
+      try {
+        await api.pagarMembresia(usuarioId, $('r-plan').value, tarjeta);
+        md.cerrar();
+        ui.toast('Pago aprobado: tu membresía quedó renovada.', 'ok');
+        setTimeout(() => window.location.reload(), 1200);
+      } catch (error) {
+        ui.aviso($('ren-msg'), error.message);
+        boton.disabled = false;
+        textoBoton();
+      }
+    });
   }
 
   // ---------- Próximas reservas (canchas + clases) ----------

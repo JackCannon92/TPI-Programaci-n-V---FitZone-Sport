@@ -98,7 +98,8 @@ const setupCompositionRoot = () => {
     const usuariosService = crearUsuariosService({ UsuarioModel: Usuario, MembresiaModel: Membresia, sequelize });
 
     // Nivel 2: Dependen de Nivel 1
-    const membresiasService = crearMembresiasService({ membresiasRepo });
+    const pasarela = crearPasarelaMock();
+    const membresiasService = crearMembresiasService({ membresiasRepo, pasarela });
     
 
     const canchasService = crearCanchasService({
@@ -127,7 +128,6 @@ const setupCompositionRoot = () => {
         RegistroAccesoModel: RegistroAcceso
     });
 
-    const pasarela = crearPasarelaMock();
    
     // Nivel 3: Dependen de Nivel 2 y Sistemas Externos
     const pagosService = crearPagosService({

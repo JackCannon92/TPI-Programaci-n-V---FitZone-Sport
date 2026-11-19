@@ -8,7 +8,12 @@
  * cambio es estructural, no funcional. Los olores que se detectaron acá y NO
  * se corrigieron están anotados en docs/entregables/historial-del-equipo.md (sección 6).
  */
-function crearMembresiasService({ membresiasRepo }) {
+const { AppError } = require('../common/app-error');
+
+// RF-02 y RF-13 — Precio de cada plan para pagar la membresía en línea.
+const PRECIO_PLAN = Object.freeze({ MENSUAL: 30000, TRIMESTRAL: 81000, ANUAL: 288000 });
+
+function crearMembresiasService({ membresiasRepo, pasarela }) {
 
     // OLOR O-5 (documentado, no corregido): este switch está repetido en
     // renovarMembresia y en el frontend (registro.js).
@@ -96,11 +101,29 @@ function crearMembresiasService({ membresiasRepo }) {
         return membresiasRepo.guardar(membresia);
     }
 
+    // RF-02 + RF-13: renovar pagando por la pasarela. Si el pago se rechaza,
+    // la membresía no cambia. De la tarjeta solo queda el token y los últimos 4 (ADR-010).
+    async function pagarYRenovar(usuario_id, plan, tarjeta) {
+        const monto = PRECIO_PLAN[plan];
+        if (!monto) throw new AppError('Plan inválido: tiene que ser MENSUAL, TRIMESTRAL o ANUAL.', 400);
+        if (!pasarela) throw new AppError('La pasarela de pago no está disponible.', 503);
+        await obtenerMembresia(usuario_id); // 404 si no tiene membresía
+        const cobro = await pasarela.cobrar({ monto, tarjeta });
+        const pago = { aprobado: cobro.aprobado, monto, plan, token_pasarela: cobro.token, ultimos4: cobro.ultimos4 };
+        if (!cobro.aprobado) {
+            throw new AppError(`Pago rechazado: ${cobro.motivo || 'la tarjeta no fue aprobada'}. La membresía no cambió.`, 402);
+        }
+        const membresia = await renovarMembresia(usuario_id, plan);
+        return { membresia, pago };
+    }
+
     return {
         asignarMembresia,
         obtenerMembresia,
         renovarMembresia,
-        cancelarMembresia
+        cancelarMembresia,
+        pagarYRenovar,
+        PRECIO_PLAN
     };
 }
 

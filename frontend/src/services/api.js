@@ -70,6 +70,8 @@ const api = {
 
   // Pagos (RF-13, RF-14)
   pagarReserva: (reservaId, usuarioId, tarjeta) => post('/pagos', { reservaId, usuarioId, tarjeta }),
+  preciosMembresia: () => apiFetch('/membresias/precios'),
+  pagarMembresia: (usuarioId, plan, tarjeta) => post(`/membresias/${usuarioId}/pagar`, { plan, tarjeta }),
   pagosDeUsuario: (usuarioId) => apiFetch(`/pagos/usuario/${usuarioId}`),
   urlComprobante: (pagoId) => `${API_BASE_URL}/pagos/${pagoId}/comprobante`,
 

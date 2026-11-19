@@ -7,7 +7,7 @@ Estado al 18/11: 113 pruebas (83 unitarias y 30 de integración) más una de con
 | Req. | Historia | Implementación | Prueba automática | Verificación manual o demo | Cobertura |
 |---|---|---|---|---|---|
 | RF-01 | H1.1 | `usuarios/` | — | Alta desde la aplicación web (manual de usuario, 3.1) | **Hueco** |
-| RF-02 | H1.2 | `membresias/` (Repository) | `unit/membresias.test.js` (8 casos: plan, vencimiento, renovación, suspensión); `integracion/membresias.api.test.js` | — | Parcial: completa en la API y en las pruebas; la renovación con pago por la pasarela desde la web no está implementada |
+| RF-02 | H1.2 | `membresias/` (Repository) | `unit/membresias.test.js` (8 casos: plan, vencimiento, renovación, suspensión); `unit/membresias-pago.test.js` (renovar pagando por la pasarela, aprobado y rechazado); `integracion/membresias.api.test.js` | — | Completa |
 | RF-03 | H2.1 | `acceso.service.js` (el ingreso no depende de la sede de alta) | — | Demo: el mismo socio entra en dos sedes en días distintos | **Hueco** |
 | RF-04 | H2.1 | `acceso/qr-token.js` (HMAC, cambia cada minuto) | — | Demo: un QR de más de un minuto se rechaza en Recepción | **Hueco** |
 | RF-05 | H2.2 | `acceso.service.js` → `aforo()`; pantalla de Recepción | `unit/sincronizacion-terminal.test.js` (cuenta del aforo excedido) | Demo: sede llena rechaza el ingreso | Parcial |
@@ -32,8 +32,8 @@ Estado al 18/11: 113 pruebas (83 unitarias y 30 de integración) más una de con
 
 | Cobertura | Requisitos |
 |---|---|
-| Completa | RF-08, RF-10, RF-11, RF-14, RN-01, RN-02, RN-03, RNF-01 (8) |
-| Parcial | RF-02, RF-05, RF-07, RF-12, RF-13, RNF-02, RNF-03, RNF-04 (8) |
+| Completa | RF-02, RF-08, RF-10, RF-11, RF-14, RN-01, RN-02, RN-03, RNF-01 (9) |
+| Parcial | RF-05, RF-07, RF-12, RF-13, RNF-02, RNF-03, RNF-04 (7) |
 | Hueco (solo verificación manual) | RF-01, RF-03, RF-04, RF-06, RF-09 (5) |
 
 Todos los requisitos tienen una historia y una implementación. Los huecos son de prueba automática: las reglas de negocio obligatorias (RN-01 a RN-03) y el RNF de disponibilidad están cubiertos. Los huecos están en las altas simples (usuarios, clases, canchas) y en el QR dinámico: cuando se escribieron las pruebas, en el sprint 5, se priorizaron las reglas de negocio y no se volvió sobre el resto.

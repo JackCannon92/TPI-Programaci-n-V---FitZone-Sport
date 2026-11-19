@@ -10,6 +10,7 @@ const { crearCanchasService } = require('../../src/canchas/canchas.service');
 const { crearReservasRepositoryMemoria } = require('../../src/canchas/repositorio/reservas.memoria');
 const { crearMembresiasService } = require('../../src/membresias/membresias.service');
 const { crearMembresiasRepositoryMemoria } = require('../../src/membresias/repositorio/membresias.memoria');
+const { crearPasarelaMock } = require('../../src/pagos/pasarela-mock');
 const { crearTarifador } = require('../../src/canchas/strategies/tarifador');
 const { crearPrecioEstandar } = require('../../src/canchas/strategies/standarPricing');
 const { crearDescuentoSocio } = require('../../src/canchas/strategies/memberDiscountPricing');
@@ -68,7 +69,7 @@ function crearCanchasDePrueba({ cancha = CANCHA } = {}) {
 /** Servicio de membresías real + repositorio en memoria. */
 function crearMembresiasDePrueba() {
   const membresiasRepo = crearMembresiasRepositoryMemoria();
-  return { servicio: crearMembresiasService({ membresiasRepo }), membresiasRepo };
+  return { servicio: crearMembresiasService({ membresiasRepo, pasarela: crearPasarelaMock() }), membresiasRepo };
 }
 
 const loggerMudo = { log: () => {}, error: () => {} };

@@ -48,12 +48,30 @@ function crearMembresiasController(membresiasService) {
         }
     }
 
+    // RF-02 + RF-13: renovar pagando con tarjeta por la pasarela.
+    async function pagar(req, res, next) {
+        try {
+            const { id_usuario } = req.params;
+            const { plan, tarjeta } = req.body;
+            const resultado = await membresiasService.pagarYRenovar(id_usuario, plan, tarjeta);
+            res.status(201).json({ mensaje: 'Pago aprobado y membresía renovada', data: resultado });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    function precios(req, res) {
+        res.json(membresiasService.PRECIO_PLAN);
+    }
+
     // Retornamos los métodos al enrutador
     return {
         asignarPlan,
         obtenerEstado,
         renovar,
-        suspender
+        suspender,
+        pagar,
+        precios
     };
 }
 
